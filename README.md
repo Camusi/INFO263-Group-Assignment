@@ -4,8 +4,9 @@ The core task is to develop a website for showcasing and augmenting the IMDB tit
 
 Task to implement to improve the database:
 
-genres — List of all genres for a title extracted from title_basics
-title_genre — Combination table between title_basics and genres
-professions — List of all profession of a person extracted from name_basics
-name_professions — Combination table between name_basics and professions
-title_known_for — Combination table between title_basics and name_basics
+* **genres** — List of all genres for a title extracted from `title_basics`
+* **title_genre** — Combination table between `title_basics` and `genres`
+* **professions** — List of all professions of a person extracted from `name_basics`
+* **name_professions** — Combination table between `name_basics` and `professions`
+* **title_known_for** — Combination table between `title_basics` and `name_basics`
+
