@@ -1,5 +1,7 @@
 # INFO263-Group-Assignment
 
+Note: You need to put the database from LEARN in your local repository and name it imbd.db manually. It is to big to be pushed to git.
+
 The core task is to develop a website for showcasing and augmenting the IMDB titles. This task will require a bit of front-end work for designing HTML pages with forms and back-end functionality written in PHP code; and then, to give the website a proper look-and-feel you'll need to add some interactivity with JavaScript and CSS. There is a lot of freedom as to how you may approach this task. At the very minimum your solution must include these basic features/properties:
 
 Task to implement to improve the database:
