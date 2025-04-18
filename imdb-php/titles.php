@@ -54,7 +54,7 @@
     ?>
 
     <?php if (!isset($_GET["id"])): ?>
-        <h1 id="title_count" class="text-center mt-2"><?= $count ?> Titles</h1>
+        <h1 id="title_count" class="text-center mt-2">Showing <?= $count ?> Titles</h1>
 
         <div class="container p-5">
             <div class="row">

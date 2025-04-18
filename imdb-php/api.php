@@ -20,7 +20,7 @@ header("Cache-Control: no-transform,public,max-age=300,s-maxage=900");
 // Tell the receiving browser to treat this as JSON.
 header('Content-Type: application/json');
 
-// This is for imagination.
+// This is for pagination.
 if (isset($_GET['offset']) and !empty($_GET['offset'])) {
     $offset = $_GET["offset"];
 } else {
@@ -43,11 +43,6 @@ if (isset($_GET['title']) and !empty($_GET['title'])) {
 // Retrieving something by ID (title, name, etc.).
 if (isset($_GET['id']) and !empty($_GET['id'])) {
     $id = $_GET["id"];
-}
-
-if (isset($_GET['schbtn']) and !empty($_GET['search'])) {
-    $search_str = $_GET["search"];
-    print_r(getTitles(0, ',', $search_str));
 }
 
 // Specify the type of data requested.
