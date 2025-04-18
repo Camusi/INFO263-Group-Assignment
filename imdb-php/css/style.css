@@ -1,0 +1,23 @@
+/* Navigation.
+
+IMPORTANT: Change the styling for the navigation — choose your own colours and other parameters!!!
+
+*/
+
+.nav-link:hover,
+.navbar-brand:hover {
+    color: #000;
+    background-color: #cc9a06;
+}
+
+.bg-yellow-500 {
+    color: #000;
+    background-color: #ffc107;
+}
+
+/* For the index page. */
+.img-banner {
+    width: 50vw; /* This means 25% of the viewport. */
+}
+
+/* Insert other style definitions here. */
