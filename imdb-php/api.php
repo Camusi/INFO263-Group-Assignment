@@ -11,7 +11,7 @@ include_once 'database.php';
 header_remove();
 
 // CORS - NOTE: Change this link to the React page to avoid CORS warnings
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: http://localhost/imdb-react/src/app/page.js");
 header("Access-Control-Allow-Headers: 'Origin, X-Requested-With, Content-Type, Accept'");
 header("Access-Control-Allow-Methods: 'GET, POST'");
 
