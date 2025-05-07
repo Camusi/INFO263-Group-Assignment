@@ -64,7 +64,7 @@ function getTitles($offset, $limit, $title /* Define more parameters for filteri
 
         if (!empty($title)) {
             $title = "%" . $title . "%";
-            $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+            $stmt->bindParam(':title', $title);
         }
 
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -94,7 +94,7 @@ function getTitleCount($title)
 
         if (!empty($title)) {
             $title = "%" . $title . "%";
-            $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+            $stmt->bindParam(':title', $title);
         }
 
         $stmt->execute();
@@ -134,7 +134,7 @@ function getTitle($id) {
     try {
         $imdb = openConnection();
         $stmt = $imdb->prepare($query);
-        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id);
 
         $stmt->execute();
         $object = $stmt->fetchObject(Title::class);
@@ -143,4 +143,34 @@ function getTitle($id) {
     }
     return $object;
 }
-?>
+
+
+/** Functions to create tables: genres, title_genre, professions, name_professions, title_known_for */
+
+// TODO: some records have genres in the form 'Drama,Family,Fantasy' but we just want singular genres
+function createGenres(): string
+{
+    $pdo = openConnection();
+
+    // Create the 'genres' table to store genre names
+    $query = $pdo->prepare("DROP TABLE IF EXISTS genres;");
+    $query->execute();
+
+    $query = $pdo->prepare("
+        CREATE TABLE genres (
+        genre_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        genre_name TEXT UNIQUE
+        );
+    ");
+    $query->execute();
+
+    $query = $pdo->prepare("
+        INSERT INTO genres (genre_name)
+        SELECT DISTINCT genres FROM title_basics_trim;
+    ");
+    $query->execute();
+
+    return "Genres table created successfully.";
+}
+
+echo(createGenres());
