@@ -146,31 +146,64 @@ function getTitle($id) {
 
 
 /** Functions to create tables: genres, title_genre, professions, name_professions, title_known_for */
+// TODO: Create tables: title_genre, professions, name_professions, title_known_for
 
-// TODO: some records have genres in the form 'Drama,Family,Fantasy' but we just want singular genres
-function createGenres(): string
+/** Creates genres table */
+function createGenres()
 {
     $pdo = openConnection();
 
-    // Create the 'genres' table to store genre names
-    $query = $pdo->prepare("DROP TABLE IF EXISTS genres;");
-    $query->execute();
+    // Drop the table if it exists
+    $pdo->exec("DROP TABLE IF EXISTS genres;");
 
-    $query = $pdo->prepare("
+    // Create the 'genres' table
+    $pdo->exec("
         CREATE TABLE genres (
-        genre_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        genre_name TEXT UNIQUE
+            genre_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            genre_name TEXT UNIQUE
         );
     ");
-    $query->execute();
 
-    $query = $pdo->prepare("
-        INSERT INTO genres (genre_name)
-        SELECT DISTINCT genres FROM title_basics_trim;
-    ");
-    $query->execute();
+    // Fetch all genre strings from the source table
+    $stmt = $pdo->query("SELECT genres FROM title_basics_trim WHERE genres IS NOT NULL;");
+    $allGenres = []; // Holds all the unique genres
 
-    return "Genres table created successfully.";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { // While there is a row to fetch from
+        $genres = explode(',', $row['genres']);
+        $genreCount = count($genres);
+
+        for ($i = 0; $i < $genreCount; $i++) {
+            $trimmed = trim($genres[$i]);
+            if ($trimmed !== '' && !in_array($trimmed, $allGenres)) {
+                $allGenres[] = $trimmed;
+            }
+        }
+    }
+
+    // Insert unique genres into the genres table
+    $insert = $pdo->prepare("INSERT OR IGNORE INTO genres (genre_name) VALUES (:genre)");
+    foreach ($allGenres as $genre) {
+        $insert->execute([':genre' => $genre]);
+    }
 }
 
-echo(createGenres());
+/** Creates title_genre table - Combination table between title_basics and genres */
+function createTitleGenre()
+{
+    $pdo = openConnection();
+
+    // Drop the table if it exists
+    $pdo->exec("DROP TABLE IF EXISTS title_genre;");
+
+    // NOTE: If you guys see this before I complete it, the issue is that there are comma separated values in the cells so JOIN doesn't really work
+    $pdo->exec("
+//        CREATE TABLE title_genre AS
+//        SELECT t1.tconst, t2.genre_id
+//        FROM title_basics_trim t1
+//        JOIN genres t2 ON FIND_IN_SET(t2.genre_name, t1.genres) > 0;
+    ");
+}
+
+/** Create the tables */
+createGenres();
+createTitleGenre();
