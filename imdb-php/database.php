@@ -28,7 +28,7 @@ function openConnection(): PDO
 function getTitles($offset, $limit, $title /* Define more parameters for filtering, e.g. rating, date, etc. */ )
 {
     // WARNING! This is a slow query because it contains subqueries.
-    // It would be better implemented a separate queries specific to any given (filtering, pagination) purpose.
+    // It would be better implemented as separate queries specific to any given (filtering, pagination) purpose.
     $query = "SELECT t.tconst as id, titleType as title_type, primaryTitle as primary_title, 
                      originalTitle as original_title, isAdult as is_adult, startYear as start_year, 
                      endYear as end_year, runtimeMinutes as runtime_minutes, t.genres, 

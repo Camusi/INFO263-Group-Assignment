@@ -12,7 +12,7 @@ export default function Page() {
         <div className="row align-middle align-items-center py-2">
             <div className="offset-2 col-7 align-middle">
                 <input id="search-input" className="form-control" type="text" name="search"
-                       placeholder="Search for a Film, Serie, Person, ..."/>
+                       placeholder="Search for a Movie, Series, Person, ..."/>
             </div>
 
             <div className="col-2 d-grid col-2">
