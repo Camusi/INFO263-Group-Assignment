@@ -196,12 +196,8 @@ function createTitleGenre()
     $pdo->exec("DROP TABLE IF EXISTS title_genre;");
 
     // NOTE: If you guys see this before I complete it, the issue is that there are comma separated values in the cells so JOIN doesn't really work
-    $pdo->exec("
-//        CREATE TABLE title_genre AS
-//        SELECT t1.tconst, t2.genre_id
-//        FROM title_basics_trim t1
-//        JOIN genres t2 ON FIND_IN_SET(t2.genre_name, t1.genres) > 0;
-    ");
+    $pdo->exec(file_get_contents('qryCreateTGenre.sql'));
+    $pdo->exec(file_get_contents('qryPopulateTGenre.sql'));
 }
 
 /** Create the tables */
