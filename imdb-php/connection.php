@@ -1,6 +1,6 @@
 <?php
 
-const CONNECTION_STRING = "sqlite:resources/imdb.2.sqlite3";
+const CONNECTION_STRING = "sqlite:resources/imdb.sqlite3";
 const CONNECTION_USER = "";
 const CONNECTION_PASSWORD = "";
 

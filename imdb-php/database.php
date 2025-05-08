@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require_once 'connection.php';
 require_once './objects/ArrayValue.php';
 require_once './objects/Title.php';
@@ -18,79 +19,71 @@ function openConnection(): PDO
             CONNECTION_PASSWORD,
             CONNECTION_OPTIONS
         );
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
-        throw new PDOException($e->getMessage(), (int)$e->getCode());
+        die("Database connection failed: " . $e->getMessage());
     }
 
     return $pdo;
 }
 
-function getTitles($offset, $limit, $title /* Define more parameters for filtering, e.g. rating, date, etc. */ )
+/**
+ * Fetch paginated titles
+ */
+function getTitles($page, $pageSize, $title)
 {
-    // WARNING! This is a slow query because it contains subqueries.
-    // It would be better implemented as separate queries specific to any given (filtering, pagination) purpose.
-    $query = "SELECT t.tconst as id, titleType as title_type, primaryTitle as primary_title, 
-                     originalTitle as original_title, isAdult as is_adult, startYear as start_year, 
-                     endYear as end_year, runtimeMinutes as runtime_minutes, t.genres, 
-                     r.averageRating as rating, r.numVotes as votes,
-                     (
-                         SELECT count(*)
-                         FROM title_director_trim d
-                         WHERE d.tconst = t.tconst
-                     ) as directors_count,
-                     (
-                         SELECT count(*)
-                         FROM title_principals_trim p
-                         WHERE p.tconst = t.tconst
-                     ) as principals_count,
-                     (
-                         SELECT count(*)
-                         FROM title_writer_trim w
-                         WHERE w.tconst = t.tconst
-                     ) as writers_count
+    $offset = ($page - 1) * $pageSize;
+
+    $query = "SELECT t.tconst AS id, titleType AS title_type, primaryTitle AS primary_title, 
+                     originalTitle AS original_title, isAdult AS is_adult, startYear AS start_year, 
+                     endYear AS end_year, runtimeMinutes AS runtime_minutes, t.genres, 
+                     r.averageRating AS rating, r.numVotes AS votes
               FROM title_basics_trim t
-              JOIN title_ratings_trim r on r.tconst = t.tconst
-              WHERE 1 = 1 "; // This allows us to tack on filtering and sorting and limiting clauses later on.
+              JOIN title_ratings_trim r ON r.tconst = t.tconst
+              WHERE 1 = 1 ";
 
     if (!empty($title)) {
-        $query .= "AND (primaryTitle LIKE :title or originalTitle LIKE :title) ";
+        $query .= "AND (primaryTitle LIKE :title OR originalTitle LIKE :title) ";
     }
 
-    $query .= "LIMIT :limit OFFSET :offset";
+    $query .= "LIMIT :pageSize OFFSET :offset";
 
     try {
-        $imdb = openConnection();
-        $stmt = $imdb->prepare($query);
+        $pdo = openConnection();
+        $stmt = $pdo->prepare($query);
 
         if (!empty($title)) {
             $title = "%" . $title . "%";
             $stmt->bindParam(':title', $title);
         }
 
+        $stmt->bindParam(':pageSize', $pageSize, PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
-        $objects = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Title::class);
+
+        return $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Title::class);
     } catch (PDOException $e) {
-        die($e->getMessage());
+        die("Error fetching paginated titles: " . $e->getMessage());
     }
-    return $objects;
 }
 
+/**
+ * Get total number of titles for pagination
+ */
 function getTitleCount($title)
 {
-    $query = "SELECT count(*) AS title_count
-              FROM title_basics_trim AS t
-              JOIN title_ratings_trim r on r.tconst = t.tconst
+    $query = "SELECT COUNT(*) AS title_count
+              FROM title_basics_trim t
+              JOIN title_ratings_trim r ON r.tconst = t.tconst
               WHERE 1 = 1 ";
 
     if (!empty($title)) {
-        $query = $query . "AND (primaryTitle LIKE :title or originalTitle LIKE :title) ";
+        $query .= "AND (primaryTitle LIKE :title OR originalTitle LIKE :title) ";
     }
 
     try {
-        $db = openConnection();
-        $stmt = $db->prepare($query);
+        $pdo = openConnection();
+        $stmt = $pdo->prepare($query);
 
         if (!empty($title)) {
             $title = "%" . $title . "%";
@@ -100,106 +93,122 @@ function getTitleCount($title)
         $stmt->execute();
         $row = $stmt->fetch();
 
+        return $row["title_count"];
     } catch (PDOException $e) {
-        die($e->getMessage());
+        die("Error fetching title count: " . $e->getMessage());
     }
-
-    return $row["title_count"];
 }
 
-function getTitle($id) {
-    $query = "SELECT t.tconst as id, titleType as title_type, primaryTitle as primary_title,
-                     originalTitle as original_title, isAdult as is_adult, startYear as start_year,
-                     endYear as end_year, runtimeMinutes as runtime_minutes, r.averageRating as rating,
-                     numVotes as votes,
-                     (
-                         SELECT count(*)
-                         FROM title_director_trim d
-                         WHERE d.tconst = t.tconst
-                     ) as directors_count,
-                     (
-                         SELECT count(*)
-                         FROM title_principals_trim p
-                         WHERE p.tconst = t.tconst
-                     ) as principals_count,
-                     (
-                         SELECT count(*)
-                         FROM title_writer_trim w
-                         WHERE w.tconst = t.tconst
-                     ) as writers_count
-              FROM title_basics_trim t
-              JOIN title_ratings_trim r on r.tconst = t.tconst
-              WHERE t.tconst = :id";
-
-    try {
-        $imdb = openConnection();
-        $stmt = $imdb->prepare($query);
-        $stmt->bindParam(':id', $id);
-
-        $stmt->execute();
-        $object = $stmt->fetchObject(Title::class);
-    } catch (PDOException $e) {
-        die($e->getMessage());
-    }
-    return $object;
-}
-
-
-/** Functions to create tables: genres, title_genre, professions, name_professions, title_known_for */
-// TODO: Create tables: title_genre, professions, name_professions, title_known_for
-
-/** Creates genres table */
-function createGenres()
+/**
+ * Create genres table with pagination processing
+ */
+function createGenres(): void
 {
     $pdo = openConnection();
 
-    // Drop the table if it exists
+    // Drop and create the 'genres' table
     $pdo->exec("DROP TABLE IF EXISTS genres;");
+    $pdo->exec("CREATE TABLE genres (genre_id INTEGER PRIMARY KEY AUTOINCREMENT, genre_name TEXT UNIQUE);");
 
-    // Create the 'genres' table
-    $pdo->exec("
-        CREATE TABLE genres (
-            genre_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            genre_name TEXT UNIQUE
-        );
-    ");
+    // Fetch genres in batches
+    $batchSize = 1000;
+    $offset = 0;
 
-    // Fetch all genre strings from the source table
-    $stmt = $pdo->query("SELECT genres FROM title_basics_trim WHERE genres IS NOT NULL;");
-    $allGenres = []; // Holds all the unique genres
+    while (true) {
+        $stmt = $pdo->prepare("SELECT genres FROM title_basics_trim WHERE genres IS NOT NULL LIMIT :batchSize OFFSET :offset");
+        $stmt->bindValue(':batchSize', $batchSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { // While there is a row to fetch from
-        $genres = explode(',', $row['genres']);
-        $genreCount = count($genres);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (empty($rows)) break;
 
-        for ($i = 0; $i < $genreCount; $i++) {
-            $trimmed = trim($genres[$i]);
-            if ($trimmed !== '' && !in_array($trimmed, $allGenres)) {
-                $allGenres[] = $trimmed;
+        $allGenres = [];
+        foreach ($rows as $row) {
+            $genres = explode(',', $row['genres']);
+            foreach ($genres as $genre) {
+                $trimmed = trim($genre);
+                if ($trimmed !== '' && !in_array($trimmed, $allGenres)) {
+                    $allGenres[] = $trimmed;
+                }
             }
         }
-    }
 
-    // Insert unique genres into the genres table
-    $insert = $pdo->prepare("INSERT OR IGNORE INTO genres (genre_name) VALUES (:genre)");
-    foreach ($allGenres as $genre) {
-        $insert->execute([':genre' => $genre]);
+        // Insert genres
+        $insert = $pdo->prepare("INSERT OR IGNORE INTO genres (genre_name) VALUES (:genre)");
+        foreach ($allGenres as $genre) {
+            $insert->execute([':genre' => $genre]);
+        }
+
+        $offset += $batchSize;
     }
 }
 
-/** Creates title_genre table - Combination table between title_basics and genres */
-function createTitleGenre()
+/**
+ * Create profession table with batch processing
+ */
+function createProfession(): void
 {
     $pdo = openConnection();
 
-    // Drop the table if it exists
-    $pdo->exec("DROP TABLE IF EXISTS title_genre;");
+    // Drop and create the tables
+    $pdo->exec("DROP TABLE IF EXISTS profession;");
+    $pdo->exec("DROP TABLE IF EXISTS name_profession;");
+    $pdo->exec(file_get_contents('qryCreateProfession.sql'));
+    $pdo->exec(file_get_contents('qryCreateNamePro.sql'));
 
-    // NOTE: If you guys see this before I complete it, the issue is that there are comma separated values in the cells so JOIN doesn't really work
-    $pdo->exec(file_get_contents('qryCreateTGenre.sql'));
-    $pdo->exec(file_get_contents('qryPopulateTGenre.sql'));
+    $batchSize = 1000;
+    $offset = 0;
+
+    while (true) {
+        $stmt = $pdo->prepare("SELECT nconst, primaryProfession FROM name_basics_trim LIMIT :batchSize OFFSET :offset");
+        $stmt->bindValue(':batchSize', $batchSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (empty($rows)) break;
+
+        foreach ($rows as $row) {
+            processProfessions($pdo, $row['nconst'], $row['primaryProfession']);
+        }
+
+        $offset += $batchSize;
+    }
 }
 
-/** Create the tables */
+/**
+ * Process professions separately to minimize memory usage
+ */
+function processProfessions($pdo, $name_id, $primaryProfession)
+{
+    $professions = explode(',', $primaryProfession);
+
+    foreach ($professions as $profession) {
+        $profession = trim($profession);
+
+        // Insert unique profession
+        $stmt = $pdo->prepare("INSERT OR IGNORE INTO profession (name) VALUES (:name)");
+        $stmt->execute([':name' => $profession]);
+
+        // Fetch profession ID
+        $stmt = $pdo->prepare("SELECT id FROM profession WHERE name = :name");
+        $stmt->execute([':name' => $profession]);
+        $profession_id = $stmt->fetchColumn();
+
+        if ($profession_id === false) {
+            return;
+        }
+
+        // Insert into name_profession table
+        $stmt = $pdo->prepare("INSERT OR IGNORE INTO name_profession (name_id, profession_id) VALUES (:name_id, :profession_id)");
+        $stmt->execute([
+            ':name_id' => $name_id,
+            ':profession_id' => $profession_id
+        ]);
+    }
+}
+
+/** Execute table creation */
 createGenres();
-createTitleGenre();
+createProfession();
