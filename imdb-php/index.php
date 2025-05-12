@@ -10,7 +10,15 @@
 <body>
 <main role="main" class="container bg-light">
     <?php include_once 'navigation.php' ?>
-    <?php include_once 'database.php'; ?>
+    <?php
+    $php = "/Applications/AMPPS/apps/php82/bin/php";
+    $lastIndex = @file_get_contents('last_index.txt');
+    $runIndex = "$php " . __DIR__ . "/build_index.php >> " . __DIR__ . "/indexlog.log 2>&1 &";
+    if (!$lastIndex || time() - $lastIndex > 86400) {
+        exec($runIndex);
+        file_put_contents('last_index.txt', time());
+    }
+    ?>
 
     <div class="row justify-content-center my-4">
         <img class="img-thumbnail img-banner" src="images/yoda.jpeg" alt="Yoda image not found :("/>

@@ -217,9 +217,9 @@ function indexDB($pdo): void
 // Main execution
 
 // Connection
-$pdo = openConnection();
+//$pdo = openConnection();
 
 // Create tables and index
-createGenres($pdo);
-createProfession($pdo);
-indexDB($pdo);
+//createGenres($pdo);
+//createProfession($pdo);
+//indexDB($pdo);
