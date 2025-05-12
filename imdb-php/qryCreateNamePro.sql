@@ -4,4 +4,3 @@ CREATE TABLE name_profession (
     PRIMARY KEY (name_id, profession_id),
     FOREIGN KEY (profession_id) REFERENCES profession(id)
 );
-
