@@ -2,3 +2,4 @@
 /imdb-react/node_modules
 *.DS_Store
 imdb-php/resources/imdb.sqlite3
+.DS_Store
