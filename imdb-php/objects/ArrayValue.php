@@ -7,7 +7,7 @@ class ArrayValue implements JsonSerializable {
         $this->array = $array;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): mixed {
         return $this->array;
     }
 }

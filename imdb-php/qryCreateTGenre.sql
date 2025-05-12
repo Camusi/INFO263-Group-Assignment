@@ -5,3 +5,5 @@ CREATE TABLE title_genre (
                              FOREIGN KEY (title_id) REFERENCES title_basics_trim (tconst),
                              FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
 );
+
+CREATE INDEX idx_title_genre ON title_genre (title_id, genre_id);

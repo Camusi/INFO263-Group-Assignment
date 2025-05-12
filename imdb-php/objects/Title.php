@@ -26,7 +26,7 @@ class Title implements JsonSerializable
         // This is taken care of by the PDO data mapping.
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'id' => $this->getId(),
