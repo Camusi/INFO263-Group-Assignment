@@ -1,5 +1,5 @@
-/imdb-php/resources/imdb.2.sqlite3
+*.sqlite3
+*.sqlite3.zip
 /imdb-react/node_modules
 *.DS_Store
-imdb-php/resources/imdb.sqlite3
 .DS_Store
