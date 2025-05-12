@@ -1,7 +1,7 @@
 <?php
 ini_set('memory_limit', '1024M');
 ini_set('max_execution_time', 60); // 1 minute
-set_time_limit(120);                 // 30 seconds
+set_time_limit(120);   // 2 minutes           
 error_reporting(E_ALL);         // Enable error reporting
 ini_set('display_errors', 1);
 
