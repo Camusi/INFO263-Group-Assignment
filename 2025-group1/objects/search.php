@@ -26,13 +26,13 @@
             clearTimeout(timeout);
 
             timeout = setTimeout(() => {
-                $.get('searchDB()', {q: query})
+                $.get('search_handler.php', {q: query})
                     .done(hints => {
                         target.html(hints).show();
                     })
                     .fail((jqXHR, textStatus, errorThrown) => {
                         target.html(`Error ${jqXHR.status}: ${errorThrown}`).show();
-                    });w
+                    });
             }, 100);
         });
     });
