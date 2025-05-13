@@ -1,5 +1,2 @@
-*.sqlite3
-*.sqlite3.zip
-/imdb-react/node_modules
 *.DS_Store
 .DS_Store
