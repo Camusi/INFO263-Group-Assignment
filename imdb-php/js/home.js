@@ -22,13 +22,15 @@ $(document).ready(function () {
 				data: {
 					q: 'titles',
 					title: query,
-					limit: 15,
+					limit: 5,
 					offset: 0
 				},
 				dataType: 'json',
 				success: function (data) {
 					console.log(data); // Log data for debug
 					$preview.empty();  // Clear previous results
+
+					$preview.append("Showing top 5 results...<br>")
 
 					if (data && data.length > 0) {
 						data.forEach(item => {
