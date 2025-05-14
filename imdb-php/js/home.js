@@ -1,3 +1,5 @@
+console.log("home.js loaded successfully");
+
 $(document).ready(function () {
 	const $input = $('#search-input');
 	const $preview = $('#search-preview');
@@ -20,7 +22,7 @@ $(document).ready(function () {
 				data: {
 					q: 'titles',
 					title: query,
-					limit: 5,
+					limit: 15,
 					offset: 0
 				},
 				dataType: 'json',
@@ -32,10 +34,10 @@ $(document).ready(function () {
 						data.forEach(item => {
 							const result = $(`
                 				<a href="title.php?tconst=${item.id}" class="list-group-item list-group-item-action">
-                    				<strong>${item.primary_title}</strong> (${item.start_year || 'NA'})
-                    				<br><small>Director: ${item.directors || 'NA'} | ${item.runtime_minutes || 'NA'} min</small>
+                    				<strong>${item.primary_title}</strong> (${item.start_year || 'Unknown'})
+                    				<br><small>${item.title_type ? `${item.title_type} | ` : ''} Director: ${item.directors || 'Unknown'}${item.runtime_minutes ? ` | ${item.runtime_minutes} min` : ''}</small>
                 				</a>
-            `);
+            					`);
 							$preview.append(result);
 						});
 						$preview.show();

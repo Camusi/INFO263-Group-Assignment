@@ -27,7 +27,7 @@ class Title implements JsonSerializable
         // This is taken care of by the PDO data mapping.
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->getId(),
@@ -86,7 +86,17 @@ class Title implements JsonSerializable
 
     public function getTitleType()
     {
-        return $this->title_type;
+        $type = null;
+        if ($this->title_type == 'tvSeries') {
+            $type = "TV Show";
+        } else if ($this->title_type == 'movie') {
+            $type = "Movie";
+        }
+        if ($type) {
+            return $type;
+        } else {
+            return null;
+        }
     }
 
     public function getPrimaryTitle()
