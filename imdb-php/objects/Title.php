@@ -6,6 +6,7 @@
 class Title implements JsonSerializable
 {
     protected $id;
+    protected $directors;
     protected $image_url;
     protected $title_type;
     protected $primary_title;
@@ -30,6 +31,7 @@ class Title implements JsonSerializable
     {
         return [
             'id' => $this->getId(),
+            'directors' => $this->getDirectors(),
             'image_url' => $this->getImageUrl(),
             'title_type' => $this->getTitleType(),
             'primary_title' => $this->getPrimaryTitle(),
@@ -69,6 +71,11 @@ class Title implements JsonSerializable
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getDirectors()
+    {
+        return $this->directors;
     }
 
     public function getImageUrl()

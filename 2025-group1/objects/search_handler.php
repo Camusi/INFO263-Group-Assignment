@@ -12,7 +12,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Check if search query is provided
-    if (isset($_GET['query']) && !empty($_GET['query'])) {
+    if (isset($_GET['query'])) {
         $query = htmlspecialchars($_GET['query']);
         $query = "%$query%";
 
@@ -39,15 +39,17 @@ try {
                 echo "<li>" . htmlspecialchars($row['primaryName']) . " (nconst: " . htmlspecialchars($row['nconst']) . ")</li>";
             }
             echo "</ul>";
-        };
+        }
 
         if (!empty($titleResults)) {
             foreach ($titleResults as $row) {
                 echo "<li>" . htmlspecialchars($row['primaryTitle']) . " (tconst: " . htmlspecialchars($row['tconst']) . ")</li>";
             }
             echo "</ul>";
-        };
-} 
+        }
+    }
+} catch (PDOException $e)
+{
     die("Database error: " . $e->getMessage());
 }
 ?>

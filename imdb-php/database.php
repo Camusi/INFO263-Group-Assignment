@@ -35,19 +35,32 @@ function getTitles($page, $pageSize, $title)
 {
     $offset = ($page - 1) * $pageSize;
 
-    $query = "SELECT t.tconst AS id, titleType AS title_type, primaryTitle AS primary_title, 
-                     originalTitle AS original_title, isAdult AS is_adult, startYear AS start_year, 
-                     endYear AS end_year, runtimeMinutes AS runtime_minutes, t.genres, 
-                     r.averageRating AS rating, r.numVotes AS votes
-              FROM title_basics_trim t
-              JOIN title_ratings_trim r ON r.tconst = t.tconst
-              WHERE 1 = 1 ";
+    $query = "SELECT 
+    t.tconst AS id,
+    titleType AS title_type,
+    primaryTitle AS primary_title,
+    originalTitle AS original_title,
+    isAdult AS is_adult, 
+    startYear AS start_year,
+    endYear AS end_year, 
+    runtimeMinutes AS runtime_minutes, 
+    t.genres,
+    r.averageRating AS rating,
+    r.numVotes AS votes,
+    GROUP_CONCAT(d.primaryName, ', ') AS directors
+FROM title_basics_trim t
+LEFT JOIN title_ratings_trim r ON r.tconst = t.tconst
+LEFT JOIN title_director_trim td ON td.tconst = t.tconst
+LEFT JOIN name_basics_trim d ON d.nconst = td.director
+WHERE 1 = 1
+ ";
 
     if (!empty($title)) {
         $query .= "AND (primaryTitle LIKE :title OR originalTitle LIKE :title) ";
     }
 
-    $query .= "LIMIT :pageSize OFFSET :offset";
+    $query .= "GROUP BY t.tconst
+               LIMIT :pageSize OFFSET :offset";
 
     try {
         $pdo = openConnection();

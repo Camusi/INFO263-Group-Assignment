@@ -50,8 +50,10 @@ if (isset($_GET['q']) and !empty($_GET['q'])) {
     $q = $_GET['q'];
 
     if ($q == "titles") {
-        $titles = getTitles($offset, $limit, $title_str);
+        $page = 1;                                          //TODO always page 1, can change later
+        $titles = getTitles($page, $limit, $title_str);
         echo json_encode(new ArrayValue($titles), JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+        exit;
     }
     if ($q == "title_count") {
         $title_count = getTitleCount($title_str);
@@ -62,5 +64,7 @@ if (isset($_GET['q']) and !empty($_GET['q'])) {
         echo json_encode($title, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
     }
 }
+
+
 
 ?>
