@@ -4,7 +4,7 @@ $(document).ready(function () {
 	const $input = $('#search-input');
 	const $preview = $('#search-preview');
 
-	let debounceTimeout;
+	let debounceTimeout; // Initialise variable for clearTimeout
 
 	$input.on('input', function () {
 		const query = $input.val().trim();

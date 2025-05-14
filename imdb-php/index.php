@@ -19,26 +19,27 @@
         file_put_contents('last_index.txt', time());
     }
     ?>
-
     <div class="row justify-content-center my-4">
         <img class="img-thumbnail img-banner" src="images/yoda.jpeg" alt="Yoda image not found :("/>
         <h4 class="text-center">Welcome, please enter your query</h4>
     </div>
 
-    <div class="row align-items-start">
-        <!-- Search Input + Dropdown -->
-        <div class="offset-2 col-7 position-relative">
-            <!--suppress HtmlFormInputWithoutLabel -->
-            <input id="search-input" class="form-control" type="text" name="search" placeholder="Search for a Film, Series, Person, ..." />
-            <div id="search-preview" class="list-group position-absolute w-100 mt-1" style="z-index: 1000;"></div>
-        </div>
+    <form action="results.php" method="get">
+        <div class="row align-items-start">
 
-        <!-- Search Button -->
-        <div class="col-2 d-grid">
-            <button id="search-button" type="submit" class="btn btn-warning">Search</button>
-        </div>
-    </div>
+            <!-- Search Input + Dropdown -->
+            <div class="offset-2 col-7 position-relative">
+                <!--suppress HtmlFormInputWithoutLabel -->
+                <input id="search-input" class="form-control" type="text" name="search" placeholder="Search for a Film, Series, Person, ..." />
+                <div id="search-preview" class="list-group position-absolute w-100 mt-1" style="z-index: 1000;"></div>
+            </div>
 
+            <!-- Search Button -->
+            <div class="col-2 d-grid">
+                <button id="search-button" type="submit" class="btn btn-warning">Search</button>
+            </div>
+        </div>
+    </form>
 
 </main>
 

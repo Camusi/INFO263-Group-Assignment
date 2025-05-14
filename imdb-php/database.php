@@ -47,20 +47,40 @@ function getTitles($page, $pageSize, $title)
     t.genres,
     r.averageRating AS rating,
     r.numVotes AS votes,
-    GROUP_CONCAT(d.primaryName, ', ') AS directors
+    
+    -- Groupconcat Directors (up to 3 for nice searches) TODO implement additional support for directors
+    (
+        SELECT GROUP_CONCAT(d2.primaryName, ', ')
+        FROM title_director_trim td2
+        JOIN name_basics_trim d2 ON d2.nconst = td2.director
+        WHERE td2.tconst = t.tconst
+        LIMIT 3
+    ) AS directors,
+    
+    -- Groupconcat genres
+    GROUP_CONCAT(DISTINCT g.genre_name) AS genres
 FROM title_basics_trim t
+    
 LEFT JOIN title_ratings_trim r ON r.tconst = t.tconst
 LEFT JOIN title_director_trim td ON td.tconst = t.tconst
 LEFT JOIN name_basics_trim d ON d.nconst = td.director
-WHERE 1 = 1
- ";
+LEFT JOIN title_genre tg ON tg.title_id = t.tconst
+LEFT JOIN genres g ON g.genre_id = tg.genre_id
+
+WHERE 1 = 1 ";
 
     if (!empty($title)) {
-        $query .= "AND (primaryTitle LIKE :title OR originalTitle LIKE :title) ";
+        $query .= "AND (
+        t.primaryTitle LIKE :title
+        OR t.originalTitle LIKE :title
+        OR d.primaryName LIKE :title
+        OR g.genre_name LIKE :title
+        )"; // TODO IMPLEMENT GENRE SEARCH
     }
 
     $query .= "GROUP BY t.tconst
-               LIMIT :pageSize OFFSET :offset";
+                ORDER BY r.numVotes DESC, r.averageRating DESC
+                LIMIT :pageSize OFFSET :offset ";
 
     try {
         $pdo = openConnection();
@@ -68,11 +88,11 @@ WHERE 1 = 1
 
         if (!empty($title)) {
             $title = "%" . $title . "%";
-            $stmt->bindParam(':title', $title);
+            $stmt->bindValue(':title', $title, PDO::PARAM_STR);
         }
 
-        $stmt->bindParam(':pageSize', $pageSize, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':pageSize', $pageSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Title::class);
@@ -98,7 +118,7 @@ function getTitleCount($title)
 
         if (!empty($title)) {
             $title = "%" . $title . "%";
-            $stmt->bindParam(':title', $title);
+            $stmt->bindValue(':title', $title);
         }
 
         $stmt->execute();
@@ -106,10 +126,11 @@ function getTitleCount($title)
 
         return $row["title_count"];
     } catch (PDOException $e) {
-        die("Error fetching title count: " . $e->getMessage());
+        die("Error fetching titles: " . $e->getMessage());
     }
 }
 
+// Generate Genres Table - now deprecated and uncalled
 function createGenres($pdo): void
 {
     $pdo->exec("DROP TABLE IF EXISTS genres;");
@@ -235,4 +256,9 @@ function indexDB($pdo): void
 // Create tables and index
 //createGenres($pdo);
 //createProfession($pdo);
+
+// Uncomment the below lines to have the database index itself
+// every 24 hours on launch. Helps with query speeds but probably unnecessary.
+//$pdo = openConnection();
 //indexDB($pdo);
+//$pdo = null;
