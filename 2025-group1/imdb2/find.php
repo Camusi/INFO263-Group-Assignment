@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Search Results | IMDB2</title>
+  <title>"<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>"" | IMDB2</title>
   <link rel="stylesheet" href="resources/style.css" />
 </head>
 <body>
@@ -14,7 +14,7 @@
 
 <nav class="navbar">
     <div class="nav-left">
-      <a href="#navbar">Home</a>
+      <a href="index.php">Home</a>
       <a href="about.php">About</a>
     </div>
     <div class="nav-center">
