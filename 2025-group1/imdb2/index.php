@@ -24,13 +24,16 @@
     </div>
     <div class="nav-center">
       <input type="text" id="search-input" name="search-input" placeholder="Start typing to search..." />
-      <p id="search-output"></p>
     </div>
     <div class="nav-right">
       <a href="signin.php">Sign In</a>
-      <div class="account-preview">👤 Guest</div>
+      <p class="account-preview">👤 Guest</p>
     </div>
   </nav>
+  <div class="search-results">
+    <p id="search-output"></p>
+  </div>
+  
 
   <main class="main-content">
     <h2>Welcome to the testing Site</h2>
