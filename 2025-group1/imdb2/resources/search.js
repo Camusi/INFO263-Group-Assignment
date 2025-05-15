@@ -27,17 +27,21 @@ $(document).ready(function () {
 					console.log(data); // Log data for debug
 					$preview.empty();  // Clear previous results
 
-					$preview.append("Showing top 5 results...<br>")
-
-					if (data && data.length > 0) {
-						data.forEach(item => {
-							const result = $(`
-								<strong>${item.primary_name}</strong><br> (${item.id})<br>
-								`);
-							$preview.append(result);
+					const results = data && Array.isArray(data.results) ? data.results : [];
+					if (results.length > 0) {
+						$preview.append("Showing top 5 results...<br>");
+						results.slice(0, 5).forEach(item => {
+							const resultHtml = `
+								${item.primary_name}<br>
+								${item.id}<br>
+								${item.table_name}<br><br>
+							`;
+							$preview.append(resultHtml);
 						});
 						$preview.show();
-					};
+					} else {
+						$preview.append("No results found.").show();
+					}
 				},
 				error: function () {
 					$preview.html('<div class="list-group-item text-danger">Error fetching results</div>').show();
