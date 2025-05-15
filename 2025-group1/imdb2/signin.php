@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sign In</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Sign In | IMDB2.0</title>
+  <link rel="stylesheet" href="resources/style.css" />
 </head>
 <body>
   <header class="header">
@@ -14,15 +14,8 @@
 
   <nav class="navbar">
     <div class="nav-left">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-    </div>
-    <div class="nav-center">
-      <input type="text" class="search-bar" placeholder="Search...">
-    </div>
-    <div class="nav-right">
-      <a href="signin.html" class="active">Sign In</a>
-      <div class="account-preview">👤 Guest</div>
+      <a href="index.php">Home</a>
+      <a href="about.php">About</a>
     </div>
   </nav>
 

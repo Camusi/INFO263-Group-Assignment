@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About Us</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="resources/style.css" />
 </head>
 <body>
   <header class="header">
@@ -14,14 +14,11 @@
 
   <nav class="navbar">
     <div class="nav-left">
-      <a href="index.html">Home</a>
-      <a href="about.html" class="active">About</a>
-    </div>
-    <div class="nav-center">
-      <input type="text" class="search-bar" placeholder="Search...">
+      <a href="index.php">Home</a>
+      <a href="about.php" class="active">About</a>
     </div>
     <div class="nav-right">
-      <a href="signin.html">Sign In</a>
+      <a href="signin.php">Sign In</a>
       <div class="account-preview">👤 Guest</div>
     </div>
   </nav>
