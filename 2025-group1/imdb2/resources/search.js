@@ -32,17 +32,12 @@ $(document).ready(function () {
 					if (data && data.length > 0) {
 						data.forEach(item => {
 							const result = $(`
-                				<a href="title.php?tconst=${item.id}" class="list-group-item list-group-item-action">
-                    				<strong>${item.primary_title}</strong> (${item.start_year || 'Unknown'})
-                    				<br><small>${item.title_type ? `${item.title_type} | ` : ''} Director: ${item.directors || 'Unknown'}${item.runtime_minutes ? ` | ${item.runtime_minutes} min` : ''}</small>
-                				</a>
-            					`);
+								<strong>${item.primary_name}</strong> (${item.id})<br>
+								`);
 							$preview.append(result);
 						});
 						$preview.show();
-					} else {
-						$preview.html('<div class="list-group-item text-muted">No results found</div>').show();
-					}
+					};
 				},
 				error: function () {
 					$preview.html('<div class="list-group-item text-danger">Error fetching results</div>').show();
@@ -52,7 +47,7 @@ $(document).ready(function () {
 	});
 
 	$(document).on('click', function (e) {
-		if (!$(e.target).closest('#search-input, #search-preview').length) {
+		if (!$(e.target).closest('#search-input, #search-output').length) {
 			$preview.hide();
 		}
 	});

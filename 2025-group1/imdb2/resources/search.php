@@ -15,11 +15,15 @@ try {
     $db = new PDO('sqlite:./imdb-2.sqlite3');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Prepare SQL for both tables
+    // Prepare SQL for both tables, include table name and primary field
     $sql = "
-        SELECT nconst AS id FROM name_basics WHERE primaryName LIKE :query
-        UNION
-        SELECT tconst AS id FROM title_basics WHERE primaryTitle LIKE :query
+        SELECT nconst AS id, primaryName AS primary_name, 'name_basics_trim' AS table_name
+        FROM name_basics_trim
+        WHERE primaryName LIKE :query
+        UNION ALL
+        SELECT tconst AS id, primaryTitle AS primary_name, 'title_basics_trim' AS table_name
+        FROM title_basics_trim
+        WHERE primaryTitle LIKE :query
     ";
 
     $stmt = $db->prepare($sql);
@@ -27,11 +31,12 @@ try {
     $stmt->bindValue(':query', $likeQuery, PDO::PARAM_STR);
     $stmt->execute();
 
-    $results = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode(['ids' => $results]);
+    // Output as JSON: id, primary, table
+    echo json_encode(['results' => $results]);
 } catch (Exception $e) {
-    echo json_encode(['error' => 'Database error.']);
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
     exit;
 }
 ?>
