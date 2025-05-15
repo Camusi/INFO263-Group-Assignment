@@ -54,6 +54,7 @@ $(document).ready(function () {
 							`;
 							$preview.append(resultHtml);
 						});
+						$preview.append("<a href='find.php?q=" + query + "'>See all results</a>");
 						$preview.show();
 					} else {
 						$preview.append("No results found.").show();
