@@ -32,7 +32,7 @@ $(document).ready(function () {
 					if (data && data.length > 0) {
 						data.forEach(item => {
 							const result = $(`
-								<strong>${item.primary_name}</strong> (${item.id})<br>
+								<strong>${item.primary_name}</strong><br> (${item.id})<br>
 								`);
 							$preview.append(result);
 						});
