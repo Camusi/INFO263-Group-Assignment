@@ -1,6 +1,6 @@
 <?php
 // Database file path
-$dbPath = realpath(__DIR__ . '/../imdb2/imdb-2.sqlite3');
+$dbPath = realpath(__DIR__ . '/../imdb2/resources/imdb-2.sqlite3');
 
 if (!file_exists($dbPath)) {
     die("Database file not found.");
