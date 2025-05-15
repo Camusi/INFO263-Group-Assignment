@@ -1,0 +1,118 @@
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+a:hover {
+  color: #0077cc;
+}
+
+/* Header */
+.header {
+  background-color: #333;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ddd;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav-left, .nav-right, .nav-center {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-center {
+  flex: 1;
+  justify-content: center;
+}
+
+.search-bar {
+  padding: 0.5rem;
+  width: 60%;
+  max-width: 300px;
+  border-radius: 4px;
+  border: 1px solid #aaa;
+}
+
+.navbar .active {
+  font-weight: bold;
+  color: #0077cc;
+}
+
+/* Main content */
+.main-content {
+  padding: 2rem;
+}
+
+/* Footer */
+.footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Sign-in form */
+.signin-form {
+  max-width: 400px;
+  margin: auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.signin-form input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.signin-form button {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.signin-form button:hover {
+  background-color: #005fa3;
+}
+
+.movie-poster {
+    width: 120px;
+    height: 120px;
+}
