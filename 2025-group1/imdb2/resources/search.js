@@ -31,12 +31,26 @@ $(document).ready(function () {
 
 					const results = data && Array.isArray(data.results) ? data.results : [];
 					if (results.length > 0) {
-						$preview.append("Showing top 5 results...<br>");
+						$preview.append("<h3>Suggestions:</h3><br>");
 						results.slice(0, 5).forEach(item => {
+							const typeLabel = item.table_name === "title_basics_trim" ? "Movie/Show" : item.table_name === "name_basics_trim" ? "Person" : item.table_name;
+							let coverImage = '';
+							//$.ajax({
+							//	url: `resources/cover-image.php?q=${item.id}`,
+							//	method: 'GET',
+							//	dataType: 'json',
+							//	async: false,
+							//	success: function (imgData) {
+							//		if (imgData && imgData.cover_image) {
+							//			coverImage = `<img src="${imgData.cover_image}" style="margin-right:10px;vertical-align:middle;width:50px;height:75px;">`;
+							//		}
+							//	}
+							//});
 							const resultHtml = `
-								${item.primary_name}<br>
-								${item.id}<br>
-								${item.table_name}<br><br>
+								${coverImage}
+								<strong>${item.primary_name}</strong><br>
+								${typeLabel}<br>
+								<hr>
 							`;
 							$preview.append(resultHtml);
 						});
