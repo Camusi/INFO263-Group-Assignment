@@ -11,7 +11,9 @@ $(document).ready(function () {
 		clearTimeout(debounceTimeout);
 
 		if (query.length < 3) {
-			$preview.empty().hide();
+			$preview.empty();
+			$preview.append("");
+			$preview.show();
 			return;
 		}
 
@@ -48,11 +50,5 @@ $(document).ready(function () {
 				}
 			});
 		}, 300);
-	});
-
-	$(document).on('click', function (e) {
-		if (!$(e.target).closest('#search-input, #search-output').length) {
-			$preview.hide();
-		}
-	});
+	})
 });
