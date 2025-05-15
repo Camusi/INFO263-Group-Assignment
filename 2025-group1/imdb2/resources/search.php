@@ -17,13 +17,13 @@ try {
 
     // Prepare SQL for both tables, include table name and primary field
     $sql = "
-        SELECT nconst AS id, primaryName AS primary_name, 'name_basics_trim' AS table_name
-        FROM name_basics_trim
-        WHERE primaryName LIKE :query
-        UNION ALL
         SELECT tconst AS id, primaryTitle AS primary_name, 'title_basics_trim' AS table_name
         FROM title_basics_trim
         WHERE primaryTitle LIKE :query
+        UNION ALL
+        SELECT nconst AS id, primaryName AS primary_name, 'name_basics_trim' AS table_name
+        FROM name_basics_trim
+        WHERE primaryName LIKE :query
     ";
 
     $stmt = $db->prepare($sql);
