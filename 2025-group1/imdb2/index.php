@@ -19,7 +19,7 @@
 
   <nav class="navbar">
     <div class="nav-left">
-      <a href="#navbar">Home</a>
+      <a href="#navbar" class="active">Home</a>
       <a href="about.php">About</a>
     </div>
     <div class="nav-center">

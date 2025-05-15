@@ -24,6 +24,7 @@
       <label>Email:<br><input type="email" placeholder="you@example.com"></label><br><br>
       <label>Password:<br><input type="password" placeholder="Enter password"></label><br><br>
       <button type="submit">Sign In</button>
+      <p>Don't have an account? <a href="signup.php">Sign Up</a></p>
     </form>
   </main>
 
