@@ -10,20 +10,17 @@ $(document).ready(function () {
 		const query = $input.val().trim();
 		clearTimeout(debounceTimeout);
 
-		if (query.length < 2) {
+		if (query.length < 3) {
 			$preview.empty().hide();
 			return;
 		}
 
 		debounceTimeout = setTimeout(function () {
 			$.ajax({
-				url: 'resources/api.php',
+				url: 'resources/search.php',
 				method: 'GET',
 				data: {
-					q: 'titles',
-					title: query,
-					limit: 5,
-					offset: 0
+					q: query,
 				},
 				dataType: 'json',
 				success: function (data) {
@@ -49,7 +46,6 @@ $(document).ready(function () {
 				},
 				error: function () {
 					$preview.html('<div class="list-group-item text-danger">Error fetching results</div>').show();
-					print(error)
 				}
 			});
 		}, 300);

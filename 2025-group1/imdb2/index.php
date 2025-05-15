@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Home Page</title>
+  <title>IMDB2.0 by Group 1 2025S1</title>
   <!--JS Files-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="resources/search.js"></script>
@@ -13,21 +13,21 @@
 <!-- Consequences of CSS Styling-->
 <body>
   <header class="header">
-    <h1>Testing Testing</h1>
-    <p>A Website indeed</p>
+    <h1>IMDB2.0</h1>
+    <p>RAHHHHH</p>
   </header>
 
   <nav class="navbar">
     <div class="nav-left">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
+      <a href="#navbar">Home</a>
+      <a href="about.php">About</a>
     </div>
     <div class="nav-center">
-      <input type="text" id="search-input" name="search-input" placeholder="Search...">
+      <input type="text" id="search-input" name="search-input" placeholder="Start typing to search..." />
       <p id="search-output"></p>
     </div>
     <div class="nav-right">
-      <a href="signin.html">Sign In</a>
+      <a href="signin.php">Sign In</a>
       <div class="account-preview">👤 Guest</div>
     </div>
   </nav>
