@@ -17,21 +17,23 @@
       <a href="index.php">Home</a>
       <a href="about.php">About</a>
     </div>
-    <div class="nav-center">
-      <input type="text" id="find-search-input" name="find-search-input" placeholder="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
-    </div>
     <div class="nav-right">
       <a href="signin.php">Sign In</a>
       <p class="account-preview">👤 Guest</p>
     </div>
   </nav>
-
-  <main class="search-results">
+  <section class="search-bar">
+  <form action="find.php" method="GET">
+    <input type="text" id="find-search-input" name="q" placeholder="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
+    <button id="find-search-button" type="submit">Search</button>
+  </form>
+  </section>
+  <main class="query-results">
     <p id="search-output">
         <?php
         if (isset($_GET['q'])) {
             $searchQuery = htmlspecialchars($_GET['q']);
-            echo "You searched for: {$searchQuery}<br>";
+            echo "<h4>You searched for: " . "{$searchQuery}" . "</h4><br><br>";
             try {
                 // Connect to SQLite database
                 $db = new PDO('sqlite:./resources/imdb-2.sqlite3');
@@ -39,11 +41,11 @@
 
                 // Prepare SQL for both tables, include table name and primary field
                 $sql = "
-                    SELECT tconst AS id, primaryTitle AS primary_name, 'title_basics_trim' AS table_name
+                    SELECT tconst AS id, primaryTitle AS primary_name, 'title_basics_trim' AS table_name, startYear AS year
                     FROM title_basics_trim
                     WHERE primaryTitle LIKE :query
                     UNION ALL
-                    SELECT nconst AS id, primaryName AS primary_name, 'name_basics_trim' AS table_name
+                    SELECT nconst AS id, primaryName AS primary_name, 'name_basics_trim' AS table_name, birthYear AS year
                     FROM name_basics_trim
                     WHERE primaryName LIKE :query
                 ";
@@ -54,10 +56,12 @@
                 $stmt->execute();
 
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo "Found " . count($results) . " results:<br><br>";
                 foreach ($results as $row) {
                     echo "<div class='result-item'>";
                     echo "<strong>Name:</strong> " . htmlspecialchars($row['primary_name']) . "<br>";
                     echo "<strong>Type:</strong> " . ($row['table_name'] === 'title_basics_trim' ? 'TV/Movie' : 'Person') . "<br>";
+                    echo "<strong> ". ($row['table_name'] === 'title_basics_trim' ? 'Year:' : 'Born:') ." </strong> " . htmlspecialchars($row['year']) . "<br>";
                     if ($row['table_name'] === 'title_basics_trim') {
                         // Fetch the image URL from cover-image.php?q=ID (returns JSON)
                         $coverApiUrl = "resources/cover-image.php?q=" . urlencode($row['id']);
@@ -74,7 +78,7 @@
                             }
                         }
                     }
-                    echo "</div><br><hr>";
+                    echo "</div><br><hr><br>";
                 }
             } catch (Exception $e) {
                 echo "Database error: " . htmlspecialchars($e->getMessage());
