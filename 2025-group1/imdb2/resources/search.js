@@ -34,21 +34,22 @@ $(document).ready(function () {
 						$preview.append("<h3>Suggestions:</h3><br>");
 						results.slice(0, 5).forEach(item => {
 							const typeLabel = item.table_name === "title_basics_trim" ? "Movie/Show" : item.table_name === "name_basics_trim" ? "Person" : item.table_name;
+							const typeClass = item.table_name === "title_basics_trim" ? "title" : item.table_name === "name_basics_trim" ? "person" : item.table_name;
 							let coverImage = '';
-							//$.ajax({
-							//	url: `resources/cover-image.php?q=${item.id}`,
-							//	method: 'GET',
-							//	dataType: 'json',
-							//	async: false,
-							//	success: function (imgData) {
-							//		if (imgData && imgData.cover_image) {
-							//			coverImage = `<img src="${imgData.cover_image}" style="margin-right:10px;vertical-align:middle;width:50px;height:75px;">`;
-							//		}
-							//	}
-							//});
+							$.ajax({
+								url: `resources/cover-image.php?q=${item.id}`,
+								method: 'GET',
+								dataType: 'json',
+								async: false,
+								success: function (imgData) {
+									if (imgData && imgData.cover_image) {
+										coverImage = `<img src="${imgData.cover_image}" style="margin-right:10px;vertical-align:middle;width:50px;height:75px;">`;
+									}
+								}
+							});
 							const resultHtml = `
 								${coverImage}
-								<strong>${item.primary_name}</strong><br>
+								<strong> <a href="./${typeClass}/${item.id}" target="_blank">${item.primary_name}</a></strong><br>
 								${typeLabel}<br>
 								<hr>
 							`;
