@@ -49,7 +49,7 @@ $(document).ready(function () {
 							});
 							const resultHtml = `
 								${coverImage}
-								<strong> <a href="./${typeClass}/${item.id}" target="_blank">${item.primary_name}</a></strong><br>
+								<strong> <a href="./resources/page.php?q=${item.id}" target="_blank">${item.primary_name}</a></strong><br>
 								${typeLabel}<br>
 								<hr>
 							`;

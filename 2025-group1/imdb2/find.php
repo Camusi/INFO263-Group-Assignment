@@ -60,7 +60,7 @@
                 echo "Found " . count($results) . " results:<br><br>";
                 foreach ($results as $row) {
                     echo "<div class='result-item'>";
-                    echo "<strong>Name:</strong> <a href=\"." . ($row['table_name'] === 'title_basics_trim' ? '\/title/' : '\/person/') . ($row['id']) . "\" target=\"_blank\">" . htmlspecialchars($row['primary_name']) . "</a><br>";
+                    echo "<strong>Name:</strong> <a href=\"./resources/page.php?q=" . ($row['id']) . "\" target=\"_blank\">" . htmlspecialchars($row['primary_name']) . "</a><br>";
                     echo "<strong>Type:</strong> " . ($row['table_name'] === 'title_basics_trim' ? 'TV/Movie' : 'Person') . "<br>";
                     echo "<strong> ". ($row['table_name'] === 'title_basics_trim' ? 'Year:' : 'Born:') ." </strong> " . htmlspecialchars($row['year']) . "<br>";
                     if ($row['table_name'] === 'title_basics_trim') {
