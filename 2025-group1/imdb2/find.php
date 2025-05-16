@@ -1,3 +1,4 @@
+<?php ini_set('max_execution_time', 90); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,20 +64,20 @@
                     echo "<strong>Type:</strong> " . ($row['table_name'] === 'title_basics_trim' ? 'TV/Movie' : 'Person') . "<br>";
                     echo "<strong> ". ($row['table_name'] === 'title_basics_trim' ? 'Year:' : 'Born:') ." </strong> " . htmlspecialchars($row['year']) . "<br>";
                     if ($row['table_name'] === 'title_basics_trim') {
-                        // Fetch the image URL from cover-image.php?q=ID (returns JSON)
-                        $coverApiUrl = "resources/cover-image.php?q=" . urlencode($row['id']);
-                        $coverJson = @file_get_contents($coverApiUrl);
-                        if ($coverJson !== false) {
-                            $coverData = json_decode($coverJson, true);
-                            if (
-                                json_last_error() === JSON_ERROR_NONE &&
-                                isset($coverData['cover_image']) &&
-                                !empty($coverData['cover_image']) &&
-                                filter_var($coverData['cover_image'], FILTER_VALIDATE_URL)
-                            ) {
-                                echo "<img src='" . htmlspecialchars($coverData['cover_image']) . "' alt='Cover Image'><br>";
-                            }
-                        }
+                      $url = "https://www.imdb.com/title/$row[id]";
+                      $data = file_get_contents($url);
+                      $start = strpos($data, 'https://m.media-amazon.com/images/M/');
+                      if ($start === false) {
+                          echo json_encode(['error' => 'Cover image not found.']);
+                          exit;
+                      }
+                      $end = strpos($data, '"', $start);
+                      if ($end === false) {
+                          echo json_encode(['error' => 'Cover image not found.']);
+                          exit;
+                      }
+                      $image_url = substr($data, $start, $end - $start);
+                      echo "<img src=\"" . ($row['table_name'] === 'title_basics_trim' ? $image_url : 'resources/blank.png') . "\" alt=\"Cover Image\" class=\"cover-image\" width=\"100\" /><br>";
                     }
                     echo "</div><br><hr><br>";
                 }
