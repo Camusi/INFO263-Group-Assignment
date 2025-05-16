@@ -55,7 +55,7 @@ try {
         }
 
 // Step 2: If it doesn't exist, generate the page
-
-// Step 3: Redirect to the page.
-
+    // Redirect to generate.php with query and type
+    header("Location: generate.php?q=" . $result['id'] . "&type=" . ($row['table_name'] === 'title_basics_trim' ? 'title' : 'person'));
+    exit;
     ?>
