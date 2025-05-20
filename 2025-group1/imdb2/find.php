@@ -11,7 +11,7 @@
 <body>
   <header class="header">
     <h1>IMDB2.0</h1>
-    <p>Results for "<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>"</p>
+    <p>Results for "<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ' '; ?>"</p>
   </header>
 
 <nav class="navbar">
@@ -28,6 +28,18 @@
   <form action="find.php" method="GET">
     <input type="text" id="find-search-input" name="q" placeholder="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
     <button id="find-search-button" type="submit">Search</button>
+    <script>
+      document.querySelector('form').addEventListener('submit', function(e) {
+      var input = document.getElementById('find-search-input').value.trim();
+      if (!input) {
+        e.preventDefault();
+        location.href = location.pathname;
+      } else {
+        e.preventDefault();
+        location.href = location.pathname + '?q=' + encodeURIComponent(input);
+      }
+      });
+    </script>
   </form>
   </section>
   <main class="query-results">
