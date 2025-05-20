@@ -1,4 +1,5 @@
-console.log("search.js loaded successfully");
+const version = "v1";
+console.log("search.js " + version + " loaded successfully");
 
 $(document).ready(function () {
 	const $input = $('#search-input');
@@ -9,6 +10,7 @@ $(document).ready(function () {
 	$input.on('input', function () {
 		const query = $input.val().trim();
 		clearTimeout(debounceTimeout);
+		console.log("Now searching for: " + query); // Log input for debug
 
 		if (query.length < 3) {
 			$preview.empty();
@@ -40,6 +42,7 @@ $(document).ready(function () {
 								${typeLabel}<br>
 								<hr>
 							`;
+							console.log("Added result: " + (item.primary_name));
 							$preview.append(resultHtml);
 						});
 						const extraResults = `<strong>Found ${(results.length)} results!</strong>`
@@ -56,5 +59,14 @@ $(document).ready(function () {
 				}
 			});
 		}, 300);
-	})
+	});
+	$input.on('keydown', function (e) {
+		if (e.key === 'Enter') {
+			const query = $input.val().trim();
+			if (query.length >= 1) {
+				window.location.href = 'find.php?q=' + encodeURIComponent(query);
+				console.log("Redirecting to find.php with query: " + query);
+			}
+		}
+	});
 });
