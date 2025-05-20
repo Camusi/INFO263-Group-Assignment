@@ -3,6 +3,7 @@ $id = isset($_GET['q']) ? trim($_GET['q']) : '';
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
 if ($id === '') {
     echo  'Missing a Query. Bad ID?';
+    exit;
 };
 
 if ($type === 'title') {
@@ -11,6 +12,7 @@ if ($type === 'title') {
     $pagePath = '../person/' . $id . '.php';
 } else {
     echo  'Invalid Type. Bad Request?';
+    exit;
 }
 
 echo 'Page Path: ' . $pagePath . '<br>';
