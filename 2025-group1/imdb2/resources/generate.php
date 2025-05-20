@@ -26,9 +26,11 @@ echo '<hr>';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creating <?php echo isset($_GET['type']) ? htmlspecialchars($_GET['type']) : '' ?> <?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ' '; ?></title>
+    <link rel="stylesheet" href="../resources/style.css">
 </head>
 <body>
     Currently creating a page for <?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ' '; ?>.
     Your patience is appreciated and you will be redirected to the page once it is created.
+    <br><img src="img/load.gif" alt="Loading..." style="width: 250px; height: 250px;">
 </body>
 </html>
