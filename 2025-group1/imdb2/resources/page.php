@@ -32,12 +32,14 @@ try {
 
     foreach ($results as $result) {
         if ($result['table_name'] === 'title_basics_trim') {
+            $pageType = 'title';
             $pagePath = '../title/' . $result['id'] . '.php';
             if (file_exists($pagePath)) {
                 header("Location: $pagePath");
                 exit;
             }
         } else if ($result['table_name'] === 'name_basics_trim') {
+            $pageType = 'person';
             $pagePath = '../person/' . $result['id'] . '.php';
             if (file_exists($pagePath)) {
                 header("Location: $pagePath");
@@ -56,6 +58,6 @@ try {
 
 // Step 2: If it doesn't exist, generate the page
     // Redirect to generate.php with query and type
-    header("Location: generate.php?q=" . $result['id'] . "&type=" . ($row['table_name'] === 'title_basics_trim' ? 'title' : 'person'));
+    header("Location: generate.php?q=" . $result['id'] . "&type=" . $pageType);
     exit;
     ?>
