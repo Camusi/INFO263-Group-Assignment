@@ -42,7 +42,7 @@
     <h2>Movie Overview</h2>
     <div class="movie-list">
       <div class="movie-card">
-        <img src="resources/image1.png" alt="Movie 1 Poster" class="movie-poster">
+        <img src="resources/img/load.gif" alt="Movie 1 Poster" class="movie-poster">
         <div class="movie-details">
           <h3>Movie Title 1</h3>
           <p><strong>Genre:</strong> Example, Example</p>
@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="movie-card">
-        <img src="resources/image1.png" alt="Movie 2 Poster" class="movie-poster">
+        <img src="resources/img/load.gif" alt="Movie 2 Poster" class="movie-poster">
         <div class="movie-details">
           <h3>Movie Title 2</h3>
           <p><strong>Genre:</strong> Example, Example</p>
@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="movie-card">
-        <img src="resources/image1.png" alt="Movie 3 Poster" class="movie-poster">
+        <img src="resources/img/load.gif" alt="Movie 3 Poster" class="movie-poster">
         <div class="movie-details">
           <h3>Movie Title 3</h3>
           <p><strong>Genre:</strong> Example, Example</p>
