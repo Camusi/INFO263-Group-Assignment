@@ -36,12 +36,21 @@ echo '<hr>';
     <?php
     if (copy(__DIR__ . '/template_title.php', $pagePath)) {
         echo "Copying template to {$pagePath}<br>";
+        $isGenerated = true;
     } else {
         echo "Failed to copy template to {$pagePath}<br>";
         $error = error_get_last();
         if ($error) {
             echo "Error details: " . htmlspecialchars($error['message']) . "<br>";
         }
+    }
+    $isWritten = true;
+    if ($isGenerated && $isWritten) {
+        echo "Page {$pagePath} created successfully.";
+        header("Refresh: 0; URL={$pagePath}");
+    } else {
+        echo "Failed to create page {$pagePath}. Please contact a site administrator.";
+        header("Refresh: 5; URL={../index.php}");
     }
 
     ?>
