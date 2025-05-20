@@ -45,10 +45,9 @@ $(document).ready(function () {
 							console.log("Added result: " + (item.primary_name));
 							$preview.append(resultHtml);
 						});
-						const extraResults = `<strong>Found ${(results.length)} results!</strong>`
+						const extraResults = `<strong>See all ${(results.length)} results!</strong>`
 						$preview.append("<hr><br>")
-						$preview.append(extraResults)
-						$preview.append("<br><a href='find.php?q=" + query + "'>See all!</a>");
+						$preview.append("<br><a href='find.php?q=" + query + "'>" + extraResults + "!</a>");
 						$preview.show();
 					} else {
 						$preview.append("No results found.").show();
