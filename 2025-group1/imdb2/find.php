@@ -66,7 +66,7 @@
                     echo "<strong> ". ($row['table_name'] === 'title_basics_trim' ? 'Year:' : 'Born:') ." </strong> " . htmlspecialchars($row['year']) . "<br>";
                     
                     if ($row['table_name'] === 'title_basics_trim') {
-                      echo "<img data-imdb-id=\"" . htmlspecialchars($row['id']) . "\" class=\"cover-image\" width=\"100\" src=\"resources/placeholder.png\" alt=\"Loading...\" /><br>";
+                      echo "<img data-imdb-id=\"" . htmlspecialchars($row['id']) . "\" class=\"cover-image\" width=\"100\" src=\"resources/image1.png\" alt=\"Loading...\" /><br>";
                     };
 
 
@@ -91,22 +91,22 @@
 document.addEventListener("DOMContentLoaded", function () {
   const images = document.querySelectorAll("img[data-imdb-id]");
   images.forEach(img => {
-    const imdbId = img.getAttribute("data-imdb-id");
     $.ajax({
-								url: `resources/cover-image.php?q=${item.id}`,
-								method: 'GET',
-								dataType: 'json',
-								async: false,
-								success: function (imgData) {
-									if (imgData && imgData.cover_image) {
-										coverImage = `<img src="${imgData.cover_image}" style="margin-right:10px;vertical-align:middle;width:50px;height:75px;">`;
-									}
-								}
-							})
-    })
-    .catch(() => {
-      img.src = "resources/image1.png";
+      url: `resources/cover-image.php?q=${img.getAttribute('data-imdb-id')}`,
+      method: 'GET',
+      dataType: 'json',
+      async: false,
+      success: function (imgData) {
+        if (imgData && imgData.cover_image) {
+          img.src = imgData.cover_image;
+          console.log("found cover image for " + img.getAttribute('data-imdb-id') + " at " + imgData.cover_image);
+        }
+      },
+      error: function () {
+        img.src = "resources/image1.png";
+      }
     });
+  });
 });
 </script>
 
