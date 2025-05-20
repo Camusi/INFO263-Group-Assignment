@@ -14,10 +14,6 @@ if ($type === 'title') {
     echo  'Invalid Type. Bad Request?';
     exit;
 }
-
-echo 'Page Path: ' . $pagePath . '<br>';
-echo 'Normally we would generate a page there now but missing the template.';
-echo '<hr>';
 ?>
 
 <!DOCTYPE html>

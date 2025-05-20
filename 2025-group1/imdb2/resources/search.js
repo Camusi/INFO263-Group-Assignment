@@ -18,7 +18,8 @@ $(document).ready(function () {
 			$preview.show();
 			return;
 		}
-
+		console.log(window.location)
+		
 		debounceTimeout = setTimeout(function () {
 			$.ajax({
 				url: 'resources/search.php',

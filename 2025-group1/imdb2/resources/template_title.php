@@ -32,20 +32,15 @@
   </div>
     <main class="main-content">
         <h2>Movie Overview</h2>
-        <div class="movie-list">
-        <div class="movie-card">
-            <img src="../resources/img/load.gif" alt="{NAME} Poster" class="movie-poster">
-            <div class="movie-details">
-            <h3>{NAME}</h3>
-            <p><strong>Genre:</strong> {GENRES}</p>
-            <p><strong>Running Years:</strong> {YEAR}</p>
-            <p><strong>Runtime:</strong> 999 mins</p>
-            <p><strong>Director:</strong> John Doe</p>
-            <p><strong>Writer:</strong> John Doe</p>
-            <p><strong>Actors:</strong> Actor A, Actor B, Actor C</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-        </div>
-        </div>
-</body>
+        <div id="title"></div>
+        <div id="poster"></div>
+        <div id="rating"></div>
+        <div id="people"></div>
+        <div id="plot"></div>
+        <div id="comments"></div>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2025 IMDB2.0. All rights reserved.</p>
+        <p>Contact: <a href="mailto:constatine.zakkaroff@canterbury.ac.nz">Constatine Zakkaroff</a></p>
+      </body>
 </html>
