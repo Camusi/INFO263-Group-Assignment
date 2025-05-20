@@ -63,22 +63,12 @@
                     echo "<strong>Name:</strong> <a href=\"./resources/page.php?q=" . ($row['id']) . "\" target=\"_blank\">" . htmlspecialchars($row['primary_name']) . "</a><br>";
                     echo "<strong>Type:</strong> " . ($row['table_name'] === 'title_basics_trim' ? 'TV/Movie' : 'Person') . "<br>";
                     echo "<strong> ". ($row['table_name'] === 'title_basics_trim' ? 'Year:' : 'Born:') ." </strong> " . htmlspecialchars($row['year']) . "<br>";
+                    
                     if ($row['table_name'] === 'title_basics_trim') {
-                      $url = "https://www.imdb.com/title/$row[id]";
-                      $data = file_get_contents($url);
-                      $start = strpos($data, 'https://m.media-amazon.com/images/M/');
-                      if ($start === false) {
-                          echo json_encode(['error' => 'Cover image not found.']);
-                          exit;
-                      }
-                      $end = strpos($data, '"', $start);
-                      if ($end === false) {
-                          echo json_encode(['error' => 'Cover image not found.']);
-                          exit;
-                      }
-                      $image_url = substr($data, $start, $end - $start);
-                      echo "<img src=\"" . ($row['table_name'] === 'title_basics_trim' ? $image_url : 'resources/blank.png') . "\" alt=\"Cover Image\" class=\"cover-image\" width=\"100\" /><br>";
-                    }
+                      echo "<img data-imdb-id=\"" . htmlspecialchars($row['id']) . "\" class=\"cover-image\" width=\"100\" src=\"resources/placeholder.png\" alt=\"Loading...\" /><br>";
+                    };
+
+
                     echo "</div><br><hr><br>";
                 }
             } catch (Exception $e) {
@@ -95,4 +85,28 @@
     <p>&copy; 2025 Test Website. All rights Test.</p>
   </footer>
 </body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const images = document.querySelectorAll("img[data-imdb-id]");
+  images.forEach(img => {
+    const imdbId = img.getAttribute("data-imdb-id");
+    const url = `https://www.imdb.com/title/${imdbId}`;
+    fetch(url)
+    .then(response => response.text())
+    .then(html => {
+      const match = html.match(/https:\/\/m\.media-amazon\.com\/images\/M\/[^"]+/);
+      if (match && match[0]) {
+        img.src = match[0];
+      } else {
+        img.src = "resources/image1.png";
+      }
+    })
+    .catch(() => {
+      img.src = "resources/image1.png";
+    });
+  });
+});
+</script>
+
 </html>

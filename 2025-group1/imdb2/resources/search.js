@@ -36,7 +36,7 @@ $(document).ready(function () {
 							const typeLabel = item.table_name === "title_basics_trim" ? "Movie/Show" : item.table_name === "name_basics_trim" ? "Person" : item.table_name;
 							const typeClass = item.table_name === "title_basics_trim" ? "title" : item.table_name === "name_basics_trim" ? "person" : item.table_name;
 							let coverImage = '';
-							$.ajax({
+							/*$.ajax({
 								url: `resources/cover-image.php?q=${item.id}`,
 								method: 'GET',
 								dataType: 'json',
@@ -46,16 +46,18 @@ $(document).ready(function () {
 										coverImage = `<img src="${imgData.cover_image}" style="margin-right:10px;vertical-align:middle;width:50px;height:75px;">`;
 									}
 								}
-							});
+							});*/
 							const resultHtml = `
-								${coverImage}
 								<strong> <a href="./resources/page.php?q=${item.id}" target="_blank">${item.primary_name}</a></strong><br>
 								${typeLabel}<br>
 								<hr>
 							`;
 							$preview.append(resultHtml);
 						});
-						$preview.append("<a href='find.php?q=" + query + "'>See all results</a>");
+						const extraResults = `<strong>Found ${(results.length)} results!</strong>`
+						$preview.append("<hr><br>")
+						$preview.append(extraResults)
+						$preview.append("<br><a href='find.php?q=" + query + "'>See all!</a>");
 						$preview.show();
 					} else {
 						$preview.append("No results found.").show();
