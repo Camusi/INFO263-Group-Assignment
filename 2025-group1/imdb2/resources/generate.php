@@ -49,8 +49,9 @@ echo '<hr>';
         echo "Page {$pagePath} created successfully.";
         header("Refresh: 0; URL={$pagePath}");
     } else {
-        echo "Failed to create page {$pagePath}. Please contact a site administrator.";
-        header("Refresh: 5; URL={../index.php}");
+        echo "<h1>An Error Occured:</h1><strong>Failed to create page {$pagePath}. Please contact a site administrator.</strong";
+        echo "<br><br>Redirecting to the homepage in 15 seconds.";
+        header("Refresh: 15; URL=../");
     }
 
     ?>
