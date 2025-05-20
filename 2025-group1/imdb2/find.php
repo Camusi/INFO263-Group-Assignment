@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>"<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>"" | IMDB2</title>
   <link rel="stylesheet" href="resources/style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
   <header class="header">
@@ -91,21 +92,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const images = document.querySelectorAll("img[data-imdb-id]");
   images.forEach(img => {
     const imdbId = img.getAttribute("data-imdb-id");
-    const url = `https://www.imdb.com/title/${imdbId}`;
-    fetch(url)
-    .then(response => response.text())
-    .then(html => {
-      const match = html.match(/https:\/\/m\.media-amazon\.com\/images\/M\/[^"]+/);
-      if (match && match[0]) {
-        img.src = match[0];
-      } else {
-        img.src = "resources/image1.png";
-      }
+    $.ajax({
+								url: `resources/cover-image.php?q=${item.id}`,
+								method: 'GET',
+								dataType: 'json',
+								async: false,
+								success: function (imgData) {
+									if (imgData && imgData.cover_image) {
+										coverImage = `<img src="${imgData.cover_image}" style="margin-right:10px;vertical-align:middle;width:50px;height:75px;">`;
+									}
+								}
+							})
     })
     .catch(() => {
       img.src = "resources/image1.png";
     });
-  });
 });
 </script>
 
