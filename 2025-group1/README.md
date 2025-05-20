@@ -1,6 +1,6 @@
 # 2025 Group 1 Solution
 
-Use thils folder for our solution.
+Use this folder for our solution.
 
 ## objects/
 - This folder is our playground.
