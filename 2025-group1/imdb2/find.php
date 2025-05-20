@@ -78,7 +78,7 @@
                     echo "<strong> ". ($row['table_name'] === 'title_basics_trim' ? 'Year:' : 'Born:') ." </strong> " . htmlspecialchars($row['year']) . "<br>";
                     
                     if ($row['table_name'] === 'title_basics_trim') {
-                      echo "<img data-imdb-id=\"" . htmlspecialchars($row['id']) . "\" class=\"cover-image\" width=\"100\" src=\"resources/image1.png\" alt=\"Loading...\" /><br>";
+                      echo "<img data-imdb-id=\"" . htmlspecialchars($row['id']) . "\" class=\"cover-image\" width=\"100\" src=\"resources/img/load.gif\" alt=\"Loading...\" /><br>";
                     };
 
 
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       },
       error: function () {
-        img.src = "resources/image1.png";
+        img.src = "resources/img/load.gif";
       }
     });
   });
