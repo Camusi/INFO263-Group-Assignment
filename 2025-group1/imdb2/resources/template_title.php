@@ -19,11 +19,19 @@
   </div>
     <main class="main-content">
         <h2>Movie Overview</h2>
-        <div id="title"></div>
-        <div id="poster"></div>
+        <div id="title"><h1>{NAME} ({YEAR})</h1></div>
+        <div id="poster"><img src="{POSTER}" alt="Poster for {NAME}"></div>
         <div id="rating"></div>
-        <div id="people"></div>
-        <div id="plot"></div>
+        <div id="people">
+            <h2>Notable People:</h2>
+                <strong>Director:</strong> {DIRECTOR}
+                <br><strong>Writers:</strong> {WRITERS}
+                <br><strong>Stars:</strong> {STARS}</strong>
+        </div>
+        <div id="plot">
+            <h2>Plot:</h2>
+            <p>{PLOT}</p>
+        </div>
         <div id="comments"></div>
     </main>
     <footer class="footer">
