@@ -1,7 +1,6 @@
 <nav class="navbar">
     <div class="nav-left">
       <a href="/">Home</a>
-      <a href="about.php">About</a>
     </div>
     <div class="nav-center">
       <input type="text" id="search-input" name="search-input" placeholder="Start typing to search..." />
