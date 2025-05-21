@@ -12,12 +12,7 @@
     <p>Welcome to IMDB2.0!</p>
   </header>
 
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="index.php">Home</a>
-      <a href="about.php">About</a>
-    </div>
-  </nav>
+  <?php include '../resources/navbar.php'; ?>
 
   <main class="main-content">
     <form class="signin-form">

@@ -12,16 +12,7 @@
     <p>Learn more about this test</p>
   </header>
 
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="index.php">Home</a>
-      <a href="about.php" class="active">About</a>
-    </div>
-    <div class="nav-right">
-      <a href="signin.php">Sign In</a>
-      <div class="account-preview">👤 Guest</div>
-    </div>
-  </nav>
+  <?php include '../resources/navbar.php'; ?>
 
   <main class="main-content">
     <h2>Test Testing</h2>
