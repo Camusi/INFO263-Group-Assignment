@@ -1,6 +1,7 @@
 const version = "v1";
 console.log("search.js " + version + " loaded successfully");
-
+const documentPath = document.currentScript.src.split('/').slice(0, -1).join('/') + '/';
+console.log("Current document path: " + documentPath);
 $(document).ready(function () {
 	const $input = $('#search-input');
 	const $preview = $('#search-output');
@@ -18,11 +19,10 @@ $(document).ready(function () {
 			$preview.show();
 			return;
 		}
-		console.log(window.location)
 		
 		debounceTimeout = setTimeout(function () {
 			$.ajax({
-				url: 'resources/search.php',
+				url: documentPath+'search.php',
 				method: 'GET',
 				data: {
 					q: query,
