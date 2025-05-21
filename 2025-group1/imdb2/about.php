@@ -12,7 +12,7 @@
     <p>Learn more about this test</p>
   </header>
 
-  <?php include '../resources/navbar.php'; ?>
+  <?php include 'resources/navbar.php'; ?>
 
   <main class="main-content">
     <h2>Test Testing</h2>

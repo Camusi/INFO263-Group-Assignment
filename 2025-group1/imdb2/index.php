@@ -17,7 +17,7 @@
     <p>RAHHHHH</p>
   </header>
 
-  <?php include '../resources/navbar.php'; ?>
+  <?php include 'resources/navbar.php'; ?>
   </nav>
   <div class="search-results">
     <p id="search-output"></p>

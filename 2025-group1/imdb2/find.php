@@ -14,7 +14,7 @@
     <p>Results for "<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ' '; ?>"</p>
   </header>
 
-<?php include '../resources/navbar.php'; ?>
+<?php include 'resources/navbar.php'; ?>
   <section class="search-bar">
   <form action="find.php" method="GET">
     <input type="text" id="find-search-input" name="q" placeholder="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">

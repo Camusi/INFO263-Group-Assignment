@@ -12,7 +12,7 @@
     <p>Welcome back!</p>
   </header>
 
-  <?php include '../resources/navbar.php'; ?>
+  <?php include 'resources/navbar.php'; ?>
 
   <main class="main-content">
     <form class="signin-form">
