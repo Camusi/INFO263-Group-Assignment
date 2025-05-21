@@ -48,7 +48,7 @@ $(document).ready(function () {
 						});
 						const extraResults = `<strong>See all ${(results.length)} results!</strong>`
 						$preview.append("<hr><br>")
-						$preview.append("<br><a href='find.php?q=" + query + "'>" + extraResults + "!</a>");
+						$preview.append("<br><a href='"+ documentPath +"../find.php?q=" + query + "'>" + extraResults + "!</a>");
 						$preview.show();
 					} else {
 						$preview.append("No results found.").show();
@@ -64,7 +64,7 @@ $(document).ready(function () {
 		if (e.key === 'Enter') {
 			const query = $input.val().trim();
 			if (query.length >= 1) {
-				window.location.href = 'find.php?q=' + encodeURIComponent(query);
+				window.location.href = documentPath + '../find.php?q=' + encodeURIComponent(query);
 				console.log("Redirecting to find.php with query: " + query);
 			}
 		}
