@@ -34,8 +34,6 @@
         </div>
         <div id="comments"></div>
     </main>
-    <footer class="footer">
-        <p>&copy; 2025 IMDB2.0. All rights reserved.</p>
-        <p>Contact: <a href="mailto:constatine.zakkaroff@canterbury.ac.nz">Constatine Zakkaroff</a></p>
-      </body>
+    <?php include '../resources/footer.php'; ?>
+  </body>
 </html>

@@ -72,8 +72,6 @@
     </div>
   </main>
 
-  <footer class="footer">
-    <p>&copy; 2025 Test Website. All rights Test.</p>
-  </footer>
+  <?php include 'resources/footer.php'; ?>
 </body>
 </html>
