@@ -37,6 +37,9 @@ a:hover {
   background-color: #ddd;
   padding: 1rem;
   flex-wrap: wrap;
+  position: relative;
+  left: 0;
+  right: 0;
 }
 
 .nav-left, .nav-right, .nav-center {
@@ -54,9 +57,9 @@ a:hover {
   padding: 0.5rem;
   width: 60%;
   max-width: 300px;
+  min-width: 100px;
   border-radius: 4px;
   border: 1px solid #aaa;
-  font: 1em sans-serif;
 }
 
 .navbar .active {
