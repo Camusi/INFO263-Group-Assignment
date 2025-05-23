@@ -13,7 +13,7 @@
 <body>
   <header class="header">
     <h1>IMDB2.0</h1>
-    <p>RAHHHHH</p>
+    <p>Your new home of all things media!</p>
   </header>
 
   <?php include 'resources/navbar.php'; ?>
