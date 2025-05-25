@@ -37,7 +37,7 @@
           <h3>{topMovie1_title}</h3>
           <p><strong>Genre:</strong>{topMovie1_genre}</p>
           <p><strong>Year:</strong>{topMovie1_year}</p>
-          <p><strong>Director:</strong>{topMovie1_director}}</p>
+          <p><strong>Director:</strong>{topMovie1_director}</p>
           <p><strong>Writer:</strong>{topMovie1_writer}</p>
           <p><strong>Actors:</strong>{topMovie1_talent}</p>
           <p>{topMovie1_blurb}</p>
@@ -49,7 +49,7 @@
           <h3>{TopMovie2_title}</h3>
           <p><strong>Genre:</strong>{TopMovie2_genre}</p>
           <p><strong>Year:</strong>{TopMovie2_year}</p>
-          <p><strong>Director:</strong>{TopMovie2_director}}</p>
+          <p><strong>Director:</strong>{TopMovie2_director}</p>
           <p><strong>Writer:</strong>{TopMovie2_writer}</p>
           <p><strong>Actors:</strong>{TopMovie2_talent}</p>
           <p>{TopMovie2_blurb}</p>
