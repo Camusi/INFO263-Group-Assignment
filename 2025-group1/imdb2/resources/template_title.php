@@ -30,6 +30,7 @@
         <div id="rating">
             <p><span>{VOTES}</span> Likes!</p>
             <button id="like-button">I like this!</button>
+            <button id="dislike-button">I dislike this!</button>
         </div>
         <div id="people">
             <h2>Notable People:</h2>
