@@ -17,21 +17,28 @@
   <div class="search-results">
     <p id="search-output"></p>
   </div>
+    <section class="edit-page-button">
+        <a href="../edit.php?type=title&id={ID}" class="edit-button"><button>Edit This Page</button></a>
+        <div id="warnings">
+            <p id="warning-text">{WARNINGS}</p>
+        </div>
+    </section>
     <main class="main-content">
-        <h2>Movie Overview</h2>
         <div id="title"><h1>{NAME} ({YEAR})</h1></div>
-        <div id="poster"><img src="{POSTER}" width="250" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></div>
+        <figure id="poster"><img src="{POSTER}" width="250" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
         <div id="rating"></div>
         <div id="people">
             <h2>Notable People:</h2>
                 <strong>Director:</strong> {DIRECTOR}
                 <br><strong>Writers:</strong> {WRITERS}
                 <br><strong>Stars:</strong> {STARS}</strong>
+                <br><strong>Other Notable People:</strong> {NOTABLE}
         </div>
-        <div id="plot">
+        <details id="plot" title="Plot Summary">
+            <summary>Spoiler: Plot Summary</summary>
             <h2>Plot:</h2>
             <p>{PLOT}</p>
-        </div>
+        </details>
         <div id="comments"></div>
     </main>
     <?php include '../resources/footer.php'; ?>

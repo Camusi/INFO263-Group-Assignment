@@ -27,17 +27,16 @@ try {
     $sql = "
         SELECT tconst AS id, primaryTitle AS primary_name, 'title_basics_trim' AS table_name, startYear AS year
         FROM title_basics_trim
-        WHERE tconst LIKE :query
+        WHERE tconst IS :query
         UNION ALL
         SELECT nconst AS id, primaryName AS primary_name, 'name_basics_trim' AS table_name, birthYear AS year
         FROM name_basics_trim
-        WHERE nconst LIKE :query
+        WHERE nconst IS :query
     ";
 
     // Use $id as the query parameter
     $stmt = $db->prepare($sql);
-    $likeQuery = '%' . $id . '%';
-    $stmt->bindValue(':query', $likeQuery, PDO::PARAM_STR);
+    $stmt->bindValue(':query', $id, PDO::PARAM_STR);
     $stmt->execute();
 
     $sqlOutput = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -104,19 +103,24 @@ if ($plot === 'Plot synopsis not available. (ERROR 1)') {
         $plot = trim(strip_tags($plotMatch[1]));
         // Add stub message if fallback is used
         if (!empty($sqlOutput) && isset($sqlOutput[0]['primary_name'], $sqlOutput[0]['year'])) {
-            $plot .= '<br><strong>This article about <em>' . htmlspecialchars($sqlOutput[0]['primary_name']) . ' (' . htmlspecialchars($sqlOutput[0]['year']) . ')</em> is a stub. Help improve this page by adding more details!</strong>';
+            $warningsArr[] = 'This article is a stub. Help improve this page by adding more details!';
+        }
         }
     } elseif (preg_match('/<span[^>]*class="sc-16ede01-2[^"]*"[^>]*>(.*?)<\/span>/is', $data, $plotMatch)) {
         $plot = trim(strip_tags($plotMatch[1]));
         // Add stub message if fallback is used
-        if (!empty($sqlOutput) && isset($sqlOutput[0]['primary_name'], $sqlOutput[0]['year'])) {
-            $plot .= '<br><strong>This article about <em>' . htmlspecialchars($sqlOutput[0]['primary_name']) . ' (' . htmlspecialchars($sqlOutput[0]['year']) . ')</em> is a stub. Help improve this page by adding more details!</strong>';
+        if (!empty($sqlOutput)) {
+            $warningsArr[] = 'This article is a stub. Help improve this page by adding more details!';
         }
     }
-}
+
+
+// Notable People Start
+$notable_people = 'Either all the people who worked on this title are categorized, or we\'re missing someone. Feel free to correct this by editing the page.';
+$notable_peopleArr = [];
 
 // Find Writers
-$writers = '';
+$writers = 'Sorry, we don\'t know who wrote this film yet. Why not add it?';
 if ($type === 'title') {
     $writersArr = [];
     $wstmt = $db->prepare("SELECT writer FROM title_writer_trim WHERE tconst = :tconst");
@@ -136,7 +140,7 @@ if ($type === 'title') {
 
 
 // Find Director(s)
-$director = 'Can\'t find director information. Why not add it?';
+$director = 'We don\'t yet have a director for this film. Why not add it?';
 if ($type === 'title') {
     $directorArr = [];
     $dstmt = $db->prepare("SELECT director FROM title_director_trim WHERE tconst = :tconst");
@@ -149,9 +153,18 @@ if ($type === 'title') {
             $directorArr[] = htmlspecialchars($dnameRow['primaryName']);
         }
     }
-    $directors = !empty($directorArr) ? implode(', ', $directorArr) : 'N/A';
+    if (count($directorArr) > 1) {
+        // Add all directors to notable people
+        $notable_peopleArr = array_merge($notable_peopleArr, $directorArr);
+        // Leave $director as the error message
+        $director = 'We don\'t yet have a director for this film. Why not add it?';
+    } elseif (count($directorArr) === 1) {
+        $director = $directorArr[0];
+    } else {
+        $director = 'N/A';
+    }
 } else {
-    $directors = 'N/A';
+    $director = 'N/A';
 }
 /*
 // Find Stars
@@ -173,6 +186,13 @@ if ($type === 'title') {
     $stars = 'N/A';
 }*/
 
+// Warnings Array
+global $warningsArr;
+$warningsArr = array();
+$warnings = !empty($warningsArr) ? implode(' <br>', $warningsArr) : '';
+
+// Notable People Finish
+$notable_people = !empty($notable_peopleArr) ? implode(', ', $notable_peopleArr) : $notable_people;
 ?>
 
 
@@ -217,6 +237,9 @@ if ($type === 'title') {
             $content = str_replace('{DIRECTOR}', $director, $content);
             $content = str_replace('{STARS}', $stars, $content);
             $content = str_replace('{PLOT}', $plot, $content);
+            $content = str_replace('{NOTABLE}', $notable_people, $content);
+            $content = str_replace('{ID}', $row['id'], $content);
+            $content = str_replace('{WARNINGS}', $warnings, $content);
             // Write back to the file
             if (file_put_contents($pagePath, $content) !== false) {
                 $isWritten = true;
