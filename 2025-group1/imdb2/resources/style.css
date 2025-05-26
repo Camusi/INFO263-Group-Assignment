@@ -82,7 +82,7 @@ a:hover {
 /* Main content */
 .main-content {
   padding: 2rem;
-  padding-bottom: 4rem; /* Prevents content from being hidden behind the fixed footer */
+  padding-bottom: 10rem; /* Increased to prevent content from being hidden behind the fixed footer */
 }
 
 .footer {

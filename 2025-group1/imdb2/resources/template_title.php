@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{NAME} ({YEAR}) on IMDB2.0</title>
+    <title>{NAME} ({YEAR}) | IMDB2.0</title>
     <link rel="stylesheet" href="../resources/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../resources/search.js"></script>
@@ -20,7 +20,7 @@
     <main class="main-content">
         <h2>Movie Overview</h2>
         <div id="title"><h1>{NAME} ({YEAR})</h1></div>
-        <div id="poster"><img src="{POSTER}" alt="Poster for {NAME}"></div>
+        <div id="poster"><img src="{POSTER}" width="250" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></div>
         <div id="rating"></div>
         <div id="people">
             <h2>Notable People:</h2>

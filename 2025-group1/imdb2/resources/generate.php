@@ -72,23 +72,116 @@ $image_url = substr($data, $startImg, $endImg - $startImg);
 $image_url = htmlspecialchars($image_url); // Escape HTML entities
 
 // Find the plot summary
-$plot = 'Plot synopsis not available.';
-$plotStart = strpos($data, 'data-testid="sub-section-synopsis"');
-if ($plotStart !== false) {
-    $plotSection = substr($data, $plotStart, 1000); // Get a chunk after the marker
-    $pTagStart = strpos($plotSection, '<p');
-    $pTagEnd = strpos($plotSection, '</p>', $pTagStart);
-    if ($pTagStart !== false && $pTagEnd !== false) {
-        $plotRaw = substr($plotSection, $pTagStart, $pTagEnd - $pTagStart + 4);
-        $plot = strip_tags($plotRaw); // Remove HTML tags
-        $plot = htmlspecialchars($plot); // Escape HTML entities
-        $plot = trim($plot); // Trim whitespace
+$plot = 'Plot synopsis not available. (ERROR 1)';
+$purl = "$url/plotsummary";
+$pdata = file_get_contents($purl);
+if ($pdata !== false) {
+    // Try to extract the "Synopsis" section
+    $synopsis = '';
+    // IMDb's synopsis is usually inside <ul id="plot-synopsis-content"> or <li class="ipc-html-content-inner">
+    if (preg_match('/<ul[^>]*id="plot-synopsis-content"[^>]*>(.*?)<\/ul>/is', $pdata, $ulMatch)) {
+        // Extract the first <li> inside the ul
+        if (preg_match('/<li[^>]*>(.*?)<\/li>/is', $ulMatch[1], $liMatch)) {
+            $synopsis = strip_tags($liMatch[1]);
+        }
+    }
+    // Fallback: try to find <li class="ipc-html-content-inner"> (new IMDb markup)
+    if (empty($synopsis) && preg_match('/<li[^>]*class="ipc-html-content-inner"[^>]*>(.*?)<\/li>/is', $pdata, $liMatch)) {
+        $synopsis = strip_tags($liMatch[1]);
+    }
+    // Fallback: try to find <li class="ipl-zebra-list__item"> (older IMDb markup)
+    if (empty($synopsis) && preg_match('/<li[^>]*class="ipl-zebra-list__item"[^>]*>(.*?)<\/li>/is', $pdata, $liMatch)) {
+        $synopsis = strip_tags($liMatch[1]);
+    }
+    if (!empty($synopsis)) {
+        $plot = trim($synopsis);
     }
 }
-if (empty($plot)) {
-    $plot = 'Plot synopsis not available.';
+
+// Fallback: Try to extract plot summary from the main IMDb page if still not found
+if ($plot === 'Plot synopsis not available. (ERROR 1)') {
+    if (preg_match('/<span[^>]*data-testid="plot-xl"[^>]*>(.*?)<\/span>/is', $data, $plotMatch)) {
+        $plot = trim(strip_tags($plotMatch[1]));
+        // Add stub message if fallback is used
+        if (!empty($sqlOutput) && isset($sqlOutput[0]['primary_name'], $sqlOutput[0]['year'])) {
+            $plot .= '<br><strong>This article about <em>' . htmlspecialchars($sqlOutput[0]['primary_name']) . ' (' . htmlspecialchars($sqlOutput[0]['year']) . ')</em> is a stub. Help improve this page by adding more details!</strong>';
+        }
+    } elseif (preg_match('/<span[^>]*class="sc-16ede01-2[^"]*"[^>]*>(.*?)<\/span>/is', $data, $plotMatch)) {
+        $plot = trim(strip_tags($plotMatch[1]));
+        // Add stub message if fallback is used
+        if (!empty($sqlOutput) && isset($sqlOutput[0]['primary_name'], $sqlOutput[0]['year'])) {
+            $plot .= '<br><strong>This article about <em>' . htmlspecialchars($sqlOutput[0]['primary_name']) . ' (' . htmlspecialchars($sqlOutput[0]['year']) . ')</em> is a stub. Help improve this page by adding more details!</strong>';
+        }
+    }
 }
+
+// Find Writers
+$writers = '';
+if ($type === 'title') {
+    $writersArr = [];
+    $wstmt = $db->prepare("SELECT writer FROM title_writer_trim WHERE tconst = :tconst");
+    $wstmt->execute([':tconst' => $id]);
+    while ($row = $wstmt->fetch(PDO::FETCH_ASSOC)) {
+        $nameStmt = $db->prepare("SELECT primaryName FROM name_basics_trim WHERE nconst = :nconst");
+        $nameStmt->execute([':nconst' => $row['writer']]);
+        $nameRow = $nameStmt->fetch(PDO::FETCH_ASSOC);
+        if ($nameRow) {
+            $writersArr[] = htmlspecialchars($nameRow['primaryName']);
+        }
+    }
+    $writers = !empty($writersArr) ? implode(', ', $writersArr) : 'N/A';
+} else {
+    $writers = 'N/A';
+}
+
+
+// Find Director(s)
+$director = 'Can\'t find director information. Why not add it?';
+if ($type === 'title') {
+    $directorArr = [];
+    $dstmt = $db->prepare("SELECT director FROM title_director_trim WHERE tconst = :tconst");
+    $dstmt->execute([':tconst' => $id]);
+    while ($row = $dstmt->fetch(PDO::FETCH_ASSOC)) {
+        $dnameStmt = $db->prepare("SELECT primaryName FROM name_basics_trim WHERE nconst = :nconst");
+        $dnameStmt->execute([':nconst' => $row['director']]);
+        $dnameRow = $dnameStmt->fetch(PDO::FETCH_ASSOC);
+        if ($dnameRow) {
+            $directorArr[] = htmlspecialchars($dnameRow['primaryName']);
+        }
+    }
+    $directors = !empty($directorArr) ? implode(', ', $directorArr) : 'N/A';
+} else {
+    $directors = 'N/A';
+}
+/*
+// Find Stars
+$stars = '';
+if ($type === 'title') {
+    $starsArr = [];
+    $sstmt = $db->prepare("SELECT star FROM title_principals_trim WHERE tconst = :tconst");
+    $sstmt->execute([':tconst' => $id]);
+    while ($row = $sstmt->fetch(PDO::FETCH_ASSOC)) {
+        $nameStmt = $db->prepare("SELECT primaryName FROM name_basics_trim WHERE nconst = :nconst");
+        $nameStmt->execute([':nconst' => $row['principal']]);
+        $nameRow = $nameStmt->fetch(PDO::FETCH_ASSOC);
+        if ($nameRow) {
+            $starsArr[] = htmlspecialchars($nameRow['primaryName']);
+        }
+    }
+    $stars = !empty($starsArr) ? implode(', ', $starsArr) : 'N/A';
+} else {
+    $stars = 'N/A';
+}*/
+
 ?>
+
+
+
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -120,9 +213,9 @@ if (empty($plot)) {
             $content = str_replace('{NAME}', $row['primary_name'], $content);
             $content = str_replace('{YEAR}', $row['year'], $content);
             $content = str_replace('{POSTER}', $image_url, $content);
-            /*content = str_replace('{DIRECTOR}', $director, $content);
             $content = str_replace('{WRITERS}', $writers, $content);
-            $content = str_replace('{STARS}', $stars, $content);*/
+            $content = str_replace('{DIRECTOR}', $director, $content);
+            $content = str_replace('{STARS}', $stars, $content);
             $content = str_replace('{PLOT}', $plot, $content);
             // Write back to the file
             if (file_put_contents($pagePath, $content) !== false) {

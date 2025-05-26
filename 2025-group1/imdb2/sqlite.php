@@ -22,9 +22,14 @@ try {
 }
 
 try {
-    $stmt = $db->query("SELECT COUNT(*) as count FROM name_basics_trim");
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo "Row count: " . $row['count'];
+    #$stmt = $db->query("SELECT job, nconst FROM title_principals_trim WHERE tconst = 'tt0072567'");
+    $stmt = $db->query("PRAGMA table_info(title_director_trim)");
+    #$stmt = $db->query("SELECT name from sqlite_master WHERE type='table';");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        #echo "<br>" . $row['nconst'] . " " . $row['job'] . "\n";
+        echo "<br>" . $row['name'] . " (" . $row['type'] . ")\n";
+        #echo "<br>" . $row['name'] . "\n";
+    }
 } catch (PDOException $e) {
     echo "Query failed: " . $e->getMessage();
 }
