@@ -15,7 +15,10 @@ if ($type === 'title') {
     echo  'Invalid Type. Bad Request?';
     exit;
 }
+global $warningsArr;
+$warningsArr = array();
 ?>
+
 <?php
 // Database connection
 try {
@@ -187,8 +190,8 @@ if ($type === 'title') {
 }*/
 
 // Warnings Array
-global $warningsArr;
-$warningsArr = array();
+
+$warningsArr[] = 'This page is automatically generated based on data from an IMDB database export. Information may be out of date or not accurately reflect reality.';
 $warnings = !empty($warningsArr) ? implode(' <br>', $warningsArr) : '';
 
 // Notable People Finish
@@ -217,39 +220,72 @@ $votes = 0;
 </head>
 <body>
     <?php
-    if (copy(__DIR__ . '/template_title.php', $pagePath)) {
-        echo "Copying template to {$pagePath}<br>";
-        $isGenerated = true;
-    } else {
-        echo "Failed to copy template to {$pagePath}<br>";
-        $error = error_get_last();
-        if ($error) {
-            echo "Error details: " . htmlspecialchars($error['message']) . "<br>";
-        }
-    }
-    $isWritten = false;
-        // Read the copied file
-        $content = file_get_contents($pagePath);
-        if ($content !== false && !empty($sqlOutput)) {
-            // Use the first result row
-            $row = $sqlOutput[0];
-            // Replace placeholders
-            $content = str_replace('{NAME}', $row['primary_name'], $content);
-            $content = str_replace('{YEAR}', $row['year'], $content);
-            $content = str_replace('{POSTER}', $image_url, $content);
-            $content = str_replace('{WRITERS}', $writers, $content);
-            $content = str_replace('{DIRECTOR}', $director, $content);
-            $content = str_replace('{STARS}', $stars, $content);
-            $content = str_replace('{PLOT}', $plot, $content);
-            $content = str_replace('{NOTABLE}', $notable_people, $content);
-            $content = str_replace('{ID}', $row['id'], $content);
-            $content = str_replace('{WARNINGS}', $warnings, $content);
-            $content = str_replace('{VOTES}', $votes, $content);
-            // Write back to the file
-            if (file_put_contents($pagePath, $content) !== false) {
-                $isWritten = true;
+    if ($type == 'title') {
+        if (copy(__DIR__ . '/template_title.php', $pagePath)) {
+            echo "Copying template to {$pagePath}<br>";
+            $isGenerated = true;
+        } else {
+            echo "Failed to copy template to {$pagePath}<br>";
+            $error = error_get_last();
+            if ($error) {
+                echo "Error details: " . htmlspecialchars($error['message']) . "<br>";
             }
         }
+        $isWritten = false;
+            // Read the copied file
+            $content = file_get_contents($pagePath);
+            if ($content !== false && !empty($sqlOutput)) {
+                // Use the first result row
+                $row = $sqlOutput[0];
+                // Replace placeholders
+                $content = str_replace('{NAME}', $row['primary_name'], $content);
+                $content = str_replace('{YEAR}', $row['year'], $content);
+                $content = str_replace('{POSTER}', $image_url, $content);
+                $content = str_replace('{WRITERS}', $writers, $content);
+                $content = str_replace('{DIRECTOR}', $director, $content);
+                $content = str_replace('{STARS}', $stars, $content);
+                $content = str_replace('{PLOT}', $plot, $content);
+                $content = str_replace('{NOTABLE}', $notable_people, $content);
+                $content = str_replace('{ID}', $row['id'], $content);
+                $content = str_replace('{WARNINGS}', $warnings, $content);
+                $content = str_replace('{VOTES}', $votes, $content);
+                // Write back to the file
+                if (file_put_contents($pagePath, $content) !== false) {
+                    $isWritten = true;
+                }
+            }
+    } elseif ($type == 'person'){
+        if (copy(__DIR__ . '/template_person.php', $pagePath)) {
+            echo "Copying template to {$pagePath}<br>";
+            $isGenerated = true;
+        } else {
+            echo "Failed to copy template to {$pagePath}<br>";
+            $error = error_get_last();
+            if ($error) {
+                echo "Error details: " . htmlspecialchars($error['message']) . "<br>";
+            }
+        }
+        $isWritten = false;
+            // Read the copied file
+            $content = file_get_contents($pagePath);
+            if ($content !== false && !empty($sqlOutput)) {
+                // Use the first result row
+                $row = $sqlOutput[0];
+                // Replace placeholders
+                $content = str_replace('{NAME}', $row['primary_name'], $content);
+                $content = str_replace('{YEAR}', $row['year'], $content);
+                $content = str_replace('{ROLES}', $roles, $content);
+                $content = str_replace('{BIO}', $bio, $content);
+                $content = str_replace('{ID}', $row['id'], $content);
+                $content = str_replace('{WARNINGS}', $warnings, $content);
+                $content = str_replace('{VOTES}', $votes, $content);
+                // Write back to the file
+                if (file_put_contents($pagePath, $content) !== false) {
+                    $isWritten = true;
+                }
+            }
+    }
+    
     if ($isGenerated && $isWritten) {
         echo "Page {$pagePath} created successfully.";
         header("Refresh: 0; URL={$pagePath}");
