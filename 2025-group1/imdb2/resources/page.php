@@ -1,4 +1,9 @@
 <?php
+
+echo '
+<img src="../resources/img/load.gif" alt="Loading..." style="display: block; margin: 0 auto; width: 100px; height: 100px;">
+<p style="text-align: center;">Redirecting to the page...</p>
+';
 // PAGE CHECK AND GENERATE
 // Step 1: Check if the page already exists
 $id = isset($_GET['q']) ? trim($_GET['q']) : '';
@@ -59,4 +64,5 @@ try {
     // Redirect to generate.php with query and type
     header("Location: generate.php?q=" . $result['id'] . "&type=" . $pageType);
     exit;
-    ?>
+?>
+
