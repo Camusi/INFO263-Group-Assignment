@@ -16,16 +16,15 @@ try {
     $sql = "
         SELECT tconst AS id, primaryTitle AS primary_name, 'title_basics_trim' AS table_name
         FROM title_basics_trim
-        WHERE tconst LIKE :query
+        WHERE tconst IS :query
         UNION ALL
         SELECT nconst AS id, primaryName AS primary_name, 'name_basics_trim' AS table_name
         FROM name_basics_trim
-        WHERE nconst LIKE :query
+        WHERE nconst IS :query
     ";
 
     $stmt = $db->prepare($sql);
-    $likeQuery = '%' . $id . '%';
-    $stmt->bindValue(':query', $likeQuery, PDO::PARAM_STR);
+    $stmt->bindValue(':query', $id, PDO::PARAM_STR);
     $stmt->execute();
 
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
