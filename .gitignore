@@ -5,3 +5,5 @@
 /.idea/*
 imdb-php/.idea/workspace.xml
 imdb-php/.idea/dataSources.local.xml
+2025-group1/imdb2/resources/imdb-2.sqlite3-wal
+2025-group1/imdb2/resources/imdb-2.sqlite3-shm
