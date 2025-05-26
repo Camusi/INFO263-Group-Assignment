@@ -2,5 +2,6 @@
 *.sqlite
 *.sqlite3
 /.idea/
+/.idea/*
 imdb-php/.idea/workspace.xml
 imdb-php/.idea/dataSources.local.xml
