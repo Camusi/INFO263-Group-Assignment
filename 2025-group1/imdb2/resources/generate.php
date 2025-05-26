@@ -150,7 +150,7 @@ if ($type === 'title') {
         $nameStmt->execute([':nconst' => $row['writer']]);
         $nameRow = $nameStmt->fetch(PDO::FETCH_ASSOC);
         if ($nameRow) {
-            $writersArr[] = htmlspecialchars($nameRow['primaryName']);
+            $writersArr[] = "<a href=\"../resources/page.php?q={$row['writer']}\">" . htmlspecialchars($nameRow['primaryName']) . "</a>";
         }
     }
     $writers = !empty($writersArr) ? implode(', ', $writersArr) : 'N/A';
@@ -170,7 +170,7 @@ if ($type === 'title') {
         $dnameStmt->execute([':nconst' => $row['director']]);
         $dnameRow = $dnameStmt->fetch(PDO::FETCH_ASSOC);
         if ($dnameRow) {
-            $directorArr[] = htmlspecialchars($dnameRow['primaryName']);
+            $directorArr[] = "<a href=\"../resources/page.php?q={$row['director']}\">" . htmlspecialchars($dnameRow['primaryName']) . "</a>";
         }
     }
     $director = !empty($directorArr) ? implode(', ', $directorArr) : 'N/A';
@@ -189,7 +189,7 @@ if ($type === 'title') {
         $nameStmt->execute([':nconst' => $row['nconst']]);
         $nameRow = $nameStmt->fetch(PDO::FETCH_ASSOC);
         if ($nameRow) {
-            $starsArr[] = htmlspecialchars($nameRow['primaryName']);
+            $starsArr[] = "<a href=\"../resources/page.php?q={$row['nconst']}\">" . htmlspecialchars($nameRow['primaryName']) . "</a>";
         }
     }
     $stars = !empty($starsArr) ? implode(', ', $starsArr) : 'N/A';
@@ -210,7 +210,7 @@ if ($type === 'title') {
         if ($nameRow) {
             $name = htmlspecialchars($nameRow['primaryName']);
             $job = isset($row['job']) && !empty($row['job']) ? htmlspecialchars($row['job']) : 'Unknown Job (You can add this!)';
-            $notable_peopleArr[] = "{$name} ({$job})";
+            $notable_peopleArr[] = "<a href=\"../resources/page.php?q={$row['nconst']}\">{$name} ({$job})</a>";
         }
     }
     // If no notable people found, add a message
@@ -270,7 +270,7 @@ if ($type === 'person') {
         if ($titleRow) {
             $roleName = htmlspecialchars($titleRow['primaryTitle']);
             $roleCategory = htmlspecialchars($row['category']);
-            $rolesArr[] = "{$roleName} ({$roleCategory})";
+            $rolesArr[] = "<a href=\"../resources/page.php?q={$row['tconst']}\">{$roleName} ({$roleCategory})</a>";
         }
     }
     // If no roles found, add a message
@@ -278,7 +278,7 @@ if ($type === 'person') {
         $rolesArr[] = 'No roles found for this person.';
     }
     foreach ($rolesArr as $role) {
-        $roles .= '<li>' . htmlspecialchars($role) . '</li>';
+        $roles .= '<li>' . $role . '</li>';
     }
 } else {
     $roles = 'N/A';
