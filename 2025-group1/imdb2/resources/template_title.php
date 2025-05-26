@@ -35,14 +35,13 @@
         </div>
         <div id="people">
             <h2>Notable People:</h2>
-                <strong>Director:</strong> {DIRECTOR}
-                <br><strong>Writers:</strong> {WRITERS}
-                <br><strong>Stars:</strong> {STARS}</strong>
+                <strong>Director(s):</strong> {DIRECTOR}
+                <br><strong>Writer(s):</strong> {WRITERS}
+                <br><strong>Starring:</strong> {STARS}</strong>
                 <br><strong>Other Notable People:</strong> {NOTABLE}
         </div>
         <details id="plot" title="Plot Summary">
-            <summary>Spoiler: Plot Summary</summary>
-            <h2>Plot:</h2>
+            <summary><h2>Plot:</h2></summary>
             <p>{PLOT}</p>
         </details>
         <div id="comments"></div>

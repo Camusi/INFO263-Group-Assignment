@@ -28,6 +28,7 @@
         <div id="title"><h1>{NAME}</h1></div>
         <aside id="blurb">
             {BIO}
+            <br>Born in {YEAR}.
         </aside>
         <div id="rating">
             <p><span>{VOTES}</span> Likes!</p>

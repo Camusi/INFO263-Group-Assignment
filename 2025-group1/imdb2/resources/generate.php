@@ -49,6 +49,19 @@ try {
 }
 ?>
 <?php
+
+/* 
+  _______ _ _   _        ______                _   _                 
+ |__   __(_) | | |      |  ____|              | | (_)                
+    | |   _| |_| | ___  | |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+    | |  | | __| |/ _ \ |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+    | |  | | |_| |  __/ | |  | |_| | | | | (__| |_| | (_) | | | \__ \
+    |_|  |_|\__|_|\___| |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+                                                                     
+    People are later on :D
+
+ */
+
 // Scrape current IMDB page for relevant data
 $imdbType = ($type === 'person') ? 'name' : $type;
 $url = "https://www.imdb.com/{$imdbType}/{$id}";
@@ -114,20 +127,17 @@ if ($plot === 'Plot synopsis not available. (ERROR 1)') {
         $plot = trim(strip_tags($plotMatch[1]));
         // Add stub message if fallback is used
         if (!empty($sqlOutput) && isset($sqlOutput[0]['primary_name'], $sqlOutput[0]['year'])) {
-            $warningsArr[] = 'This article is a stub. Help improve this page by adding more details!';
+            $warningsArr[] = 'The synopsis for this page is a stub. Help improve this page by adding more details!';
         }
         }
     } elseif (preg_match('/<span[^>]*class="sc-16ede01-2[^"]*"[^>]*>(.*?)<\/span>/is', $data, $plotMatch)) {
         $plot = trim(strip_tags($plotMatch[1]));
         // Add stub message if fallback is used
         if (!empty($sqlOutput)) {
-            $warningsArr[] = 'This article is a stub. Help improve this page by adding more details!';
+            $warningsArr[] = 'The synopsis for this page is a stub. Help improve this page by adding more details!';
         }
     }
 
-// Notable People Start
-$notable_people = 'Either all the people who worked on this title are categorized, or we\'re missing someone. Feel free to correct this by editing the page.';
-$notable_peopleArr = [];
 
 // Find Writers
 $writers = 'Sorry, we don\'t know who wrote this film yet. Why not add it?';
@@ -163,29 +173,20 @@ if ($type === 'title') {
             $directorArr[] = htmlspecialchars($dnameRow['primaryName']);
         }
     }
-    if (count($directorArr) > 1) {
-        // Add all directors to notable people
-        $notable_peopleArr = array_merge($notable_peopleArr, $directorArr);
-        // Leave $director as the error message
-        $director = 'We don\'t yet have a director for this film. Why not add it?';
-    } elseif (count($directorArr) === 1) {
-        $director = $directorArr[0];
-    } else {
-        $director = 'N/A';
-    }
+    $director = !empty($directorArr) ? implode(', ', $directorArr) : 'N/A';
 } else {
     $director = 'N/A';
 }
-/*
+
 // Find Stars
 $stars = '';
 if ($type === 'title') {
     $starsArr = [];
-    $sstmt = $db->prepare("SELECT star FROM title_principals_trim WHERE tconst = :tconst");
+    $sstmt = $db->prepare("SELECT nconst FROM title_principals_trim WHERE tconst = :tconst AND category IN ('actor', 'actress')");
     $sstmt->execute([':tconst' => $id]);
     while ($row = $sstmt->fetch(PDO::FETCH_ASSOC)) {
         $nameStmt = $db->prepare("SELECT primaryName FROM name_basics_trim WHERE nconst = :nconst");
-        $nameStmt->execute([':nconst' => $row['principal']]);
+        $nameStmt->execute([':nconst' => $row['nconst']]);
         $nameRow = $nameStmt->fetch(PDO::FETCH_ASSOC);
         if ($nameRow) {
             $starsArr[] = htmlspecialchars($nameRow['primaryName']);
@@ -194,22 +195,97 @@ if ($type === 'title') {
     $stars = !empty($starsArr) ? implode(', ', $starsArr) : 'N/A';
 } else {
     $stars = 'N/A';
-}*/
+}
+
+// Other Notable People
+$notable_people = 'Either all the people who worked on this title are categorized, or we\'re missing someone. Feel free to correct this by editing the page.';
+$notable_peopleArr = [];
+if ($type === 'title') {
+    $nstmt = $db->prepare("SELECT nconst, job FROM title_principals_trim WHERE tconst = :tconst AND category NOT IN ('actor', 'actress', 'writer', 'director')");
+    $nstmt->execute([':tconst' => $id]);
+    while ($row = $nstmt->fetch(PDO::FETCH_ASSOC)) {
+        $nameStmt = $db->prepare("SELECT primaryName FROM name_basics_trim WHERE nconst = :nconst");
+        $nameStmt->execute([':nconst' => $row['nconst']]);
+        $nameRow = $nameStmt->fetch(PDO::FETCH_ASSOC);
+        if ($nameRow) {
+            $name = htmlspecialchars($nameRow['primaryName']);
+            $job = isset($row['job']) && !empty($row['job']) ? htmlspecialchars($row['job']) : 'Unknown Job (You can add this!)';
+            $notable_peopleArr[] = "{$name} ({$job})";
+        }
+    }
+    // If no notable people found, add a message
+    if (empty($notable_peopleArr)) {
+        $notable_peopleArr[] = 'Either all the people who worked on this title are categorized, or we\'re missing someone. Feel free to correct this by editing the page.';
+    }
+} else {
+    $notable_peopleArr[] = 'N/A';
+}
+$notable_people = !empty($notable_peopleArr) ? implode(', ', $notable_peopleArr) : $notable_people;
 
 // Warnings Array
 
 $warningsArr[] = 'This page is automatically generated based on data from an IMDB database export. Information may be out of date or not accurately reflect reality.';
-$warnings = !empty($warningsArr) ? implode(' <br>', $warningsArr) : '';
-
-// Notable People Finish
-$notable_people = !empty($notable_peopleArr) ? implode(', ', $notable_peopleArr) : $notable_people;
-
+foreach ($warningsArr as $warning) {
+    $warnings .= '<span id="page-warning">'. htmlspecialchars($warning) . '</span><br>';
+}
 // Votes Logic
 $votes = 0;
 
 ?>
 
+<?php 
+/* 
 
+  _____                 _        ______                _   _                 
+ |  __ \               | |      |  ____|              | | (_)                
+ | |__) |__  ___  _ __ | | ___  | |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+ |  ___/ _ \/ _ \| '_ \| |/ _ \ |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+ | |  |  __/ (_) | |_) | |  __/ | |  | |_| | | | | (__| |_| | (_) | | | \__ \
+ |_|   \___|\___/| .__/|_|\___| |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+                 | |                                                         
+                 |_|                                                         
+
+*/
+
+// Bio logic
+if ($type === 'person'){
+    if (preg_match('/<span[^>]*data-testid="biography"[^>]*>(.*?)<\/span>/is', $data, $bioMatch)) {
+        $bio = trim(strip_tags($bioMatch[1]));
+    } else {
+        $bio = 'No biography available yet, but you can add one!';
+        $warningsArr[] = 'This person page is missing key information. Please help improve it by adding a biography!';
+    }
+}
+
+//Roles Logic
+$roles = '';
+if ($type === 'person') {
+    $rolesArr = [];
+    $rstmt = $db->prepare("SELECT tconst, category FROM title_principals_trim WHERE nconst = :nconst");
+    $rstmt->execute([':nconst' => $id]);
+    while ($row = $rstmt->fetch(PDO::FETCH_ASSOC)) {
+        $titleStmt = $db->prepare("SELECT primaryTitle FROM title_basics_trim WHERE tconst = :tconst");
+        $titleStmt->execute([':tconst' => $row['tconst']]);
+        $titleRow = $titleStmt->fetch(PDO::FETCH_ASSOC);
+        if ($titleRow) {
+            $roleName = htmlspecialchars($titleRow['primaryTitle']);
+            $roleCategory = htmlspecialchars($row['category']);
+            $rolesArr[] = "{$roleName} ({$roleCategory})";
+        }
+    }
+    // If no roles found, add a message
+    if (empty($rolesArr)) {
+        $rolesArr[] = 'No roles found for this person.';
+    }
+    foreach ($rolesArr as $role) {
+        $roles .= '<li>' . htmlspecialchars($role) . '</li>';
+    }
+} else {
+    $roles = 'N/A';
+}
+
+
+?>
 
 
 
