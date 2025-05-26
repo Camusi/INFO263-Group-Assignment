@@ -73,6 +73,14 @@ if ($endImg === false) {
 $image_url = substr($data, $startImg, $endImg - $startImg);
 $image_url = htmlspecialchars($image_url); // Escape HTML entities
 
+// Find the blurb
+if (preg_match('/<span[^>]*data-testid="plot-xl"[^>]*>(.*?)<\/span>/is', $data, $blurbMatch)) {
+    $blurb = trim(strip_tags($blurbMatch[1]));
+} else {
+    $blurb = '';
+}
+
+
 // Find the plot summary
 $plot = 'Plot synopsis not available. (ERROR 1)';
 $purl = "$url/plotsummary";
@@ -116,7 +124,6 @@ if ($plot === 'Plot synopsis not available. (ERROR 1)') {
             $warningsArr[] = 'This article is a stub. Help improve this page by adding more details!';
         }
     }
-
 
 // Notable People Start
 $notable_people = 'Either all the people who worked on this title are categorized, or we\'re missing someone. Feel free to correct this by editing the page.';
@@ -244,6 +251,7 @@ $votes = 0;
                 $content = str_replace('{WRITERS}', $writers, $content);
                 $content = str_replace('{DIRECTOR}', $director, $content);
                 $content = str_replace('{STARS}', $stars, $content);
+                $content = str_replace('{BLURB}', $blurb, $content);
                 $content = str_replace('{PLOT}', $plot, $content);
                 $content = str_replace('{NOTABLE}', $notable_people, $content);
                 $content = str_replace('{ID}', $row['id'], $content);

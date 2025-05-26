@@ -26,9 +26,9 @@
     </section>
     <main class="main-content">
         <div id="title"><h1>{NAME}</h1></div>
-        <article id="biography">
+        <aside id="blurb">
             {BIO}
-        </article>
+        </aside>
         <div id="rating">
             <p><span>{VOTES}</span> Likes!</p>
             <button id="like-button">I like this!</button>

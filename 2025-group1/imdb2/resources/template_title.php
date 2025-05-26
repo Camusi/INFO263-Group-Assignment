@@ -26,6 +26,7 @@
     </section>
     <main class="main-content">
         <div id="title"><h1>{NAME} ({YEAR})</h1></div>
+        <aside id="blurb"><p>{BLURB}</p></aside>
         <figure id="poster"><img src="{POSTER}" width="250" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
         <div id="rating">
             <p><span>{VOTES}</span> Likes!</p>
