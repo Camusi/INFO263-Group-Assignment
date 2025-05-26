@@ -226,7 +226,7 @@ $notable_people = !empty($notable_peopleArr) ? implode(', ', $notable_peopleArr)
 
 $warningsArr[] = 'This page is automatically generated based on data from an IMDB database export. Information may be out of date or not accurately reflect reality.';
 foreach ($warningsArr as $warning) {
-    $warnings .= '<span id="page-warning">'. htmlspecialchars($warning) . '</span><br>';
+    $warnings .= '<br><span id="page-warning">'. htmlspecialchars($warning) . '</span><br><br>';
 }
 // Votes Logic
 $votes = 0;

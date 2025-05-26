@@ -82,7 +82,7 @@ a:hover {
 /* Main content */
 .main-content {
   padding: 2rem;
-  padding-bottom: 10rem; /* Increased to prevent content from being hidden behind the fixed footer */
+  padding-bottom: 20rem;
 }
 
 .footer {
@@ -177,6 +177,14 @@ a:hover {
     width: 90%;
     max-width: 350px;
   }
+  .person-list {
+    flex-direction: column;
+    align-items: center;
+  }
+  .person-card {
+    width: 90%;
+    max-width: 350px;
+  }
 }
 
 .person-list {
@@ -208,4 +216,65 @@ a:hover {
     width: 90%;
     max-width: 350px;
   }
+}
+
+#warnings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 1rem; /* Add spacing between warnings */
+}
+#page-warning {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin: 0 auto; /* Remove vertical margin, spacing is handled by gap */
+  max-width: 600px;
+  width: 100%;
+}
+
+#blurb {
+  background-color: #e2e3e5;
+  color: #383d41;
+  padding: 2rem 0;
+  border-top: 1px solid #b8c0c7;
+  border-bottom: 1px solid #b8c0c7;
+  border-radius: 0;
+  margin: 0;
+  width: 100vw;
+  max-width: 100vw;
+  position: relative;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.roles-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  flex-direction: row;
+  overflow: hidden;
+  word-break: break-word;
+  padding: 0.5rem;
+  list-style: none;
+}
+
+.roles-list li {
+  background: #fff;
+  color: #383d41;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 0 6px rgba(0,0,0,0.08);
+  font-size: 1rem;
+  margin: 0;
+  min-width: 80px;
+  text-align: center;
+  font-weight: 500;
 }
