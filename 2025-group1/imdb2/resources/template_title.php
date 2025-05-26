@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../resources/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../resources/search.js"></script>
+    <script src="../resources/like.js"></script>
 </head>
 <body>
     <header class="header">
@@ -26,7 +27,10 @@
     <main class="main-content">
         <div id="title"><h1>{NAME} ({YEAR})</h1></div>
         <figure id="poster"><img src="{POSTER}" width="250" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
-        <div id="rating"></div>
+        <div id="rating">
+            <p><span>{VOTES}</span> Likes!</p>
+            <button id="like-button">I like this!</button>
+        </div>
         <div id="people">
             <h2>Notable People:</h2>
                 <strong>Director:</strong> {DIRECTOR}

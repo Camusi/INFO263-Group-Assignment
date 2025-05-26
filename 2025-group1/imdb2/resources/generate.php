@@ -193,6 +193,10 @@ $warnings = !empty($warningsArr) ? implode(' <br>', $warningsArr) : '';
 
 // Notable People Finish
 $notable_people = !empty($notable_peopleArr) ? implode(', ', $notable_peopleArr) : $notable_people;
+
+// Votes Logic
+$votes = 0;
+
 ?>
 
 
@@ -240,6 +244,7 @@ $notable_people = !empty($notable_peopleArr) ? implode(', ', $notable_peopleArr)
             $content = str_replace('{NOTABLE}', $notable_people, $content);
             $content = str_replace('{ID}', $row['id'], $content);
             $content = str_replace('{WARNINGS}', $warnings, $content);
+            $content = str_replace('{VOTES}', $votes, $content);
             // Write back to the file
             if (file_put_contents($pagePath, $content) !== false) {
                 $isWritten = true;
