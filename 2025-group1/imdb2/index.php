@@ -1,106 +1,105 @@
-<?php session_start(); ?>
+<?php
+session_start();
+
+// Connect to SQLite database
+try {
+    $pdo = new PDO('sqlite:./resources/imdb-2.sqlite3'); // Replace with your actual database path
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Fetch top 3 liked movies
+    $stmt = $pdo->query("SELECT primaryTitle, startYear, genres, image_url
+                        FROM title_basics_trim
+                        ORDER BY IFNULL(likes, 0) DESC
+                        LIMIT 3");
+    $topMovies = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fetch top 3 liked people
+    $stmt = $pdo->query("
+        SELECT
+            primaryName,
+            birthYear,
+            deathYear,
+            primaryProfession,
+            likes
+        FROM name_basics_trim
+        ORDER BY IFNULL(likes, 0) DESC
+        LIMIT 3
+    ");
+
+    $topPeople = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Database error: " . $e->getMessage();
+    $topMovies = [];
+    $topPeople = [];
+    exit();
+}
+
+function safe($str) {
+    return htmlspecialchars($str ?? '', ENT_QUOTES);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IMDB2.0 by Group 1 2025S1</title>
-  <!--JS Files-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="resources/search.js"></script>
-  <!-- External CSS Stylesheet Import-->
-  <link rel="stylesheet" href="resources/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IMDB2.0 by Group 1 2025S1</title>
+    <!--JS Files-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="resources/search.js"></script>
+    <!-- External CSS Stylesheet Import-->
+    <link rel="stylesheet" href="resources/style.css" />
 </head>
 <body>
-  <header class="header">
+<header class="header">
     <h1>IMDB2.0</h1>
     <p>Your new home of all things media!</p>
-  </header>
+</header>
 
-  <?php include 'resources/navbar.php'; ?>
-  </nav>
-  <div class="search-results">
+<?php include 'resources/navbar.php'; ?>
+<div class="search-results">
     <p id="search-output"></p>
-  </div>
-  
+</div>
 
-  <main class="main-content">
+<main class="main-content">
     <h2>Welcome to IMDB2.0</h2>
     <p>Your one-stop destination for all things movies! Search for a movie above or browse through our extensive database of over 211,000 titles and 3 million people.</p>
     <hr>
     <section class="featured-content">
-      <h2>Featured Movies/Shows</h2>
-      <p>These are the all time top movies and shows on IMDB2.0!</p>
-    <div class="movie-list">
-      <div class="movie-card" id="topMovie1">
-        <img id="topMovie1_img" src="resources/img/load.gif" alt="Movie 1 Poster" class="movie-poster">
-        <div class="movie-details">
-          <h3>{topMovie1_title}</h3>
-          <p><strong>Genre:</strong>{topMovie1_genre}</p>
-          <p><strong>Year:</strong>{topMovie1_year}</p>
-          <p><strong>Director:</strong>{topMovie1_director}</p>
-          <p><strong>Writer:</strong>{topMovie1_writer}</p>
-          <p><strong>Actors:</strong>{topMovie1_talent}</p>
-          <p>{topMovie1_blurb}</p>
+        <h2>Featured Movies/Shows</h2>
+        <p>These are the all time top movies and shows on IMDB2.0!</p>
+        <div class="movie-list">
+            <?php for ($i = 0; $i < 3; $i++): ?>
+                <?php if (isset($topMovies[$i])): ?>
+                    <div class="movie-card" id="topMovie<?= $i + 1 ?>">
+                        <img src="<?= safe($topMovies[$i]['image_url']) ?>" alt="Movie <?= $i + 1 ?> Poster" class="movie-poster">
+                        <div class="movie-details">
+                            <h3><?= safe($topMovies[$i]['primaryTitle']) ?></h3>
+                            <p><strong>Genre:</strong> <?= safe($topMovies[$i]['genres']) ?></p>
+                            <p><strong>Year:</strong> <?= safe($topMovies[$i]['startYear']) ?></p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endfor; ?>
         </div>
-      </div>
-      <div class="movie-card" id="TopMovie2">
-        <img id="TopMovie2_img" src="resources/img/load.gif" alt="Movie 2 Poster" class="movie-poster">
-        <div class="movie-details">
-          <h3>{TopMovie2_title}</h3>
-          <p><strong>Genre:</strong>{TopMovie2_genre}</p>
-          <p><strong>Year:</strong>{TopMovie2_year}</p>
-          <p><strong>Director:</strong>{TopMovie2_director}</p>
-          <p><strong>Writer:</strong>{TopMovie2_writer}</p>
-          <p><strong>Actors:</strong>{TopMovie2_talent}</p>
-          <p>{TopMovie2_blurb}</p>
+        <hr>
+        <h2>Featured People</h2>
+        <p>These are the all time top people on IMDB2.0!</p>
+        <div class="person-list">
+            <?php foreach ($topPeople as $index => $person): ?>
+                <div class="person-card" id="topPerson<?= $index + 1 ?>">
+                    <div class="person-details">
+                        <h3><?= htmlspecialchars($person['primaryName']) ?></h3>
+                        <p><strong>Known For:</strong> <?= htmlspecialchars($person['primaryProfession']) ?></p>
+                        <p><strong>Birth Year:</strong> <?= $person['birthYear'] ?: 'N/A' ?></p>
+                        <p><strong>Death Year:</strong> <?= $person['deathYear'] ?: 'N/A' ?></p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-      </div>
-      <div class="movie-card" id="topMovie3">
-        <img id="topMovie3_img" src="resources/img/load.gif" alt="Movie 3 Poster" class="movie-poster">
-        <div class="movie-details">
-          <h3>{topMovie3_title}</h3>
-          <p><strong>Genre:</strong>{topMovie3_genre}</p>
-          <p><strong>Year:</strong>{topMovie3_year}</p>
-          <p><strong>Director:</strong>{topMovie3_director}</p>
-          <p><strong>Writer:</strong>{topMovie3_writer}</p>
-          <p><strong>Actors:</strong>{topMovie3_talent}</p>
-          <p>{topMovie3_blurb}</p>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <h2>Featured People</h2>
-    <p>These are the all time top people on IMDB2.0!</p>
-    <div class="person-list">
-      <div class="person-card" id="topPerson1">
-        <div class="person-details">
-          <h3>{topPerson1_name}</h3>
-          <p><strong>Known For:</strong>{topPerson1_knownFor}</p>
-          <p><strong>Birth Year:</strong>{topPerson1_birthYear}</p>
-          <p><strong>Death Year:</strong>{topPerson1_deathYear}</p>
-        </div>
-      </div>
-      <div class="person-card" id="topPerson2">
-        <div class="person-details">
-          <h3>{topPerson2_name}</h3>
-          <p><strong>Known For:</strong>{topPerson2_knownFor}</p>
-          <p><strong>Birth Year:</strong>{topPerson2_birthYear}</p>
-          <p><strong>Death Year:</strong>{topPerson2_deathYear}</p>
-        </div>
-      </div>
-      <div class="person-card" id="topPerson3">
-        <div class="person-details">
-          <h3>{topPerson3_name}</h3>
-          <p><strong>Known For:</strong>{topPerson3_knownFor}</p>
-          <p><strong>Birth Year:</strong>{topPerson3_birthYear}</p>
-          <p><strong>Death Year:</strong>{topPerson3_deathYear}</p>
-        </div>
-      </div>
-    </div>
     </section>
-  </main>
+</main>
 
-  <?php include 'resources/footer.php'; ?>
+<?php include 'resources/footer.php'; ?>
 </body>
 </html>
