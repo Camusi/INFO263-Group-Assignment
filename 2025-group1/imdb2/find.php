@@ -62,7 +62,7 @@
 
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo "Found " . count($results) . " results:<br><br>";
-                $maxResults = 5;
+                $maxResults = 8;
                 foreach ($results as $i => $row) {
                   if ($i >= $maxResults) break;
                   echo "<div class='result-item'>";
@@ -76,23 +76,24 @@
                 }
                 if (count($results) > $maxResults) {
                   echo "<button id='view-more-btn'>View More</button>";
-                  echo '<script>
-                    const allResults = ' . json_encode($results) . ';
-                    let shown = ' . $maxResults . ';
+                  ?>
+                  <script>
+                    const allResults = <?php echo json_encode($results); ?>;
+                    let shown = <?php echo $maxResults; ?>;
                     document.getElementById("view-more-btn").onclick = function() {
                       let html = "";
-                      for (let i = shown; i < shown + ' . $maxResults . ' && i < allResults.length; i++) {
+                      for (let i = shown; i < shown + <?php echo $maxResults; ?> && i < allResults.length; i++) {
                         let row = allResults[i];
                         html += `<div class="result-item">`;
                         html += `<strong>Name:</strong> <a href="./resources/page.php?q=${row.id}" target="_blank">${row.primary_name.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</a><br>`;
                         html += `<strong>Type:</strong> ${(row.table_name === "title_basics_trim" ? "TV/Movie" : "Person")}<br>`;
-                        html += `<strong> ${(row.table_name === "title_basics_trim" ? "Year:" : "Born:")} </strong> ${row.year ? row.year.replace(/</g,"&lt;").replace(/>/g,"&gt;") : ""}<br>`;
+                        html += `<strong> ${(row.table_name === "title_basics_trim" ? "Year:" : "Born:")} </strong> ${row.year ? String(row.year).replace(/</g,"&lt;").replace(/>/g,"&gt;") : ""}<br>`;
                         if (row.table_name === "title_basics_trim") {
                           html += `<img data-imdb-id="${row.id}" class="cover-image" width="100" src="resources/img/load.gif" alt="Loading..." /><br>`;
                         }
                         html += `</div><br><hr><br>`;
                       }
-                      shown += ' . $maxResults . ';
+                      shown += <?php echo $maxResults; ?>;
                       document.getElementById("view-more-btn").insertAdjacentHTML("beforebegin", html);
                       if (shown >= allResults.length) {
                         document.getElementById("view-more-btn").remove();
@@ -117,7 +118,8 @@
                         }
                       });
                     };
-                  </script>';
+                  </script>
+                  <?php
                 }
             } catch (Exception $e) {
                 echo "Database error: " . htmlspecialchars($e->getMessage());

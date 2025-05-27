@@ -29,9 +29,7 @@
         <aside id="blurb"><p>{BLURB}</p></aside>
         <figure id="poster"><img src="{POSTER}" width="250" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
         <div id="rating">
-            <p><span>{VOTES}</span> Likes!</p>
-            <button id="like-button">I like this!</button>
-            <button id="dislike-button">I dislike this!</button>
+            <?php include '../resources/likes.php'; ?>
         </div>
         <div id="people">
             <h2>Notable People:</h2>

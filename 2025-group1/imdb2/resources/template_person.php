@@ -31,9 +31,7 @@
             <br>Born in {YEAR}.
         </aside>
         <div id="rating">
-            <p><span>{VOTES}</span> Likes!</p>
-            <button id="like-button">I like this!</button>
-            <button id="dislike-button">I dislike this!</button>
+            <?php include '../resources/likes.php'; ?>
         </div>
         <div id="roles" class="roles">
             <h2>Roles</h2>
