@@ -1,4 +1,12 @@
 <?php
+if (!empty($_SESSION['userID'])) {
+    session_start();
+} else {
+    http_response_code(403);
+    header("Location: ../signin.php?error=Please%20log%20in%20to%20like%20or%20dislike%20content.");
+    exit;
+}
+
 $type = $_GET['type'] ?? '';
 $ID = $_GET['ID'] ?? '';
 $ld = $_GET['ld'] ?? 'like';
@@ -9,29 +17,22 @@ if ($type !== 'person' && $type !== 'title') {
     exit;
 }
 
-$dbname = $type === 'person' ? 'name_basics_trim' : 'title_basics_trim';
-$id_column = $type === 'person' ? 'nconst' : 'tconst';
+$db = new SQLite3('../resources/imdb-2.sqlite3');
 
-$conn = new mysqli('localhost', 'root', '', $dbname);
+$table = $type === 'person' ? 'name_basics_trim' : 'title_basics_trim';
+$id_col = $type === 'person' ? 'nconst' : 'tconst';
+$increment = ($ld === 'like') ? 1 : -1;
 
-if ($conn->connect_error) {
-    http_response_code(500);
-    echo "Database connection failed: " . $conn->connect_error;
-    exit;
-}
-
-$updateOp = ($ld === 'dislike') ? 'likes = GREATEST(likes - 1, 0)' : 'likes = likes + 1';
-
-$stmt = $conn->prepare("UPDATE $dbname SET $updateOp WHERE $id_column = ?");
-$stmt->bind_param('s', $ID);
+// Prepare and execute the update statement
+$stmt = $db->prepare("UPDATE $table SET likes = likes + :inc WHERE $id_col = :id");
+$stmt->bindValue(':inc', $increment, SQLITE3_INTEGER);
+$stmt->bindValue(':id', $ID, SQLITE3_TEXT);
 
 if ($stmt->execute()) {
-    echo ($ld === 'dislike') ? "Dislike registered." : "Like updated successfully.";
+    echo "Success";
 } else {
     http_response_code(500);
-    echo "Error updating like.";
+    echo "Database update failed.";
 }
-
-$stmt->close();
-$conn->close();
+$db->close();
 ?>

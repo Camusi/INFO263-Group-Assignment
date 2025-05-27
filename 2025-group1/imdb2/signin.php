@@ -55,6 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <?php include 'resources/navbar.php'; ?>
 
   <main class="main-content">
+    <div id="warnings">
+      <p id="page-warning"><?php echo htmlspecialchars($_GET['error'] ?? ''); ?></p>
+    </div>
     <form action="signin.php" method="post" class="signin-form">
         <p>Please note all values are case-sensitive.</p><br>
       <label>Email or username:<br>
