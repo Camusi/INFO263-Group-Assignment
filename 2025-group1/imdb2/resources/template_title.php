@@ -31,10 +31,11 @@
             <ul>
                 <li>Title: <span id="movie-title">{NAME}</span></li>
                 <li>Year: <span id="movie-year"></span>{YEAR}</span></li>
-                <li>Runtime: <span id="movie-runtime">{RUNTIME}</span> minutes</li>
+                <li>Runtime: <span id="movie-runtime">{RUNTIME}</span></li>
+                <li>Genres: <span id="movie-genres" class="genre-list">{GENRES}</span></li>
             </ul>
         </aside>
-        <figure id="poster"><img src="{POSTER}" width="250" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
+        <figure id="poster"><img src="{POSTER}" width="50" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
         <div id="rating">
             <?php
                 try {
@@ -71,3 +72,25 @@
     <?php include '../resources/footer.php'; ?>
   </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const images = document.querySelectorAll("figure img");
+  images.forEach(img => {
+    $.ajax({
+      url: `../resources/cover-image.php?q={ID}`,
+      method: 'GET',
+      dataType: 'json',
+      async: false,
+      success: function (imgData) {
+        if (imgData && imgData.cover_image) {
+          img.src = imgData.cover_image;
+          img.width = "250";
+        }
+      },
+      error: function () {
+        img.src = "../resources/img/load.gif";
+      }
+    });
+  });
+});
+</script>

@@ -73,18 +73,9 @@ if ($data === false) {
 
 // Find the cover image URL by using cover-image.php?q=ID json cover_image:
 
-$startImg = strpos($data, 'https://m.media-amazon.com/images/M/');
-if ($startImg === false) {
-    echo json_encode(['error' => 'Cover image not found.']);
-    exit;
-}
-$endImg= strpos($data, '"', $startImg);
-if ($endImg === false) {
-    echo json_encode(['error' => 'Cover image not found.']);
-    exit;
-}
-$image_url = substr($data, $startImg, $endImg - $startImg);
-$image_url = htmlspecialchars($image_url); // Escape HTML entities
+$image_url = '../resources/img/load.gif'; // Default fallback image
+
+
 
 // Find the blurb
 if (preg_match('/<span[^>]*data-testid="plot-xl"[^>]*>(.*?)<\/span>/is', $data, $blurbMatch)) {
@@ -138,6 +129,21 @@ if ($plot === 'Plot synopsis not available. (ERROR 1)') {
         }
     }
 
+// Runtime
+$runtime = 'We don\'t have a runtime for this title yet. Why not add it?';
+if ($type === 'title') {
+    $rstmt = $db->prepare("SELECT runtimeMinutes FROM title_basics_trim WHERE tconst = :tconst");
+    $rstmt->execute([':tconst' => $id]);
+    $row = $rstmt->fetch(PDO::FETCH_ASSOC);
+    if ($row && isset($row['runtimeMinutes']) && !empty($row['runtimeMinutes'])) {
+        $runtime = htmlspecialchars($row['runtimeMinutes']) . ' minutes';
+    } else {
+        $warningsArr[] = 'This title does not have a runtime yet. You can help by adding it!';
+    }
+} else {
+    $runtime = 'N/A';
+}
+
 
 // Find Writers
 $writers = 'Sorry, we don\'t know who wrote this film yet. Why not add it?';
@@ -176,6 +182,27 @@ if ($type === 'title') {
     $director = !empty($directorArr) ? implode(', ', $directorArr) : 'N/A';
 } else {
     $director = 'N/A';
+}
+
+//Genres Logic
+$genres = '';
+if ($type === 'title') {
+    $genresArr = [];
+    $gstmt = $db->prepare("SELECT genres FROM title_basics_trim WHERE tconst = :tconst");
+    $gstmt->execute([':tconst' => $id]);
+    while ($row = $gstmt->fetch(PDO::FETCH_ASSOC)) {
+        $genresArr[] = htmlspecialchars($row['genres']);
+    }
+    $genres = !empty($genresArr) ? implode(', ', $genresArr) : 'N/A';
+    // If no genres found, add a message
+    if (empty($genresArr)) {
+        $genresArr[] = 'No genres found for this title.';
+    }
+    foreach ($genresArr as $genre) {
+        $genres .= '<li>' . $genre . '</li>';
+    }
+} else {
+    $roles = 'N/A';
 }
 
 // Find Stars
@@ -326,7 +353,9 @@ if ($type === 'person') {
                 $content = str_replace('{POSTER}', $image_url, $content);
                 $content = str_replace('{WRITERS}', $writers, $content);
                 $content = str_replace('{DIRECTOR}', $director, $content);
+                $content = str_replace('{GENRES}', $genres, $content);
                 $content = str_replace('{STARS}', $stars, $content);
+                $content = str_replace('{RUNTIME}', $runtime, $content);
                 $content = str_replace('{BLURB}', $blurb, $content);
                 $content = str_replace('{PLOT}', $plot, $content);
                 $content = str_replace('{NOTABLE}', $notable_people, $content);
@@ -359,7 +388,7 @@ if ($type === 'person') {
                 $content = str_replace('{NAME}', $row['primary_name'], $content);
                 $content = str_replace('{YEAR}', $row['year'], $content);
                 $content = str_replace('{ROLES}', $roles, $content);
-                $content = str_replace('{BIO}', $bio, $content);
+                $content = str_replace('{BLURB}', $bio, $content);
                 $content = str_replace('{ID}', $row['id'], $content);
                 $content = str_replace('{WARNINGS}', $warnings, $content);
                 $content = str_replace('{VOTES}', $votes, $content);
