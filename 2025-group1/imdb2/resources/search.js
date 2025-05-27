@@ -1,6 +1,6 @@
 const version = "v0.8.0";
 console.log("search.js " + version + " loaded successfully");
-//const documentPath = document.currentScript.src.split('/').slice(0, -1).join('/') + '/';
+const documentPath = document.currentScript.src.split('/').slice(0, -1).join('/') + '/';
 //console.log("Current document path: " + documentPath);
 $(document).ready(function () {
 	const $input = $('#search-input');
