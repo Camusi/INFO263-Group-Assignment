@@ -56,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <main class="main-content">
     <form action="signin.php" method="post" class="signin-form">
+        <p>Please note all values are case-sensitive.</p><br>
       <label>Email or username:<br>
           <input
                   type="text"
