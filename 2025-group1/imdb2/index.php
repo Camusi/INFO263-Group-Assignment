@@ -67,7 +67,7 @@ function safe($str) {
     <hr>
     <section class="featured-content">
         <h2>Featured Movies/Shows</h2>
-        <p>These are the all time top movies and shows on IMDB2.0!</p>
+        <p>These are the all time top movies and shows on IMDB2.0!</p><br>
         <div class="movie-list">
             <?php for ($i = 0; $i < 3; $i++): ?>
                 <?php if (isset($topMovies[$i])): ?>
@@ -81,7 +81,7 @@ function safe($str) {
                     </div>
                 <?php endif; ?>
             <?php endfor; ?>
-        </div>
+        </div><br>
         <hr>
         <h2>Featured People</h2>
         <p>These are the all time top people on IMDB2.0!</p>

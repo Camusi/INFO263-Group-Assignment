@@ -1,10 +1,10 @@
 <nav class="navbar">
     <div class="nav-left">
-      <a href="/">Home</a>
+      <a href="./">Home</a>
     </div>
 
     <div class="nav-center">
-      <input type="text" id="search-input" name="search-input" placeholder="Search any movie..." />
+      <input type="text" id="search-input" name="search-input" placeholder="Search any movie..."/>
     </div>
 
     <div class="nav-right" id="account">
