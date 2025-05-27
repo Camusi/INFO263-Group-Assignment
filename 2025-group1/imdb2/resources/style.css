@@ -300,3 +300,25 @@ a:hover {
 .signin-form .form-message.success {
   color: #27ae60 !important;
 }
+
+.edit-form {
+  max-width: 600px;
+  margin: auto;
+  background: gray;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.edit-form input,
+.edit-form select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
