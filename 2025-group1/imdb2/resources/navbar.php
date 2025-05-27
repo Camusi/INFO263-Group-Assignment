@@ -1,6 +1,6 @@
 <nav class="navbar">
     <div class="nav-left">
-      <a href="./">Home</a>
+      <a href="/INFO263-Group-Assignment/2025-group1/imdb2">Home</a>
     </div>
 
     <div class="nav-center">
@@ -9,11 +9,11 @@
 
     <div class="nav-right" id="account">
       <?php if (!empty($_SESSION['userID'])): ?>
-        <a href="./logout.php">Logout</a>
+        <a href="/INFO263-Group-Assignment/2025-group1/imdb2/logout.php">Logout</a>
         <p class="account-preview">👤 <?= htmlspecialchars($_SESSION['userID']) ?></p>
         <?php else: ?>
-        <a href="./signin.php">Sign In</a>
-        <p class="account=preview">👤 Guest</p>
+        <a href="/INFO263-Group-Assignment/2025-group1/imdb2/signin.php">Sign In</a>
+        <p class="account-preview">👤 Guest</p>
         <?php endif; ?>
     </div>
 </nav>

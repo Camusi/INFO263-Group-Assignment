@@ -8,3 +8,6 @@ Use this folder for our solution.
 
 ## imdb2/
 - The folder we will hand in.
+
+## Your file setup
+From your webserver, the file should be located in: localhost:/INFO263-Group-Assignment/2025-group1/imdb2/

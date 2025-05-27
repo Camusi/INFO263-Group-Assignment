@@ -1,7 +1,7 @@
-const version = "v1";
+const version = "v0.8.0";
 console.log("search.js " + version + " loaded successfully");
-const documentPath = document.currentScript.src.split('/').slice(0, -1).join('/') + '/';
-console.log("Current document path: " + documentPath);
+//const documentPath = document.currentScript.src.split('/').slice(0, -1).join('/') + '/';
+//console.log("Current document path: " + documentPath);
 $(document).ready(function () {
 	const $input = $('#search-input');
 	const $preview = $('#search-output');
@@ -39,7 +39,7 @@ $(document).ready(function () {
 							const typeLabel = item.table_name === "title_basics_trim" ? "Movie/Show" : item.table_name === "name_basics_trim" ? "Person" : item.table_name;
 							const typeClass = item.table_name === "title_basics_trim" ? "title" : item.table_name === "name_basics_trim" ? "person" : item.table_name;
 							const resultHtml = `
-								<strong> <a href="./resources/page.php?q=${item.id}" target="_blank">${item.primary_name}</a></strong><br>
+								<strong> <a href="/INFO263-Group-Assignment/2025-group1/imdb2/resources/page.php?q=${item.id}">${item.primary_name}</a></strong><br>
 								${typeLabel}<br>
 								<hr>
 							`;
@@ -64,7 +64,7 @@ $(document).ready(function () {
 		if (e.key === 'Enter') {
 			const query = $input.val().trim();
 			if (query.length >= 1) {
-				window.location.href = documentPath + '../find.php?q=' + encodeURIComponent(query);
+				window.location.href = documentPath + '/INFO263-Group-Assignment/2025-group1/imdb2/find.php?q=' + encodeURIComponent(query);
 				console.log("Redirecting to find.php with query: " + query);
 			}
 		}
