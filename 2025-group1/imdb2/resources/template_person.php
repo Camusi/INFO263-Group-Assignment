@@ -41,9 +41,10 @@
                 }
                 
 
-                $stmt = $db->prepare('SELECT likes FROM name_basics_trim WHERE nconst = {ID}');
+                $stmt = $db->prepare('SELECT likes FROM name_basics_trim WHERE nconst = \'{ID}\'');
                 $stmt->execute();
                 $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $likes = $likes[0]['likes'] ?? '?'; // Default to ? if no likes found
                 ?>
             <p><span><?php echo $likes; ?></span> Likes!</p>
             <button id="like-button">I like this!</button>
