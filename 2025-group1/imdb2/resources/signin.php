@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign In | IMDB2.0</title>
-  <link rel="stylesheet" href="resources/style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="header">
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </label><br><br>
 
       <button type="submit">Sign In</button>
-      <p>Don't have an account? <a href="signup.php">Sign Up!</a></p>
+      <p>Don't have an account? <a href="../signup.php">Sign Up!</a></p>
 
         <!--Feedback-->
       <?php if ($error): ?>
