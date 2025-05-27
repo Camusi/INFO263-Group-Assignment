@@ -60,7 +60,9 @@ function safe($str) {
 <div class="search-results">
     <p id="search-output"></p>
 </div>
-
+<div id="warnings">
+      <p id="page-warning"><?php echo htmlspecialchars($_GET['error'] ?? ''); ?></p>
+    </div>
 <main class="main-content">
     <h2>Welcome to IMDB2.0</h2>
     <p>Your one-stop destination for all things movies! Search for a movie above or browse through our extensive database of over 211,000 titles and 3 million people.</p>
