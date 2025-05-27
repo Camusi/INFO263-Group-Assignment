@@ -1,5 +1,7 @@
 <?php
 
+// THIS CODE IS DEPRECATED - FUNCTIONALITY MOVED TO signup.php
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // Connection
