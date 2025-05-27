@@ -61,7 +61,9 @@ function safe($str) {
     <p id="search-output"></p>
 </div>
 <div id="warnings">
-      <p id="page-warning"><?php echo htmlspecialchars($_GET['error'] ?? ''); ?></p>
+    <?php if (!empty($_GET['error'])): ?>
+        <p id="page-warning"><?php echo htmlspecialchars($_POST['error']); ?></p>
+    <?php endif; ?>
     </div>
 <main class="main-content">
     <h2>Welcome to IMDB2.0</h2>
