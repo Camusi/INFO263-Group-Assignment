@@ -62,7 +62,7 @@ function safe($str) {
 </div>
 <div id="warnings">
     <?php if (!empty($_GET['error'])): ?>
-        <p id="page-warning"><?php echo htmlspecialchars($_GET['error']); ?></p>
+        <p id="page-warning"><?php echo htmlspecialchars($_GETs['error']); ?></p>
     <?php endif; ?>
     </div>
 <main class="main-content">

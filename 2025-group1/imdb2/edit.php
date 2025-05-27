@@ -1,24 +1,28 @@
 <?php
 // Preload crap
 
-$id = $_GET['id'] ?? null;
-if (!$id) {
-    header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.") ;
-    exit;
-}
-$type = $_GET['type'] ?? null;
-if (!$type || !in_array($type, ['title', 'person'])) {
-    header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.");
-    exit;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.");
+        exit;
+    }
+    $type = $_GET['type'] ?? null;
+    if (!$type || !in_array($type, ['title', 'person'])) {
+        header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.");
+        exit;
+    }
 }
 
 // Read page information
 $pageurl =  $type . '/' . $id . '.php';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $pagedata = file_get_contents($pageurl);
-if ($pagedata === false) {
-    header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time. PAGEDATA NOT FOUND");
-    exit;
-}
+
+    if ($pagedata === false) {
+        header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time. PAGEDATA NOT FOUND");
+        exit;
+    }
 // Extract data from the page
 if (preg_match('/<span\s+id="movie-title"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
     $title = trim($matches[1]);
@@ -56,7 +60,7 @@ if (preg_match('/<span\s+id="person-name"\s*>(.*?)<\/span>/is', $pagedata, $matc
 }
 if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matches)) {
     $roles = trim($matches[1]);
-}
+}}
 ?>
 
 <!DOCTYPE html>
@@ -78,6 +82,15 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
     </header>
     <?php include 'resources/navbar.php'; ?>
     <main class="main-content">
+    <div id="warnings">
+    <?php if (!empty($_GET['error'])): ?>
+        <?php if ($_GET['error'] == 1): ?>
+            <p id="page-warning">Failed to save, please try again soon or contact a site administrator.</p>
+        <?php else: ?>
+            <p id="page-warning">An error occured.</p>
+        <?php endif; ?>
+    <?php endif; ?>
+    </div>
         <?php 
         if ($type === 'title'){
             echo '
@@ -147,6 +160,7 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
             <label for=\"warnings\">Page Warnings</label>
             <p>Please check the relevant page warnings below.</p>
             <input type=\"checkbox\" id=\"person-edit-warnings-stub\" name=\"warnings\" value=\"1\">
+        // redirect to the edit page with an error message
             <label for=\"person-edit-warnings-stub\">Stub Page</label>
             <input type=\"checkbox\" id=\"person-edit-warnings-unverified\" name=\"warnings\" value=\"2\">
             <label for=\"person-edit-warnings-unverified\">Unverified Information</label>
@@ -190,7 +204,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Write the updated content back to the file
     if (file_put_contents($pageurl, $updatedContent) === false) {
         echo '<p>Error: Unable to save changes to the file.</p>';
+        // redirect to the edit page with an error message
+        header("Location: edit.php?type=$type&id=$id&error=1");
+        exit;
     } else {
         echo '<p>Changes saved successfully!</p>';
+        // Redirect to the updated page
+        header("Location: $pageurl");
+        exit;
     }
 } ?>
