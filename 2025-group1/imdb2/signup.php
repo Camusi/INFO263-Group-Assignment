@@ -15,11 +15,12 @@
   <?php include 'resources/navbar.php'; ?>
 
   <main class="main-content">
-    <form class="signin-form">
-      <label>Username:<br><input type="name" placeholder="DrZakkaroff" required></label><br><br>
-      <label>Email:<br><input type="email" placeholder="you@example.com" required></label><br><br>
-      <label>Password:<br><input type="password" placeholder="Enter password" required></label><br><br>
-      <label>Confirm Password:<br><input type="password" placeholder="Re-enter password" required></label><br><br>
+    <form class="signin-form" action="newuser.php" method="post">
+      <label>Username:<br><input type="text" name="userID" placeholder="DrZakkaroff" required></label><br><br>
+        <label>Birth date:<br><input type="date" name="dob"></label><br><br>
+        <label>Email:<br><input type="email" name="email" placeholder="you@example.com" required></label><br><br>
+      <label>Password:<br><input type="password" name="password" placeholder="Enter password" required></label><br><br>
+      <label>Confirm Password:<br><input type="password" name="passconfirm" placeholder="Re-enter password" required></label><br><br>
       <button type="submit">Join for Free!</button>
         <p>Already have an account? <a href="signin.php">Sign In</a></p>
     </form>
