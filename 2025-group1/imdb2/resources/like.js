@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 likeButton.textContent = 'Remove Like';
                 dislikeButton.disabled = true;
+                
             }
         });
     }

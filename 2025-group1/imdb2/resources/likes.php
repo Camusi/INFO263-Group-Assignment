@@ -1,33 +1,37 @@
 <?php
-$id = isset($_GET['id']) ? trim($_GET['id']) : '';
+$type = $_GET['type'] ?? '';
+$ID = $_GET['ID'] ?? '';
+$ld = $_GET['ld'] ?? 'like';
 
-try {
-    $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+if ($type !== 'person' && $type !== 'title') {
+    http_response_code(400);
+    echo "Invalid type parameter.";
     exit;
 }
 
-if ($type === 'title') {
-    $type_sql = 'SELECT likes FROM title_basics_trim WHERE tconst = :id';
-} elseif ($type === 'person') {
-    $type_sql = 'SELECT likes FROM name_basics_trim WHERE nconst = :id';
+$dbname = $type === 'person' ? 'name_basics_trim' : 'title_basics_trim';
+$id_column = $type === 'person' ? 'nconst' : 'tconst';
+
+$conn = new mysqli('localhost', 'root', '', $dbname);
+
+if ($conn->connect_error) {
+    http_response_code(500);
+    echo "Database connection failed: " . $conn->connect_error;
+    exit;
 }
 
-$stmt = $db->prepare($type_sql);
-$stmt->bindParam(':id', $id, PDO::PARAM_INT);
-$stmt->execute();
+$updateOp = ($ld === 'dislike') ? 'likes = GREATEST(likes - 1, 0)' : 'likes = likes + 1';
 
-$likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $conn->prepare("UPDATE $dbname SET $updateOp WHERE $id_column = ?");
+$stmt->bind_param('s', $ID);
+
+if ($stmt->execute()) {
+    echo ($ld === 'dislike') ? "Dislike registered." : "Like updated successfully.";
+} else {
+    http_response_code(500);
+    echo "Error updating like.";
+}
+
+$stmt->close();
+$conn->close();
 ?>
-
-<html>
-    <title>Likes</title>
-</head>
-<body>
-    <p><span><?php echo $likes; ?></span> Likes!</p>
-            <button id="like-button">I like this!</button>
-            <button id="dislike-button">I dislike this!</button>
-</body>
-</html>
