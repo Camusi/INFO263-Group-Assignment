@@ -26,7 +26,14 @@
     </section>
     <main class="main-content">
         <div id="title"><h1>{NAME} ({YEAR})</h1></div>
-        <aside id="blurb"><p>{BLURB}</p></aside>
+        <aside id="blurb">
+            <p id="blurb-text">{BLURB}</p>
+            <ul>
+                <li>Title: <span id="movie-title">{NAME}</span></li>
+                <li>Year: <span id="movie-year"></span>{YEAR}</span></li>
+                <li>Runtime: <span id="movie-runtime">{RUNTIME}</span> minutes</li>
+            </ul>
+        </aside>
         <figure id="poster"><img src="{POSTER}" width="250" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
         <div id="rating">
             <?php
@@ -50,14 +57,14 @@
         </div>
         <div id="people">
             <h2>Notable People:</h2>
-                <strong>Director(s):</strong> {DIRECTOR}
-                <br><strong>Writer(s):</strong> {WRITERS}
-                <br><strong>Starring:</strong> {STARS}</strong>
-                <br><strong>Other Notable People:</strong> {NOTABLE}
+                <strong>Director(s):</strong> <span id='director'>{DIRECTOR}</span>
+                <br><strong>Writer(s):</strong> <span id='writers'>{WRITERS}</span>
+                <br><strong>Starring:</strong> <span id='stars'>{STARS}</span>
+                <br><strong>Other Notable People:</strong> <span id='notable'>{NOTABLE}</span>
         </div>
         <details id="plot" title="Plot Summary">
             <summary><h2>Plot:</h2></summary>
-            <p>{PLOT}</p>
+            <p id="plot-text">{PLOT}</p>
         </details>
         <div id="comments"></div>
     </main>

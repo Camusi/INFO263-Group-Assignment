@@ -1,6 +1,6 @@
 <?php
 // Preload crap
-/* NOT YET
+
 $id = $_GET['id'] ?? null;
 if (!$id) {
     header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.") ;
@@ -10,16 +10,53 @@ $type = $_GET['type'] ?? null;
 if (!$type || !in_array($type, ['title', 'person'])) {
     header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.");
     exit;
-}*/
-
-// Read page information
-$pageurl = '/' . htmlspecialchars($type) . '/' . htmlspecialchars($id) . '.php';
-$pagedata = file_get_contents($pageurl);
-if ($pagedata === false) {
-    header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.");
-    exit;
 }
 
+// Read page information
+$pageurl =  $type . '/' . $id . '.php';
+$pagedata = file_get_contents($pageurl);
+if ($pagedata === false) {
+    header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time. PAGEDATA NOT FOUND");
+    exit;
+}
+// Extract data from the page
+if (preg_match('/<span\s+id="movie-title"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $title = trim($matches[1]);
+}
+if (preg_match('/<span\s+id="movie-year"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $year = trim($matches[1]);
+}
+if (preg_match('/<span\s+id="movie-runtime"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $runtime = trim($matches[1]);
+}
+if (preg_match('/<p\s+id="blurb-text"\s*>(.*?)<\/p>/is', $pagedata, $matches)) {
+    $blurb = trim($matches[1]);
+}
+if (preg_match('/<p\s+id="plot-text"\s*>(.*?)<\/p>/is', $pagedata, $matches)) {
+    $plot = trim($matches[1]);
+}
+if (preg_match('/<span\s+id="director"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $director = trim($matches[1]);
+}
+if (preg_match('/<span\s+id="writers"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $writers = trim($matches[1]);
+}
+if (preg_match('/<span\s+id="stars"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $stars = trim($matches[1]);
+}
+if (preg_match('/<span\s+id="notable"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $notable = trim($matches[1]);
+}
+//people
+if (preg_match('/<span\s+id="person-year"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $year = trim($matches[1]);
+}
+if (preg_match('/<span\s+id="person-name"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $title = trim($matches[1]);
+}
+if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matches)) {
+    $roles = trim($matches[1]);
+}
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +64,7 @@ if ($pagedata === false) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editing {TITLE} | IMDB2.0</title>
+    <title>Editing <?php echo $title; ?> | IMDB2.0</title>
     <!--JS Files-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="resources/search.js"></script>
@@ -36,38 +73,41 @@ if ($pagedata === false) {
 </head>
 <body>
     <header class="header">
-        <h1>Editing {TITLE}</h1>
-        <p>{PAGE_URL}</p>
+        <h1>Editing <?php echo $title; ?></h1>
+        <p><?php echo $pageurl; ?></p>
     </header>
     <?php include 'resources/navbar.php'; ?>
     <main class="main-content">
         <?php 
         if ($type === 'title'){
-            echo `
+            echo '
             <form id="edit-form-title" class="edit-form" action="edit.php" method="post">
             <label for="title">Name:</label>
-            <input class="page-edit-form-entry" type="text" id="title-edit-title" name="title" value="{TITLE}" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-title" name="title" value="' . htmlspecialchars($runtime) . '" required>
             
             <label for="year">Year:</label>
-            <input class="page-edit-form-entry" type="number" id="title-edit-year" name="year" value="{YEAR}" required>
+            <input class="page-edit-form-entry" type="number" id="title-edit-year" name="year" value="' . htmlspecialchars($year) . '" required>
+            
+            <label for="runtime">Runtime: (mins)</label>
+            <input class="page-edit-form-entry" type="number" id="title-edit-runtime" name="runtime" value="' . htmlspecialchars($runtime) . '" required>
 
             <label for="blurb">Blurb:</label>
-            <input class="page-edit-form-entry" type="text" id="title-edit-blurb" name="blurb" value="{BLURB}" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-blurb" name="blurb" value="' . htmlspecialchars($blurb) . '" required>
 
             <label for="plot">Plot:</label>
-            <textarea class="page-edit-form-entry" id="title-edit-plot" name="plot" rows="4" required>{PLOT}</textarea>
+            <textarea class="page-edit-form-entry" id="title-edit-plot" name="plot" rows="4" required>' . htmlspecialchars($plot) . '</textarea>
 
             <label for="director">Director(s):</label>
-            <input class="page-edit-form-entry" type="text" id="title-edit-director" name="director" value="{DIRECTOR}" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-director" name="director" value="' . htmlspecialchars($director) . '" required>
 
             <label for="writers">Writer(s):</label>
-            <input class="page-edit-form-entry" type="text" id="title-edit-writers" name="writers" value="{WRITERS}" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-writers" name="writers" value="' . htmlspecialchars($writers) . '" required>
 
             <label for="stars">Starring:</label>
-            <input class="page-edit-form-entry" type="text" id="title-edit-stars" name="stars" value="{STARS}" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-stars" name="stars" value="' . htmlspecialchars($stars) . '" required>
 
             <label for="notable">Other Notable People:</label>
-            <input class="page-edit-form-entry" type="text" id="title-edit-notable" name="notable" value="{NOTABLE}">
+            <input class="page-edit-form-entry" type="text" id="title-edit-notable" name="notable" value="' . htmlspecialchars($notable) . '" required>
 
             <label for="sources">Sources/Notes</label>
             <textarea class="page-edit-form-entry" id="title-edit-sources" name="sources" rows="4" placeholder="Please enter any notes or sources for your edits" required></textarea>
@@ -85,42 +125,72 @@ if ($pagedata === false) {
 
             <button type="submit">Save Changes</button>
         </form>
-            `;
+            ';
         } elseif ($type === 'person') {
-            echo `
-            <form id="edit-form-person" class="edit-form" action="edit.php" method="post">
-            <label for="title">Name:</label>
-            <input class="page-edit-form-entry" type="text" id="person-edit-title" name="title" value="{TITLE}" required>
+            echo "
+            <form id=\"edit-form-person\" class=\"edit-form\" action=\"edit.php\" method=\"post\">
+            <label for=\"title\">Name:</label>
+            <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-title\" name=\"title\" value=\"$title\" required>
             
-            <label for="year">Year of Birth:</label>
-            <input class="page-edit-form-entry" type="number" id="person-edit-year" name="year" value="{YEAR}" required>
+            <label for=\"year\">Year of Birth:</label>
+            <input class=\"page-edit-form-entry\" type=\"number\" id=\"person-edit-year\" name=\"year\" value=\"$year\" required>
 
-            <label for="bio">Bio:</label>
-            <input class="page-edit-form-entry" type="text" id="person-edit-bio" name="bio" value="{BIO}" required>
+            <label for=\"bio\">Bio:</label>
+            <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-bio\" name=\"bio\" value=\"$bio\" required>
 
-            <label for="roles">Roles:</label>
-            <input class="page-edit-form-entry" type="text" id="person-edit-roles" name="roles" value="{ROLES}">
+            <label for=\"roles\">Roles:</label>
+            <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-roles\" name=\"roles\" value=\"$roles\" required>
 
-            <label for="sources">Sources/Notes</label>
-            <textarea class="page-edit-form-entry" id="person-edit-sources" name="sources" rows="4" placeholder="Please enter any notes or sources for your edits" required></textarea>
+            <label for=\"sources\">Sources/Notes</label>
+            <textarea class=\"page-edit-form-entry\" id=\"person-edit-sources\" name=\"sources\" rows=\"4\" placeholder=\"Please enter any notes or sources for your edits\" required></textarea>
 
-            <label for="warnings">Page Warnings</label>
+            <label for=\"warnings\">Page Warnings</label>
             <p>Please check the relevant page warnings below.</p>
-            <input type="checkbox" id="person-edit-warnings-stub" name="warnings" value="1">
-            <label for="person-edit-warnings-stub">Stub Page</label>
-            <input type="checkbox" id="person-edit-warnings-unverified" name="warnings" value="2">
-            <label for="person-edit-warnings-unverified">Unverified Information</label>
-            <input type="checkbox" id="person-edit-warnings-duplicate" name="warnings" value="3">
-            <label for="person-edit-warnings-duplicate">Duplicate Page</label>
-            <input type="checkbox" id="person-edit-warnings-outdated" name="warnings" value="4">
-            <label for="person-edit-warnings-outdated">Outdated Information</label>
+            <input type=\"checkbox\" id=\"person-edit-warnings-stub\" name=\"warnings\" value=\"1\">
+            <label for=\"person-edit-warnings-stub\">Stub Page</label>
+            <input type=\"checkbox\" id=\"person-edit-warnings-unverified\" name=\"warnings\" value=\"2\">
+            <label for=\"person-edit-warnings-unverified\">Unverified Information</label>
+            <input type=\"checkbox\" id=\"person-edit-warnings-duplicate\" name=\"warnings\" value=\"3\">
+            <label for=\"person-edit-warnings-duplicate\">Duplicate Page</label>
+            <input type=\"checkbox\" id=\"person-edit-warnings-outdated\" name=\"warnings\" value=\"4\">
+            <label for=\"person-edit-warnings-outdated\">Outdated Information</label>
 
-            <button type="submit">Save Changes</button>
+            <button type=\"submit\">Save Changes</button>
             </form>
-            `;
+            ";
         }
         ?>
 </main>
     <?php include 'resources/footer.php'; ?>
 </body>
 </html>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $updatedContent = $pagedata;
+
+    if ($type === 'title') {
+        $updatedContent = preg_replace('/<span\s+id="movie-title"\s*>.*?<\/span>/is', '<span id="movie-title">' . htmlspecialchars($_POST['title']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="movie-year"\s*>.*?<\/span>/is', '<span id="movie-year">' . htmlspecialchars($_POST['year']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="movie-runtime"\s*>.*?<\/span>/is', '<span id="movie-runtime">' . htmlspecialchars($_POST['runtime']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<p\s+id="blurb-text"\s*>.*?<\/p>/is', '<p id="blurb-text">' . htmlspecialchars($_POST['blurb']) . '</p>', $updatedContent);
+        $updatedContent = preg_replace('/<p\s+id="plot-text"\s*>.*?<\/p>/is', '<p id="plot-text">' . htmlspecialchars($_POST['plot']) . '</p>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="director"\s*>.*?<\/span>/is', '<span id="director">' . htmlspecialchars($_POST['director']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="writers"\s*>.*?<\/span>/is', '<span id="writers">' . htmlspecialchars($_POST['writers']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="stars"\s*>.*?<\/span>/is', '<span id="stars">' . htmlspecialchars($_POST['stars']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="notable"\s*>.*?<\/span>/is', '<span id="notable">' . htmlspecialchars($_POST['notable']) . '</span>', $updatedContent);
+    } elseif ($type === 'person') {
+        $updatedContent = preg_replace('/<span\s+id="person-name"\s*>.*?<\/span>/is', '<span id="person-name">' . htmlspecialchars($_POST['title']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="person-year"\s*>.*?<\/span>/is', '<span id="person-year">' . htmlspecialchars($_POST['year']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<ul\s+class="roles-list"\s*>.*?<\/ul>/is', '<ul class="roles-list">' . htmlspecialchars($_POST['roles']) . '</ul>', $updatedContent);
+    }
+
+    // Append sources/notes as an HTML comment
+    $updatedContent .= "\n<!-- This page was recently edited: " . htmlspecialchars($_POST['sources']) . " -->";
+
+    // Write the updated content back to the file
+    if (file_put_contents($pageurl, $updatedContent) === false) {
+        echo '<p>Error: Unable to save changes to the file.</p>';
+    } else {
+        echo '<p>Changes saved successfully!</p>';
+    }
+} ?>

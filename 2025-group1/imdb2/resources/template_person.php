@@ -19,7 +19,7 @@
     <p id="search-output"></p>
   </div>
     <section class="edit-page-button">
-        <a href="../edit.php?type=title&id={ID}" class="edit-button"><button>Edit This Page</button></a>
+        <a href="../edit.php?type=person&id={ID}" class="edit-button"><button>Edit This Page</button></a>
         <div id="warnings">
             <p id="warning-text">{WARNINGS}</p>
         </div>
@@ -27,8 +27,11 @@
     <main class="main-content">
         <div id="title"><h1>{NAME}</h1></div>
         <aside id="blurb">
-            {BIO}
-            <br>Born in {YEAR}.
+            <p id="blurb-text">{BLURB}</p>
+            <ul>
+                <li>Born: <span id="person-year"></span>{YEAR}</span></li>
+                <li>Name: <span id="person-name">{NAME}</span></li>
+            </ul>
         </aside>
         <div id="rating">
             <?php
