@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute([':uid' => $userID]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$user) {
-            throw new Exception("Sorry, User not found");
+            throw new Exception("Sorry, that username or email is incorrect");
         }
 
         // Check password
@@ -56,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <main class="main-content">
     <form action="signin.php" method="post" class="signin-form">
+        <p>Please note all values are case-sensitive.</p><br>
       <label>Email or username:<br>
           <input
                   type="text"
