@@ -84,6 +84,12 @@ a:hover {
   padding: 2rem;
   padding-bottom: 20rem;
 }
+.query-results{
+  padding: 2rem;
+  padding-bottom: 20rem;
+  gap: 1rem;
+  max-width: 1200px;
+}
 
 .footer {
   background-color: #333;

@@ -22,12 +22,17 @@ try {
 }
 
 try {
-    $stmt = $db->query("SELECT nconst, job FROM title_principals_trim WHERE tconst IS 'tt0078607';");
-    #$stmt = $db->query("PRAGMA table_info(title_principals_trim)");
+    #$stmt = $db->query("
+    #ALTER TABLE title_basics_trim
+    #ADD COLUMN image_url TEXT;
+    #");
+    #echo "Column 'image_url' added to 'title_basics_trim' table successfully.<br>";
+    
+    $stmt = $db->query("PRAGMA table_info(title_basics_trim)");
     #$stmt = $db->query("SELECT name from sqlite_master WHERE type='table';");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "<br>" . $row['nconst'] . " (" . $row['job'] . ")\n";
-        #echo "<br>" . $row['name'] . " (" . $row['type'] . ")\n";
+        #echo "<br>" . $row['nconst'] . " (" . $row['job'] . ")\n";
+        echo "<br>" . $row['name'] . " (" . $row['type'] . ")\n";
         #echo "<br>" . $row['name'] . "\n";
     }
 } catch (PDOException $e) {

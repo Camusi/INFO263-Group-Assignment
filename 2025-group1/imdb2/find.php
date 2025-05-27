@@ -62,18 +62,62 @@
 
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo "Found " . count($results) . " results:<br><br>";
-                foreach ($results as $row) {
-                    echo "<div class='result-item'>";
-                    echo "<strong>Name:</strong> <a href=\"./resources/page.php?q=" . ($row['id']) . "\" target=\"_blank\">" . htmlspecialchars($row['primary_name']) . "</a><br>";
-                    echo "<strong>Type:</strong> " . ($row['table_name'] === 'title_basics_trim' ? 'TV/Movie' : 'Person') . "<br>";
-                    echo "<strong> ". ($row['table_name'] === 'title_basics_trim' ? 'Year:' : 'Born:') ." </strong> " . htmlspecialchars($row['year']) . "<br>";
-                    
-                    if ($row['table_name'] === 'title_basics_trim') {
-                      echo "<img data-imdb-id=\"" . htmlspecialchars($row['id']) . "\" class=\"cover-image\" width=\"100\" src=\"resources/img/load.gif\" alt=\"Loading...\" /><br>";
+                $maxResults = 5;
+                foreach ($results as $i => $row) {
+                  if ($i >= $maxResults) break;
+                  echo "<div class='result-item'>";
+                  echo "<strong>Name:</strong> <a href=\"./resources/page.php?q=" . ($row['id']) . "\" target=\"_blank\">" . htmlspecialchars($row['primary_name']) . "</a><br>";
+                  echo "<strong>Type:</strong> " . ($row['table_name'] === 'title_basics_trim' ? 'TV/Movie' : 'Person') . "<br>";
+                  echo "<strong> ". ($row['table_name'] === 'title_basics_trim' ? 'Year:' : 'Born:') ." </strong> " . htmlspecialchars($row['year']) . "<br>";
+                  if ($row['table_name'] === 'title_basics_trim') {
+                    echo "<img data-imdb-id=\"" . htmlspecialchars($row['id']) . "\" class=\"cover-image\" width=\"100\" src=\"resources/img/load.gif\" alt=\"Loading...\" /><br>";
+                  }
+                  echo "</div><br><hr><br>";
+                }
+                if (count($results) > $maxResults) {
+                  echo "<button id='view-more-btn'>View More</button>";
+                  echo '<script>
+                    const allResults = ' . json_encode($results) . ';
+                    let shown = ' . $maxResults . ';
+                    document.getElementById("view-more-btn").onclick = function() {
+                      let html = "";
+                      for (let i = shown; i < shown + ' . $maxResults . ' && i < allResults.length; i++) {
+                        let row = allResults[i];
+                        html += `<div class="result-item">`;
+                        html += `<strong>Name:</strong> <a href="./resources/page.php?q=${row.id}" target="_blank">${row.primary_name.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</a><br>`;
+                        html += `<strong>Type:</strong> ${(row.table_name === "title_basics_trim" ? "TV/Movie" : "Person")}<br>`;
+                        html += `<strong> ${(row.table_name === "title_basics_trim" ? "Year:" : "Born:")} </strong> ${row.year ? row.year.replace(/</g,"&lt;").replace(/>/g,"&gt;") : ""}<br>`;
+                        if (row.table_name === "title_basics_trim") {
+                          html += `<img data-imdb-id="${row.id}" class="cover-image" width="100" src="resources/img/load.gif" alt="Loading..." /><br>`;
+                        }
+                        html += `</div><br><hr><br>`;
+                      }
+                      shown += ' . $maxResults . ';
+                      document.getElementById("view-more-btn").insertAdjacentHTML("beforebegin", html);
+                      if (shown >= allResults.length) {
+                        document.getElementById("view-more-btn").remove();
+                      }
+                      // Re-trigger image loading for new images
+                      document.querySelectorAll("img[data-imdb-id]").forEach(img => {
+                        if (!img.src.includes("cover_image")) {
+                          $.ajax({
+                            url: `resources/cover-image.php?q=${img.getAttribute("data-imdb-id")}`,
+                            method: "GET",
+                            dataType: "json",
+                            async: false,
+                            success: function (imgData) {
+                              if (imgData && imgData.cover_image) {
+                                img.src = imgData.cover_image;
+                              }
+                            },
+                            error: function () {
+                              img.src = "resources/img/load.gif";
+                            }
+                          });
+                        }
+                      });
                     };
-
-
-                    echo "</div><br><hr><br>";
+                  </script>';
                 }
             } catch (Exception $e) {
                 echo "Database error: " . htmlspecialchars($e->getMessage());
@@ -85,7 +129,7 @@
     </p>
   </main>
 
-  <?php include 'resources/footer.php'; ?>
+<br><?php include 'resources/footer.php'; ?>
 </body>
 
 <script>
