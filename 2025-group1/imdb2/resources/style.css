@@ -284,3 +284,19 @@ a:hover {
   text-align: center;
   font-weight: 500;
 }
+
+/* form feedback messages */
+.form-message {
+  text-align: center;
+  margin: 1em 0;
+  font-size: 1rem;
+}
+
+/* FORCE our feedback colours even over body{} */
+.signin-form .form-message.error {
+  color: #c0392b !important;
+}
+
+.signin-form .form-message.success {
+  color: #27ae60 !important;
+}
