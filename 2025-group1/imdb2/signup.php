@@ -1,4 +1,5 @@
 <?php
+session_start();
 // ─── 1) Setup message buckets ──────────────────────────────────────────
 $error   = '';
 $success = '';
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':e' => $email,
         ]);
 
-        $success = "🎉 Signup successful! <a href='signin.php'>Click here to log in.</a>";
+        $success = "🎉 Signup successful! <a href='resources/signin.php'>Click here to log in.</a>";
 
     } catch (Exception $ex) {
         $error = $ex->getMessage();
@@ -95,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </label><br><br>
 
         <button type="submit">Join for Free!</button>
-        <p>Already have an account? <a href="signin.php">Sign In</a></p>
+        <p>Already have an account? <a href="resources/signin.php">Sign In</a></p>
 
         <!-- 👇 only one, centered & styled feedback -->
         <?php if ($error): ?>
