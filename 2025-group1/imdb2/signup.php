@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($dob) {
             $birthdate = new DateTime($dob);
             $today = new DateTime();
-            $age = $today->diff($birthdate);
+            $age = $today->diff($birthdate)->y;
 
             if ($age < 13) {
                 throw new Exception("Sorry! You must be at least 13 to sign up.");
