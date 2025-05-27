@@ -17,6 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pw       = $_POST['password']         ?? '';
         $pw2      = $_POST['passconfirm']      ?? '';
 
+        if ($dob) {
+            $birthdate = new DateTime($dob);
+            $today = new DateTime();
+            $age = $today->diff($birthdate);
+
+            if ($age < 13) {
+                throw new Exception("Sorry! You must be at least 13 to sign up.");
+            }
+        } else {
+            throw new Exception("Please provide your birth date 🎂");
+        }
+
         // validation
         if (!$userID || !$email || !$pw || !$pw2) {
             throw new Exception("Please fill in all fields.");
@@ -80,7 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </label><br><br>
 
         <label>Birth date:<br>
-            <input type="date" name="dob">
+            <input type="date"
+                   name="dob"
+                   max="<?= date('Y-m-d', strtotime('-13 years'))?>"
+                   required>
         </label><br><br>
 
         <label>Email:<br>
