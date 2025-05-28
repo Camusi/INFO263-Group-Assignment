@@ -92,6 +92,7 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
     <?php endif; ?>
     </div>
         <?php 
+        $pageurl = '/INFO263-Group-Assignment/2025-group1/imdb2/' . $pageurl;
         if ($type === 'title'){
             echo '
             <form id="edit-form-title" class="edit-form" action="resources/pageeditor.php" method="post">

@@ -1,4 +1,11 @@
 <?php
+$pageID = htmlspecialchars($_POST['id'] ?? '');
+$type = htmlspecialchars($_POST['type'] ?? '');
+$pageURL = '../' . $type . '/' . $pageID . '.php';
+
+// Initialize $updatedContent with the existing file content
+$updatedContent = file_exists($pageURL) ? file_get_contents($pageURL) : '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = $_POST['type'] ?? null;
 
@@ -19,21 +26,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
    
     $pageID = htmlspecialchars($_POST['id']);
-    $pageURL = htmlspecialchars($_POST['pageurl']);
+    $pageURL = '../' . $type . '/' . $pageID . '.php';
 
     // Append sources/notes as an HTML comment
     $updatedContent .= "\n<!-- This page was recently edited: " . htmlspecialchars($_POST['sources']) . " -->";
 
     // Write the updated content back to the file
     if (file_put_contents($pageURL, $updatedContent) === false) {
-        echo '<p>Error: Unable to save changes to the file.</p>';
         // redirect to the edit page with an error message
         header("Location: ../edit.php?type=$type&id=$pageID&error=1");
         exit;
-    } else {
-        echo '<p>Changes saved successfully!</p>';
+  } else {
         // Redirect to the updated page
-        header("Location: /INFO263-Group-Assignment/2025-group1/imdb2/$type/$id.php");
+        header("Location: /INFO263-Group-Assignment/2025-group1/imdb2/$type/$pageID.php");
         exit;
     }
-} ?>
+}
+?>
