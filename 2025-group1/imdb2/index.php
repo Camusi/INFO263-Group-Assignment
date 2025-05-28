@@ -7,7 +7,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Fetch top 3 liked movies
-    $stmt = $pdo->query("SELECT primaryTitle, startYear, genres, image_url
+    $stmt = $pdo->query("SELECT primaryTitle, startYear, genres, image_url, tconst
                         FROM title_basics_trim
                         ORDER BY IFNULL(likes, 0) DESC
                         LIMIT 3");
@@ -76,9 +76,9 @@ function safe($str) {
             <?php for ($i = 0; $i < 3; $i++): ?>
                 <?php if (isset($topMovies[$i])): ?>
                     <div class="movie-card" id="topMovie<?= $i + 1 ?>">
-                        <img src="<?= safe($topMovies[$i]['image_url']) ?>" alt="Movie <?= $i + 1 ?> Poster" class="movie-poster">
+                        <img id="top-movie-poster-<?= $i ?>" src="resources/img/load.gif" alt="Movie <?= $i + 1 ?> Poster" class="movie-poster" data-tconst="<?= safe($topMovies[$i]['tconst']) ?>">
                         <div class="movie-details">
-                            <h3><?= safe($topMovies[$i]['primaryTitle']) ?></h3>
+                            <h3><a href="resources/page.php?q=<?= safe($topMovies[$i]['tconst']) ?>"><?= safe($topMovies[$i]['primaryTitle']) ?></a></h3>
                             <p><strong>Genre:</strong> <?= safe($topMovies[$i]['genres']) ?></p>
                             <p><strong>Year:</strong> <?= safe($topMovies[$i]['startYear']) ?></p>
                         </div>
@@ -93,7 +93,7 @@ function safe($str) {
             <?php foreach ($topPeople as $index => $person): ?>
                 <div class="person-card" id="topPerson<?= $index + 1 ?>">
                     <div class="person-details">
-                        <h3><?= htmlspecialchars($person['primaryName']) ?></h3>
+                        <h3><a href="resources/page.php?q=<?= htmlspecialchars($person['id']) ?>"><?= htmlspecialchars($person['primaryName']) ?></a></h3>
                         <p><strong>Known For:</strong> <?= htmlspecialchars($person['primaryProfession']) ?></p>
                         <p><strong>Birth Year:</strong> <?= $person['birthYear'] ?: 'N/A' ?></p>
                         <p><strong>Death Year:</strong> <?= $person['deathYear'] ?: 'N/A' ?></p>
@@ -110,24 +110,25 @@ function safe($str) {
 </body>
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
-		const images = document.querySelectorAll("img[data-imdb-id]");
-		images.forEach(img => {
-			$.ajax({
-				url: `resources/cover-image.php?q=${img.getAttribute('data-imdb-id')}`,
-				method: 'GET',
-				dataType: 'json',
-				async: false,
-				success: function (imgData) {
-					if (imgData && imgData.cover_image) {
-						img.src = imgData.cover_image;
-						console.log("found cover image for " + img.getAttribute('data-imdb-id') + " at " + imgData.cover_image);
-					}
-				},
-				error: function () {
-					img.src = "resources/img/load.gif";
-				}
-			});
-		});
+        console.log("DOM fully loaded and parsed");
+        const images = document.querySelectorAll(".movie-poster");
+        console.log("Found images:", images);
+        images.forEach((img, index) => {
+            $.ajax({
+                url: `resources/cover-image.php?q=${img.dataset.tconst}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function (imgData) {
+                    if (imgData && imgData.cover_image) {
+                        img.src = imgData.cover_image;
+                    }
+                },
+                error: function () {
+                    img.src = "resources/img/load.gif";
+                    console.error("Error loading image for movie:", img.dataset.tconst);
+                }
+            });
+        });
 	});
 </script>
 </html>
