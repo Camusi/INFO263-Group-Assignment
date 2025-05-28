@@ -94,15 +94,15 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
         <?php 
         if ($type === 'title'){
             echo '
-            <form id="edit-form-title" class="edit-form" action="edit.php" method="post">
+            <form id="edit-form-title" class="edit-form" action="resources/pageeditor.php" method="post">
             <label for="title">Name:</label>
-            <input class="page-edit-form-entry" type="text" id="title-edit-title" name="title" value="' . htmlspecialchars($runtime) . '" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-title" name="title" value="' . htmlspecialchars($title) . '" required>
             
             <label for="year">Year:</label>
-            <input class="page-edit-form-entry" type="number" id="title-edit-year" name="year" value="' . htmlspecialchars($year) . '" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-year" name="year" value="' . htmlspecialchars($year) . '" required>
             
             <label for="runtime">Runtime: (mins)</label>
-            <input class="page-edit-form-entry" type="number" id="title-edit-runtime" name="runtime" value="' . htmlspecialchars($runtime) . '" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-runtime" name="runtime" value="' . htmlspecialchars($runtime) . '" required>
 
             <label for="blurb">Blurb:</label>
             <input class="page-edit-form-entry" type="text" id="title-edit-blurb" name="blurb" value="' . htmlspecialchars($blurb) . '" required>
@@ -135,13 +135,16 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
             <label for="title-edit-warnings-duplicate">Duplicate Page</label>
             <input type="checkbox" id="title-edit-warnings-outdated" name="warnings" value="4">
             <label for="title-edit-warnings-outdated">Outdated Information</label>
+            <input type="hidden" name="type" value="title">
+            <input type="hidden" name="id" value="' . htmlspecialchars($id) . '">
+            <input type="hidden" name="pageurl" value="' . htmlspecialchars($pageurl) . '">
 
             <button type="submit">Save Changes</button>
         </form>
             ';
         } elseif ($type === 'person') {
             echo "
-            <form id=\"edit-form-person\" class=\"edit-form\" action=\"edit.php\" method=\"post\">
+            <form id=\"edit-form-person\" class=\"edit-form\" action=\"resources/pageeditor.php\" method=\"post\">
             <label for=\"title\">Name:</label>
             <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-title\" name=\"title\" value=\"$title\" required>
             
@@ -167,6 +170,10 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
             <input type=\"checkbox\" id=\"person-edit-warnings-duplicate\" name=\"warnings\" value=\"3\">
             <label for=\"person-edit-warnings-duplicate\">Duplicate Page</label>
             <input type=\"checkbox\" id=\"person-edit-warnings-outdated\" name=\"warnings\" value=\"4\">
+
+            <input type=\"hidden\" name=\"type\" value=\"person\">
+            <input type=\"hidden\" name=\"id\" value=\"" . htmlspecialchars($id) . "\">
+            <input type=\"hidden\" name=\"pageurl\" value=\"" . htmlspecialchars($pageurl) . "\">
             <label for=\"person-edit-warnings-outdated\">Outdated Information</label>
 
             <button type=\"submit\">Save Changes</button>
@@ -178,39 +185,3 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
     <?php include 'resources/footer.php'; ?>
 </body>
 </html>
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $updatedContent = $pagedata;
-
-    if ($type === 'title') {
-        $updatedContent = preg_replace('/<span\s+id="movie-title"\s*>.*?<\/span>/is', '<span id="movie-title">' . htmlspecialchars($_POST['title']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<span\s+id="movie-year"\s*>.*?<\/span>/is', '<span id="movie-year">' . htmlspecialchars($_POST['year']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<span\s+id="movie-runtime"\s*>.*?<\/span>/is', '<span id="movie-runtime">' . htmlspecialchars($_POST['runtime']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<p\s+id="blurb-text"\s*>.*?<\/p>/is', '<p id="blurb-text">' . htmlspecialchars($_POST['blurb']) . '</p>', $updatedContent);
-        $updatedContent = preg_replace('/<p\s+id="plot-text"\s*>.*?<\/p>/is', '<p id="plot-text">' . htmlspecialchars($_POST['plot']) . '</p>', $updatedContent);
-        $updatedContent = preg_replace('/<span\s+id="director"\s*>.*?<\/span>/is', '<span id="director">' . htmlspecialchars($_POST['director']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<span\s+id="writers"\s*>.*?<\/span>/is', '<span id="writers">' . htmlspecialchars($_POST['writers']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<span\s+id="stars"\s*>.*?<\/span>/is', '<span id="stars">' . htmlspecialchars($_POST['stars']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<span\s+id="notable"\s*>.*?<\/span>/is', '<span id="notable">' . htmlspecialchars($_POST['notable']) . '</span>', $updatedContent);
-    } elseif ($type === 'person') {
-        $updatedContent = preg_replace('/<span\s+id="person-name"\s*>.*?<\/span>/is', '<span id="person-name">' . htmlspecialchars($_POST['title']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<span\s+id="person-year"\s*>.*?<\/span>/is', '<span id="person-year">' . htmlspecialchars($_POST['year']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<ul\s+class="roles-list"\s*>.*?<\/ul>/is', '<ul class="roles-list">' . htmlspecialchars($_POST['roles']) . '</ul>', $updatedContent);
-    }
-
-    // Append sources/notes as an HTML comment
-    $updatedContent .= "\n<!-- This page was recently edited: " . htmlspecialchars($_POST['sources']) . " -->";
-
-    // Write the updated content back to the file
-    if (file_put_contents($pageurl, $updatedContent) === false) {
-        echo '<p>Error: Unable to save changes to the file.</p>';
-        // redirect to the edit page with an error message
-        header("Location: edit.php?type=$type&id=$id&error=1");
-        exit;
-    } else {
-        echo '<p>Changes saved successfully!</p>';
-        // Redirect to the updated page
-        header("Location: $pageurl");
-        exit;
-    }
-} ?>
