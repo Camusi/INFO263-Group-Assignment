@@ -26,8 +26,48 @@
             <p id="warning-text">{WARNINGS}</p>
         </div>
     </section>
-    <main class="main-content">
-        <div id="title"><h1>{NAME} ({YEAR})</h1></div>
+    <div id="title"><h1>{NAME} ({YEAR})</h1></div>
+    <main class="title-page-info">
+
+        <div class="left-column">
+            <div id="rating">
+                <?php
+                    // Database connection
+                    try {
+                        $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
+                        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    } catch (PDOException $e) {
+                        echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+                        exit;
+                    }
+
+
+                    $stmt = $db->prepare('SELECT likes FROM title_basics_trim WHERE tconst = \'{ID}\'');
+                    $stmt->execute();
+                    $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $likes = $likes[0]['likes'] ?? '?'; // Default to ? if no likes found
+                    ?>
+            </div>
+            <div id="people">
+                <h2>Notable People:</h2>
+                    <strong>Director(s):</strong> <span id='director'>{DIRECTOR}</span>
+                    <br><strong>Writer(s):</strong> <span id='writers'>{WRITERS}</span>
+                    <br><strong>Starring:</strong> <span id='stars'>{STARS}</span>
+                    <br><strong>Other Notable People:</strong> <span id='notable'>{NOTABLE}</span>
+            </div>
+            <p><span><?php echo $likes; ?></span> Likes!</p>
+            <div>
+                <button id="like-button">👍 Like</button>
+                <button id="dislike-button">👎 Dislike</button>
+            </div>
+            <details id="plot" title="Plot Summary">
+                <summary><h2>Plot:</h2></summary>
+                <p id="plot-text">{PLOT}</p>
+            </details>
+        </div>
+
+        <figure id="poster"><img src="{POSTER}" width="50" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
+
         <aside id="blurb">
             <p id="blurb-text">{BLURB}</p>
             <ul>
@@ -37,41 +77,8 @@
                 <li>Genres: <span id="movie-genres" class="genre-list">{GENRES}</span></li>
             </ul>
         </aside>
-        <figure id="poster"><img src="{POSTER}" width="50" alt="Poster for {NAME}" title="Poster for {NAME} from imdb.com"></figure>
-        <div id="rating">
-            <?php
-                // Database connection
-                try {
-                    $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
-                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                } catch (PDOException $e) {
-                    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
-                    exit;
-                }
-                
-
-                $stmt = $db->prepare('SELECT likes FROM title_basics_trim WHERE tconst = \'{ID}\'');
-                $stmt->execute();
-                $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $likes = $likes[0]['likes'] ?? '?'; // Default to ? if no likes found
-                ?>
-            <p><span><?php echo $likes; ?></span> Likes!</p>
-            <button id="like-button">I like this!</button>
-            <button id="dislike-button">I dislike this!</button>
-        </div>
-        <div id="people">
-            <h2>Notable People:</h2>
-                <strong>Director(s):</strong> <span id='director'>{DIRECTOR}</span>
-                <br><strong>Writer(s):</strong> <span id='writers'>{WRITERS}</span>
-                <br><strong>Starring:</strong> <span id='stars'>{STARS}</span>
-                <br><strong>Other Notable People:</strong> <span id='notable'>{NOTABLE}</span>
-        </div>
-        <details id="plot" title="Plot Summary">
-            <summary><h2>Plot:</h2></summary>
-            <p id="plot-text">{PLOT}</p>
-        </details>
-        <div id="comments"></div>
     </main>
+    <div id="comments"></div>
     <?php include '../resources/footer.php'; ?>
   </body>
 </html>

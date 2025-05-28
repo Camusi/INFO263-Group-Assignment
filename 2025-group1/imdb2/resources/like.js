@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (likeButton) {
         likeButton.addEventListener('click', function() {
             if (likeButton.textContent === 'Remove Like') {
-                likeButton.textContent = 'I like this!';
+                likeButton.textContent = '👍 Like';
                 dislikeButton.disabled = false;
                 sendLikeDislike('unlike');
             } else {
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (dislikeButton) {
         dislikeButton.addEventListener('click', function() {
             if (dislikeButton.textContent === 'Remove Dislike') {
-                dislikeButton.textContent = 'I Dislike This';
+                dislikeButton.textContent = '👎 Dislike';
                 likeButton.disabled = false;
                 sendLikeDislike('undislike');
             } else {

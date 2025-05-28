@@ -51,8 +51,8 @@
                 $likes = $likes[0]['likes'] ?? '?'; // Default to ? if no likes found
                 ?>
             <p><span><?php echo $likes; ?></span> Likes!</p>
-            <button id="like-button">I like this!</button>
-            <button id="dislike-button">I dislike this!</button>
+            <button id="like-button">👍 Like</button>
+            <button id="dislike-button">👎 Dislike</button>
         </div>
         <div id="roles" class="roles">
             <h2>Roles</h2>
