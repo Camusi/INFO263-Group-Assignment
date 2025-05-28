@@ -1,4 +1,6 @@
-<?php ini_set('max_execution_time', 90); ?>
+<?php
+session_start();
+ini_set('max_execution_time', 90); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
+if (!isset($_SESSION['userID'])) {
     http_response_code(403);
     exit("Please log in.");
 }
@@ -22,7 +22,7 @@ if (!isset($valueMap[$ld])) {
 }
 $value = $valueMap[$ld];
 
-$db = new PDO('../resources/imdb-2.sqlite3');
+$db = new PDO('./resources/imdb-2.sqlite3');
 
 // Create the `likes` table if it doesn't exist (optional safety)
 $db->exec("
@@ -51,12 +51,11 @@ if ($inc !== 0) {
 // 2. Update the per-user like tracking
 if ($value !== 0) {
     $stmt = $db->prepare("
-        INSERT OR REPLACE INTO likes (userID, pageID, type, value)
-        VALUES (:uid, :pid, :type, :val)
+        INSERT OR REPLACE INTO likes (userID, pageID, value)
+        VALUES (:uid, :pid, :val)
     ");
     $stmt->bindValue(':uid', $userID, SQLITE3_TEXT);
     $stmt->bindValue(':pid', $pageID, SQLITE3_TEXT);
-    $stmt->bindValue(':type', $type, SQLITE3_TEXT);
     $stmt->bindValue(':val', $value, SQLITE3_INTEGER);
     $stmt->execute();
 } else {
@@ -71,8 +70,7 @@ if ($value !== 0) {
 $query = $db->prepare("SELECT likes FROM $table WHERE $id_col = :id");
 $query->bindValue(':id', $pageID, SQLITE3_TEXT);
 $res = $query->execute();
-$likes = $res->fetchArray(SQLITE3_ASSOC)['likes'] ?? '?';
+$likes = $query->fetch(PDO::FETCH_ASSOC)['likes'] ?? '?';
 
 echo json_encode(['likes' => $likes]);
-$db->close();
 ?>

@@ -62,7 +62,7 @@ function safe($str) {
 </div>
 <div id="warnings">
     <?php if (!empty($_GET['error'])): ?>
-        <p id="page-warning"><?php echo htmlspecialchars($_GETs['error']); ?></p>
+        <p id="page-warning"><?php echo htmlspecialchars($_GET['error']); ?></p>
     <?php endif; ?>
     </div>
 <main class="main-content">
@@ -105,5 +105,29 @@ function safe($str) {
 </main>
 
 <?php include 'resources/footer.php'; ?>
+
+
 </body>
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const images = document.querySelectorAll("img[data-imdb-id]");
+		images.forEach(img => {
+			$.ajax({
+				url: `resources/cover-image.php?q=${img.getAttribute('data-imdb-id')}`,
+				method: 'GET',
+				dataType: 'json',
+				async: false,
+				success: function (imgData) {
+					if (imgData && imgData.cover_image) {
+						img.src = imgData.cover_image;
+						console.log("found cover image for " + img.getAttribute('data-imdb-id') + " at " + imgData.cover_image);
+					}
+				},
+				error: function () {
+					img.src = "resources/img/load.gif";
+				}
+			});
+		});
+	});
+</script>
 </html>

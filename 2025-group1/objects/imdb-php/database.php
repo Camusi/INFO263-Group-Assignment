@@ -131,7 +131,7 @@ function getTitleCount($title)
 }
 
 // Generate Genres Table - now deprecated and uncalled
-function createGenres($pdo): void
+function createGenres($pdo)
 {
     $pdo->exec("DROP TABLE IF EXISTS genres;");
     $pdo->exec("CREATE TABLE genres (genre_id INTEGER PRIMARY KEY AUTOINCREMENT, genre_name TEXT UNIQUE);");
@@ -169,7 +169,7 @@ function createGenres($pdo): void
     createTitleGenre($pdo);
 }
 
-function createTitleGenre($pdo): void
+function createTitleGenre($pdo)
 {
     $pdo->exec("DROP TABLE IF EXISTS title_genre;");
     $pdo->exec(file_get_contents("qryCreateTGenre.sql"));
@@ -177,12 +177,12 @@ function createTitleGenre($pdo): void
     populateTitleGenre($pdo);
 }
 
-function populateTitleGenre($pdo): void
+function populateTitleGenre($pdo):
 {
     $pdo->exec(file_get_contents("qryPopulateTGenre.sql"));
 }
 
-function createProfession(PDO $pdo): void
+function createProfession(PDO $pdo)
 {
     $pdo->exec("DROP TABLE IF EXISTS profession;");
     $pdo->exec("DROP TABLE IF EXISTS name_profession;");
@@ -243,7 +243,7 @@ function createProfession(PDO $pdo): void
         // echo "Processed up to nconst: $lastNconst" . PHP_EOL;
     }
 }
-function indexDB($pdo): void
+function indexDB($pdo):
 {
     $pdo->exec(file_get_contents('qryIndex.sql'));
 }
