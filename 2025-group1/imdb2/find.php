@@ -4,11 +4,13 @@ ini_set('max_execution_time', 90); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>"<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>"" | IMDB2</title>
-  <link rel="stylesheet" href="resources/style.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>"<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>"" | IMDB2</title>
+    <link rel="stylesheet" href="resources/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="resources/search.js"></script>
+
 </head>
 <body>
   <header class="header">
@@ -17,24 +19,6 @@ ini_set('max_execution_time', 90); ?>
   </header>
 
 <?php include 'resources/navbar.php'; ?>
-  <section class="search-bar">
-  <form action="find.php" method="GET">
-    <input type="text" id="find-search-input" name="q" placeholder="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
-    <button id="find-search-button" type="submit">Search</button>
-    <script>
-      document.querySelector('form').addEventListener('submit', function(e) {
-      var input = document.getElementById('find-search-input').value.trim();
-      if (!input) {
-        e.preventDefault();
-        location.href = location.pathname;
-      } else {
-        e.preventDefault();
-        location.href = location.pathname + '?q=' + encodeURIComponent(input);
-      }
-      });
-    </script>
-  </form>
-  </section>
   <main class="query-results">
     <p id="search-output">
         <?php
