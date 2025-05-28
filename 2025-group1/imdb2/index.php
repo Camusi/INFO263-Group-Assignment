@@ -20,7 +20,8 @@ try {
             birthYear,
             deathYear,
             primaryProfession,
-            likes
+            likes,
+            nconst
         FROM name_basics_trim
         ORDER BY IFNULL(likes, 0) DESC
         LIMIT 3
@@ -93,7 +94,7 @@ function safe($str) {
             <?php foreach ($topPeople as $index => $person): ?>
                 <div class="person-card" id="topPerson<?= $index + 1 ?>">
                     <div class="person-details">
-                        <h3><a href="resources/page.php?q=<?= htmlspecialchars($person['id']) ?>"><?= htmlspecialchars($person['primaryName']) ?></a></h3>
+                        <h3><a href="resources/page.php?q=<?= safe($person['nconst']) ?>"><?= htmlspecialchars($person['primaryName']) ?></a></h3>
                         <p><strong>Known For:</strong> <?= htmlspecialchars($person['primaryProfession']) ?></p>
                         <p><strong>Birth Year:</strong> <?= $person['birthYear'] ?: 'N/A' ?></p>
                         <p><strong>Death Year:</strong> <?= $person['deathYear'] ?: 'N/A' ?></p>
