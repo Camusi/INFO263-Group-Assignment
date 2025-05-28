@@ -1,5 +1,21 @@
 <?php
-// This script generates a new page based on the provided ID and type. 
+session_start();
+$userID = isset($_SESSION['userID']) ? $_SESSION['userID'] : '';
+$id = isset($_GET['q']) ? trim($_GET['q']) : '';
+$type = isset($_GET['type']) ? trim($_GET['type']) : '';
+$pageID = $id; // Define pageID here
+
+if ($id === '') {
+    echo 'Missing a Query. Bad ID?';
+    exit;
+}
+?>
+
+<div class="like-dislike" data-userid="<?php echo htmlspecialchars($userID); ?>" data-pageid="<?php echo htmlspecialchars($pageID); ?>">
+
+
+<?php
+// This script generates a new page based on the provided ID and type.
 $id = isset($_GET['q']) ? trim($_GET['q']) : '';
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
 if ($id === '') {
@@ -258,9 +274,6 @@ foreach ($warningsArr as $warning) {
 // Votes Logic
 $votes = 0;
 
-?>
-
-<?php 
 /* 
 
   _____                 _        ______                _   _                 
@@ -313,11 +326,6 @@ if ($type === 'person') {
 
 
 ?>
-
-
-
-
-
 
 
 <!DOCTYPE html>
