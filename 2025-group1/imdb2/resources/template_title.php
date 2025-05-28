@@ -32,7 +32,7 @@
             <p id="blurb-text">{BLURB}</p>
             <ul>
                 <li>Title: <span id="movie-title">{NAME}</span></li>
-                <li>Year: <span id="movie-year"></span>{YEAR}</span></li>
+                <li>Year: <span id="movie-year">{YEAR}</span></li>
                 <li>Runtime: <span id="movie-runtime">{RUNTIME}</span></li>
                 <li>Genres: <span id="movie-genres" class="genre-list">{GENRES}</span></li>
             </ul>
