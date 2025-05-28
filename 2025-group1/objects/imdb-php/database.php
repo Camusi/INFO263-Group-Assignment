@@ -177,7 +177,7 @@ function createTitleGenre($pdo)
     populateTitleGenre($pdo);
 }
 
-function populateTitleGenre($pdo):
+function populateTitleGenre($pdo)
 {
     $pdo->exec(file_get_contents("qryPopulateTGenre.sql"));
 }
@@ -243,7 +243,7 @@ function createProfession(PDO $pdo)
         // echo "Processed up to nconst: $lastNconst" . PHP_EOL;
     }
 }
-function indexDB($pdo):
+function indexDB($pdo)
 {
     $pdo->exec(file_get_contents('qryIndex.sql'));
 }
