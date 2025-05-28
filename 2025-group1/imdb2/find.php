@@ -61,7 +61,7 @@ ini_set('max_execution_time', 90); ?>
                   echo "</div><br><hr><br>";
                 }
                 if (count($results) > $maxResults) {
-                  echo "<button id='view-more-btn'>View More</button>";
+                  echo "<button id='view-more-btn'>View 8 More</button>";
                   ?>
                   <script>
                     const allResults = <?php echo json_encode($results); ?>;
@@ -91,7 +91,7 @@ ini_set('max_execution_time', 90); ?>
                             url: `resources/cover-image.php?q=${img.getAttribute("data-imdb-id")}`,
                             method: "GET",
                             dataType: "json",
-                            async: false,
+                            async: true,
                             success: function (imgData) {
                               if (imgData && imgData.cover_image) {
                                 img.src = imgData.cover_image;
@@ -104,6 +104,17 @@ ini_set('max_execution_time', 90); ?>
                         }
                       });
                     };
+                  </script>
+                  <script>
+                    document.getElementById("view-more-btn").addEventListener("click", function () {
+                      const button = this;
+                      const loadingImg = document.createElement("img");
+                      loadingImg.src = "resources/img/load.png";
+                      loadingImg.alt = "Loading...";
+                      loadingImg.width = 24;
+                      loadingImg.height = 24;
+                      button.parentNode.replaceChild(loadingImg, button);
+                    });
                   </script>
                   <?php
                 }
