@@ -44,16 +44,16 @@ if (preg_match('/<p\s+id="plot-text"\s*>(.*?)<\/p>/is', $pagedata, $matches)) {
     $plot = trim($matches[1]);
 }
 if (preg_match('/<span\s+id="director"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $director = trim($matches[1]);
+    $director = trim($matches);
 }
 if (preg_match('/<span\s+id="writers"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $writers = trim($matches[1]);
+    $writers = trim($matches);
 }
 if (preg_match('/<span\s+id="stars"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $stars = trim($matches[1]);
+    $stars = trim($matches);
 }
 if (preg_match('/<span\s+id="notable"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $notable = trim($matches[1]);
+    $notable = trim($matches);
 }
 //people
 if (preg_match('/<span\s+id="person-year"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
