@@ -1,6 +1,10 @@
 <?php
 // Preload crap
-
+session_start();
+if (!isset($_SESSION["userID"] )) {
+    header("Location: signin.php?error=You%20must%20be%20logged%20in%20to%20edit%20pages.");
+    exit;
+}
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $id = $_GET['id'] ?? null;
     if (!$id) {
