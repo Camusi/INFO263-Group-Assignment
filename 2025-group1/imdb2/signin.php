@@ -56,7 +56,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <main class="main-content">
     <div id="warnings">
-      <p id="page-warning"><?php echo htmlspecialchars($_GET['error'] ?? ''); ?></p>
+      <?php if (!empty($_GET['error'])): ?>
+        <p id="page-warning"><?php echo htmlspecialchars($_GET['error']); ?></p>
+    <?php endif; ?>
     </div>
     <form action="signin.php" method="post" class="signin-form">
         <p>Please note all values are case-sensitive.</p><br>
