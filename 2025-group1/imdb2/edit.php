@@ -81,8 +81,8 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
 </head>
 <body>
     <header class="header">
-        <h1>Editing <?php echo $title; ?></h1>
-        <p><?php echo $pageurl; ?></p>
+        <h1>IMDB2.0</h1>
+        <p>Editing <?php echo $title; ?></p>
     </header>
     <?php include 'resources/navbar.php'; ?>
     <main class="main-content">
@@ -132,17 +132,23 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
 
             <label for="warnings">Page Warnings</label>
             <p>Please check the relevant page warnings below.</p>
-            <input type="checkbox" id="title-edit-warnings-stub" name="warnings" value="1">
+            
+          <div style="display: flex; align-items: center; gap: 5.6rem; white-space: nowrap;">
             <label for="title-edit-warnings-stub">Stub Page</label>
-            <input type="checkbox" id="title-edit-warnings-unverified" name="warnings" value="2">
+            <input type="checkbox" id="title-edit-warnings-stub" name="warnings[]" value="1">
+          </div>
+          <div style="display: flex; align-items: center; gap: 0rem; white-space: nowrap;">
             <label for="title-edit-warnings-unverified">Unverified Information</label>
-            <input type="checkbox" id="title-edit-warnings-duplicate" name="warnings" value="3">
+            <input type="checkbox" id="title-edit-warnings-unverified" name="warnings[]" value="2">
+          </div>
+          <div style="display: flex; align-items: center; gap: 3.3rem; white-space: nowrap;">
             <label for="title-edit-warnings-duplicate">Duplicate Page</label>
-            <input type="checkbox" id="title-edit-warnings-outdated" name="warnings" value="4">
+            <input type="checkbox" id="title-edit-warnings-duplicate" name="warnings[]" value="3">
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.2rem; white-space: nowrap;">
             <label for="title-edit-warnings-outdated">Outdated Information</label>
-            <input type="hidden" name="type" value="title">
-            <input type="hidden" name="id" value="' . htmlspecialchars($id) . '">
-            <input type="hidden" name="pageurl" value="' . htmlspecialchars($pageurl) . '">
+            <input type="checkbox" id="title-edit-warnings-outdated" name="warnings[]" value="4">
+          </div>
 
             <button type="submit">Save Changes</button>
         </form>
@@ -167,19 +173,26 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
 
             <label for=\"warnings\">Page Warnings</label>
             <p>Please check the relevant page warnings below.</p>
-            <input type=\"checkbox\" id=\"person-edit-warnings-stub\" name=\"warnings\" value=\"1\">
-        // redirect to the edit page with an error message
-            <label for=\"person-edit-warnings-stub\">Stub Page</label>
-            <input type=\"checkbox\" id=\"person-edit-warnings-unverified\" name=\"warnings\" value=\"2\">
-            <label for=\"person-edit-warnings-unverified\">Unverified Information</label>
-            <input type=\"checkbox\" id=\"person-edit-warnings-duplicate\" name=\"warnings\" value=\"3\">
-            <label for=\"person-edit-warnings-duplicate\">Duplicate Page</label>
-            <input type=\"checkbox\" id=\"person-edit-warnings-outdated\" name=\"warnings\" value=\"4\">
+            <div style=\"display: flex; align-items: center; gap: 5.6rem; white-space: nowrap;\">
+              <label for=\"person-edit-warnings-stub\">Stub Page</label>
+              <input type=\"checkbox\" id=\"person-edit-warnings-stub\" name=\"warnings[]\" value=\"1\">
+            </div>
+            <div style=\"display: flex; align-items: center; gap: 0rem; white-space: nowrap;\">
+              <label for=\"person-edit-warnings-unverified\">Unverified Information</label>
+              <input type=\"checkbox\" id=\"person-edit-warnings-unverified\" name=\"warnings[]\" value=\"2\">
+            </div>
+            <div style=\"display: flex; align-items: center; gap: 3.3rem; white-space: nowrap;\">
+              <label for=\"person-edit-warnings-duplicate\">Duplicate Page</label>
+              <input type=\"checkbox\" id=\"person-edit-warnings-duplicate\" name=\"warnings[]\" value=\"3\">
+            </div>
+            <div style=\"display: flex; align-items: center; gap: 0.2rem; white-space: nowrap;\">
+              <label for=\"person-edit-warnings-outdated\">Outdated Information</label>
+              <input type=\"checkbox\" id=\"person-edit-warnings-outdated\" name=\"warnings[]\" value=\"4\">
+            </div>
 
             <input type=\"hidden\" name=\"type\" value=\"person\">
             <input type=\"hidden\" name=\"id\" value=\"" . htmlspecialchars($id) . "\">
             <input type=\"hidden\" name=\"pageurl\" value=\"" . htmlspecialchars($pageurl) . "\">
-            <label for=\"person-edit-warnings-outdated\">Outdated Information</label>
 
             <button type=\"submit\">Save Changes</button>
             </form>

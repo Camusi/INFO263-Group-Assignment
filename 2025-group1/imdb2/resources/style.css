@@ -62,6 +62,23 @@ a:hover {
   border: 1px solid #aaa;
 }
 
+#search-input {
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #d3d3d3;
+  border-radius: 8px;
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 2px 6px #d3d3d3;
+  width: 100%;
+  max-width: 400px;
+}
+
+#search-input:focus {
+  box-shadow: 0 0 8px #6e6e6e;
+}
+
+
 .navbar .active {
   font-weight: bold;
   color: #0077cc;
@@ -275,7 +292,7 @@ a:hover {
 }
 
 .left-column {
-  width: 30%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -286,15 +303,19 @@ a:hover {
   justify-content: center;
   align-items: center;
   width: 30%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 #blurb {
   background-color: #e2e3e5;
   color: #383d41;
   border: 1px solid #b8c0c7;
-  width: 30%;
   box-sizing: border-box;
   padding: 2rem 2rem 7rem;
+  height: auto;
+  width: auto;
+  max-width: 80%;
 }
 
 #blurb ul {
@@ -330,6 +351,19 @@ button:hover {
 button:active {
   background-color: #d0d0d0;
   transform: scale(0.97);
+}
+
+/* person page */
+.blurb-image {
+  display: flex;
+}
+
+.svg-box {
+  background-color: #f0f0f0;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  justify-content: center;
 }
 
 
@@ -394,4 +428,21 @@ button:active {
   margin-top: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+textarea {
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #d3d3d3;
+  border-radius: 8px;
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  resize: vertical;
+  font-family: inherit;
+  background-color: #fff;
+}
+
+textarea:focus {
+  box-shadow: 0 0 8px #6e6e6e;
+  border-color: #6e6e6e;
 }

@@ -27,8 +27,8 @@
         </div>
     </section>
     <div id="title"><h1>{NAME} ({YEAR})</h1></div>
-    <main class="title-page-info">
 
+    <main class="title-page-info">
         <div class="left-column">
             <div id="rating">
                 <?php
@@ -55,7 +55,7 @@
                     <br><strong>Starring:</strong> <span id='stars'>{STARS}</span>
                     <br><strong>Other Notable People:</strong> <span id='notable'>{NOTABLE}</span>
             </div>
-            <p><span><?php echo $likes; ?></span> Likes!</p>
+            <p><span><?php echo $likes; ?></span> Likes</p>
             <div>
                 <button id="like-button">👍 Like</button>
                 <button id="dislike-button">👎 Dislike</button>
