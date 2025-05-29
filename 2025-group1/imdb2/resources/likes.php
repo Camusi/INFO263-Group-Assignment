@@ -26,9 +26,10 @@ try {
     $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Determine which table this is (title or person)
-    $table = str_starts_with($pageID, 'tt') ? 'title_basics_trim' : 'name_basics_trim';
-    $id_col = str_starts_with($pageID, 'tt') ? 'tconst' : 'nconst';
+// Determine which table this is (title or person)
+    $table = substr($pageID, 0, 2) === 'tt' ? 'title_basics_trim' : 'name_basics_trim';
+    $id_col = substr($pageID, 0, 2) === 'tt' ? 'tconst' : 'nconst';
+
 
     // Update like count if like/dislike
     $inc = ($ld === 'like') ? 1 : (($ld === 'dislike') ? -1 : 0);
@@ -40,9 +41,11 @@ try {
     }
 
     // Update user-level like tracking
+    $udb = new PDO('sqlite:../resources/imdb2-user.sqlite3');
+    $udb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if ($value !== 0) {
         $likeID = $userID . '_' . $pageID;
-        $stmt = $db->prepare("
+        $stmt = $udb->prepare("
             INSERT INTO likes (likeID, userID, pageID, value)
             VALUES (:lid, :uid, :pid, :val)
             ON CONFLICT(likeID) DO UPDATE SET value = :val
@@ -54,11 +57,32 @@ try {
         $stmt->execute();
     } else {
         // Remove user’s like/dislike
-        $stmt = $db->prepare("DELETE FROM likes WHERE userID = :uid AND pageID = :pid");
+        $stmt = $udb->prepare("DELETE FROM likes WHERE userID = :uid AND pageID = :pid");
         $stmt->bindValue(':uid', $userID, PDO::PARAM_STR);
         $stmt->bindValue(':pid', $pageID, PDO::PARAM_STR);
         $stmt->execute();
     }
+
+    // Count likes from user table to
+    $stmt = $udb->prepare("
+    SELECT COUNT(likes) AS likes
+    FROM likes
+    WHERE pageID = ':pid';
+    ");
+    $stmt->bindValue(':pid', $pageID, PDO::PARAM_STR);
+    $stmt->execute();
+    $li = $stmt->fetch(PDO::FETCH_ASSOC)['likes'] ?? 0;
+
+    $stmt = $db->prepare("
+    UPDATE :table (likes)
+    VALUES (':count')
+    WHERE ':col' = ':pid';
+    ");
+    $stmt->bindValue(':table', $table, PDO::PARAM_STR);
+    $stmt->bindValue(':count', $li, PDO::PARAM_INT);
+    $stmt->bindValue(':col', $id_col, PDO::PARAM_STR);
+    $stmt->bindValue(':pid', $pageID, PDO::PARAM_STR);
+    $stmt->execute();
 
     // Return updated like count
     $stmt = $db->prepare("SELECT likes FROM $table WHERE $id_col = :id");
