@@ -65,4 +65,3 @@ try {
     header("Location: generate.php?q=" . $result['id'] . "&type=" . $pageType);
     exit;
 ?>
-
