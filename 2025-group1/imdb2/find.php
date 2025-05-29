@@ -109,11 +109,14 @@ ini_set('max_execution_time', 90); ?>
                     document.getElementById("view-more-btn").addEventListener("click", function () {
                       const button = this;
                       const loadingImg = document.createElement("img");
-                      loadingImg.src = "resources/img/load.png";
+                      loadingImg.src = "resources/img/load.gif";
                       loadingImg.alt = "Loading...";
                       loadingImg.width = 24;
                       loadingImg.height = 24;
                       button.parentNode.replaceChild(loadingImg, button);
+                      setTimeout(function() {
+                        loadingImg.parentNode.replaceChild(button, loadingImg);
+                      }, 2000); // Adjust the delay time as needed
                     });
                   </script>
                   <?php
