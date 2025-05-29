@@ -1,8 +1,8 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID'])) {
+if (!empty($_SESSION['userID'])) {
     http_response_code(403);
-    exit("Please log in.");
+    header('Location: ../index.php?error=403');
 }
 
 $userID = $_SESSION['userID'];

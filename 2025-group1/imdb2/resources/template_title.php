@@ -57,8 +57,7 @@
             </div>
             <p><span><?php echo $likes; ?></span> Likes</p>
             <div>
-                <button id="like-button">👍 Like</button>
-                <button id="dislike-button">👎 Dislike</button>
+                <?php if (!isset($_SESSION['userID'])){echo '<button id="rate-login-prompt">Login to rate "{NAME} ({YEAR})"!</button>';} else{echo '<button id="like-button">👍 Like</button><button id="dislike-button">👎 Dislike</button>';} ?> 
             </div>
             <details id="plot" title="Plot Summary">
                 <summary><h2>Plot:</h2></summary>

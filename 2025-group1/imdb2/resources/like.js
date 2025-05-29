@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const likeButton = document.getElementById('like-button');
     const dislikeButton = document.getElementById('dislike-button');
+    const loginButton = document.getElementById('rate-login-prompt');
 
     function getIdAndTypeFromUrl() {
         const path = window.location.pathname;
@@ -46,6 +47,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 likeButton.disabled = true;
                 sendLikeDislike('dislike');
             }
+        });
+    }
+    if (loginButton) {
+        loginButton.addEventListener('click', function() {
+            window.location.href = '../signin.php';
         });
     }
 });
