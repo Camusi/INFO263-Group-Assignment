@@ -1,7 +1,9 @@
 <?php
-$pageID = htmlspecialchars($_POST['id'] ?? '');
+session_start();
+$pageID = $_POST['pageID'];
 $type = htmlspecialchars($_POST['type'] ?? '');
 $pageURL = '../' . $type . '/' . $pageID . '.php';
+$username = $_SESSION['userID'];
 
 // Initialize $updatedContent with the existing file content
 $updatedContent = file_exists($pageURL) ? file_get_contents($pageURL) : '';
@@ -25,11 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updatedContent = preg_replace('/<ul\s+class="roles-list"\s*>.*?<\/ul>/is', '<ul class="roles-list">' . htmlspecialchars($_POST['roles']) . '</ul>', $updatedContent);
     }
    
-    $pageID = htmlspecialchars($_POST['id']);
+    $pageID = $_POST['id'];
     $pageURL = '../' . $type . '/' . $pageID . '.php';
 
     // Append sources/notes as an HTML comment
-    $updatedContent .= "\n<!-- This page was recently edited: " . htmlspecialchars($_POST['sources']) . " -->";
+    $updatedContent .= "\n<!-- This page was recently edited by" . htmlspecialchars($username) . ": " . htmlspecialchars($_POST['sources']) . " -->";
+    $updatedContent .= "id =\"" . htmlspecialchars($pageID) . "\"<br>";
+    $updatedContent .= "<br>url: ". htmlspecialchars($pageURL);
+    $updatedContent .= "<br>user: " . htmlspecialchars($username) . "<br>";
 
     // Write the updated content back to the file
     if (file_put_contents($pageURL, $updatedContent) === false) {

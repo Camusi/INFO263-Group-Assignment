@@ -6,12 +6,12 @@ if (!isset($_SESSION["userID"] )) {
     exit;
 }
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    $id = $_GET['id'] ?? null;
+    $id = $_GET['id'];
     if (!$id) {
         header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.");
         exit;
     }
-    $type = $_GET['type'] ?? null;
+    $type = $_GET['type'];
     if (!$type || !in_array($type, ['title', 'person'])) {
         header("Location: index.php?error=Sorry,%20you%20cannot%20edit%20the%20page%20at%20this%20time.");
         exit;
@@ -130,9 +130,14 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
             <label for="sources">Sources/Notes</label>
             <textarea class="page-edit-form-entry" id="title-edit-sources" name="sources" rows="4" placeholder="Please enter any notes or sources for your edits" required></textarea>
 
+            
+
+            <input type="hidden" name="type" value="person">
+            <input type="hidden" id="pageID" name="pageID" value=" . $id . ">
+            <input type="hidden" name="pageurl" value=" . $pageurl . ">
+
             <label for="warnings">Page Warnings</label>
             <p>Please check the relevant page warnings below.</p>
-            
           <div style="display: flex; align-items: center; gap: 5.6rem; white-space: nowrap;">
             <label for="title-edit-warnings-stub">Stub Page</label>
             <input type="checkbox" id="title-edit-warnings-stub" name="warnings[]" value="1">
