@@ -18,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     }
 }
 
+$userRank = $_SESSION['role'];
+
 // Read page information
 $pageurl =  $type . '/' . $id . '.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -90,8 +92,12 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
     <?php if (!empty($_GET['error'])): ?>
         <?php if ($_GET['error'] == 1): ?>
             <p id="page-warning">Failed to save, please try again soon or contact a site administrator.</p>
+        <?php elseif ($_GET['error'] == 2): ?>
+            <p id="page-warning">Failed to apply page edits due to an outdated Session. Please refresh the page and try again.</p>
+        <?php elseif ($_GET['error'] == 3): ?>
+            <p id="page-warning">Failed to find page ID. Please try again soon or contact a site administrator.</p>
         <?php else: ?>
-            <p id="page-warning">An error occured.</p>
+            <p id="page-warning">An unknown error occured. Please try again soon or contact a site administrator.</p>
         <?php endif; ?>
     <?php endif; ?>
     </div>
@@ -106,7 +112,7 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
             <label for="year">Year:</label>
             <input class="page-edit-form-entry" type="text" id="title-edit-year" name="year" value="' . htmlspecialchars($year) . '" required>
             
-            <label for="runtime">Runtime: (mins)</label>
+            <label for="runtime">Runtime:</label>
             <input class="page-edit-form-entry" type="text" id="title-edit-runtime" name="runtime" value="' . htmlspecialchars($runtime) . '" required>
 
             <label for="blurb">Blurb:</label>
@@ -114,7 +120,7 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
 
             <label for="plot">Plot:</label>
             <textarea class="page-edit-form-entry" id="title-edit-plot" name="plot" rows="4" required>' . htmlspecialchars($plot) . '</textarea>
-
+            <!-- The following fields are not working yet.
             <label for="director">Director(s):</label>
             <input class="page-edit-form-entry" type="text" id="title-edit-director" name="director" value="' . htmlspecialchars($director) . '" required>
 
@@ -126,38 +132,20 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
 
             <label for="notable">Other Notable People:</label>
             <input class="page-edit-form-entry" type="text" id="title-edit-notable" name="notable" value="' . htmlspecialchars($notable) . '" required>
+            -->
+            <br><hr><br><p>Error with the people involved? Contact a site administrator to edit this content.</p><br><hr><br>
+            <label for="sources">Edit Summary, Sources, and Notes:</label>
+            <textarea class="page-edit-form-entry" id="title-edit-sources" name="sources" rows="6" minlength="10" maxlength="800" placeholder="Please enter any notes or sources for your edits. This edit message is limited to 800 characters and will be visible for all site users." required></textarea>
 
-            <label for="sources">Sources/Notes</label>
-            <textarea class="page-edit-form-entry" id="title-edit-sources" name="sources" rows="4" placeholder="Please enter any notes or sources for your edits" required></textarea>
-
-            
-
-            <input type="hidden" name="type" value="person">
-            <input type="hidden" id="pageID" name="pageID" value=" . $id . ">
+            <input type="hidden" name="type" value="title">
+            <input type="hidden" name="id" value="'. htmlspecialchars($id) .'">
             <input type="hidden" name="pageurl" value=" . $pageurl . ">
-
-            <label for="warnings">Page Warnings</label>
-            <p>Please check the relevant page warnings below.</p>
-          <div style="display: flex; align-items: center; gap: 5.6rem; white-space: nowrap;">
-            <label for="title-edit-warnings-stub">Stub Page</label>
-            <input type="checkbox" id="title-edit-warnings-stub" name="warnings[]" value="1">
-          </div>
-          <div style="display: flex; align-items: center; gap: 0rem; white-space: nowrap;">
-            <label for="title-edit-warnings-unverified">Unverified Information</label>
-            <input type="checkbox" id="title-edit-warnings-unverified" name="warnings[]" value="2">
-          </div>
-          <div style="display: flex; align-items: center; gap: 3.3rem; white-space: nowrap;">
-            <label for="title-edit-warnings-duplicate">Duplicate Page</label>
-            <input type="checkbox" id="title-edit-warnings-duplicate" name="warnings[]" value="3">
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.2rem; white-space: nowrap;">
-            <label for="title-edit-warnings-outdated">Outdated Information</label>
-            <input type="checkbox" id="title-edit-warnings-outdated" name="warnings[]" value="4">
-          </div>
-
             <button type="submit">Save Changes</button>
         </form>
             ';
+            if (isset($userRank) && $userRank === 'admin') {
+                echo '<button id="reset-page-button" onclick="if(confirm(\'Are you sure you want to RESET this page? All user modified data will be wiped and return to the database entry. Likes and Comments will not be affected.\')){window.location.href=\'resources/deletepage.php?type=title&id=' . htmlspecialchars($id) . '\';}">Delete Page</button>';
+            }
         } elseif ($type === 'person') {
             echo "
             <form id=\"edit-form-person\" class=\"edit-form\" action=\"resources/pageeditor.php\" method=\"post\">
@@ -174,26 +162,8 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
             <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-roles\" name=\"roles\" value=\"$roles\" required>
 
             <label for=\"sources\">Sources/Notes</label>
-            <textarea class=\"page-edit-form-entry\" id=\"person-edit-sources\" name=\"sources\" rows=\"4\" placeholder=\"Please enter any notes or sources for your edits\" required></textarea>
+            <textarea class=\"page-edit-form-entry\" id=\"person-edit-sources\" name=\"sources\" maxlength=\"800\" placeholder=\"Please enter any notes or sources for your edits. This edit message is limited to 800 characters and will be visible for all site users.\" required></textarea>
 
-            <label for=\"warnings\">Page Warnings</label>
-            <p>Please check the relevant page warnings below.</p>
-            <div style=\"display: flex; align-items: center; gap: 5.6rem; white-space: nowrap;\">
-              <label for=\"person-edit-warnings-stub\">Stub Page</label>
-              <input type=\"checkbox\" id=\"person-edit-warnings-stub\" name=\"warnings[]\" value=\"1\">
-            </div>
-            <div style=\"display: flex; align-items: center; gap: 0rem; white-space: nowrap;\">
-              <label for=\"person-edit-warnings-unverified\">Unverified Information</label>
-              <input type=\"checkbox\" id=\"person-edit-warnings-unverified\" name=\"warnings[]\" value=\"2\">
-            </div>
-            <div style=\"display: flex; align-items: center; gap: 3.3rem; white-space: nowrap;\">
-              <label for=\"person-edit-warnings-duplicate\">Duplicate Page</label>
-              <input type=\"checkbox\" id=\"person-edit-warnings-duplicate\" name=\"warnings[]\" value=\"3\">
-            </div>
-            <div style=\"display: flex; align-items: center; gap: 0.2rem; white-space: nowrap;\">
-              <label for=\"person-edit-warnings-outdated\">Outdated Information</label>
-              <input type=\"checkbox\" id=\"person-edit-warnings-outdated\" name=\"warnings[]\" value=\"4\">
-            </div>
 
             <input type=\"hidden\" name=\"type\" value=\"person\">
             <input type=\"hidden\" name=\"id\" value=\"" . htmlspecialchars($id) . "\">

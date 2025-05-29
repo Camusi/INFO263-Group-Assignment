@@ -4,7 +4,21 @@ $userID = isset($_SESSION['userID']) ? $_SESSION['userID'] : '';
 $id = isset($_GET['q']) ? trim($_GET['q']) : '';
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
 $pageID = $id; // Define pageID here
+?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding {id}</title>
+</head>
+<body>
+    <p>Welcome back <?php echo htmlspecialchars($userID); ?>!</p>
+</body>
+</html>
+
+<?php
 if ($id === '') {
     echo 'Missing a Query. Bad ID?';
     exit;
@@ -34,7 +48,7 @@ if ($type === 'title') {
 global $warningsArr;
 $warningsArr = array();
 ?>
-
+<p>You are actually the first person to search for <?php echo htmlspecialchars($id); ?>, so we are just loading the content for the first time. Sorry for the delay!</p>
 <?php
 // Database connection
 try {
@@ -60,7 +74,9 @@ try {
 
     $sqlOutput = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
-    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+    echo "<h1>An Error Occured:</h1><strong>Failed to create page {$pagePath}. Please contact a site administrator.</strong>";
+    echo "<br><br>Redirecting to the homepage in 15 seconds.";
+    header("Refresh: 15; URL=../index.php?error=Failed%20to%20create%20page%20{$row['primary_name']}.");
     exit;
 }
 ?>
@@ -83,8 +99,9 @@ $imdbType = ($type === 'person') ? 'name' : $type;
 $url = "https://www.imdb.com/{$imdbType}/{$id}";
 $data = file_get_contents($url);
 if ($data === false) {
-    echo json_encode(['error' => 'Failed to fetch IMDb page.']);
-    exit;
+    echo "<h1>An Error Occured:</h1><strong>Failed to create page {$pagePath}. Please contact a site administrator.</strong>";
+    echo "<br><br>Redirecting to the homepage in 15 seconds.";
+    header("Refresh: 15; URL=../index.php?error=Failed%20to%20create%20page%20{$row['primary_name']}.");
 }
 
 // Find the cover image URL by using cover-image.php?q=ID json cover_image:
@@ -96,7 +113,6 @@ $image_url = '../resources/img/load.gif'; // Default fallback image
 // Find the blurb
 if (preg_match('/<span[^>]*data-testid="plot-xl"[^>]*>(.*?)<\/span>/is', $data, $blurbMatch)) {
     $blurb = trim(strip_tags($blurbMatch[1]));
-} else {
     $blurb = '';
 }
 
@@ -368,7 +384,7 @@ if ($type === 'person') {
                 $content = str_replace('{PLOT}', $plot, $content);
                 $content = str_replace('{NOTABLE}', $notable_people, $content);
                 $content = str_replace('{ID}', $row['id'], $content);
-                $content = str_replace('{WARNINGS}', $warnings, $content);
+                $content = str_replace('{WARNINGS}', '', $content);
                 $content = str_replace('{VOTES}', $votes, $content);
                 // Write back to the file
                 if (file_put_contents($pagePath, $content) !== false) {
@@ -398,7 +414,7 @@ if ($type === 'person') {
                 $content = str_replace('{ROLES}', $roles, $content);
                 $content = str_replace('{BLURB}', $bio, $content);
                 $content = str_replace('{ID}', $row['id'], $content);
-                $content = str_replace('{WARNINGS}', $warnings, $content);
+                $content = str_replace('{WARNINGS}', '', $content);
                 $content = str_replace('{VOTES}', $votes, $content);
                 // Write back to the file
                 if (file_put_contents($pagePath, $content) !== false) {
@@ -413,7 +429,7 @@ if ($type === 'person') {
     } else {
         echo "<h1>An Error Occured:</h1><strong>Failed to create page {$pagePath}. Please contact a site administrator.</strong>";
         echo "<br><br>Redirecting to the homepage in 15 seconds.";
-        header("Refresh: 15; URL=../");
+        header("Refresh: 15; URL=../index.php?error=Failed%20to%20create%20page%20{$row['primary_name']}.");
     }
 
     ?>
