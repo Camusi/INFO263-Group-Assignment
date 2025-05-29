@@ -13,7 +13,7 @@
 <body>
     <header class="header">
     <h1>IMDB2.0</h1>
-    <p>{NAME}</p>
+    <p id="person-name">{NAME}</p>
   </header>
   <?php include '../resources/navbar.php'; ?>
   <div class="search-results">

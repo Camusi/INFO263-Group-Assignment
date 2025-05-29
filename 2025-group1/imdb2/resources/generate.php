@@ -368,7 +368,7 @@ if ($type === 'person') {
                 $content = str_replace('{PLOT}', $plot, $content);
                 $content = str_replace('{NOTABLE}', $notable_people, $content);
                 $content = str_replace('{ID}', $row['id'], $content);
-                $content = str_replace('{WARNINGS}', $warnings, $content);
+                $content = str_replace('{WARNINGS}', '', $content);
                 $content = str_replace('{VOTES}', $votes, $content);
                 // Write back to the file
                 if (file_put_contents($pagePath, $content) !== false) {
@@ -398,7 +398,7 @@ if ($type === 'person') {
                 $content = str_replace('{ROLES}', $roles, $content);
                 $content = str_replace('{BLURB}', $bio, $content);
                 $content = str_replace('{ID}', $row['id'], $content);
-                $content = str_replace('{WARNINGS}', $warnings, $content);
+                $content = str_replace('{WARNINGS}', '', $content);
                 $content = str_replace('{VOTES}', $votes, $content);
                 // Write back to the file
                 if (file_put_contents($pagePath, $content) !== false) {

@@ -14,7 +14,7 @@
 <body>
     <header class="header">
     <h1>IMDB2.0</h1>
-    <p>{NAME} ({YEAR})</p>
+    <p id="movie-title">{NAME} ({YEAR})</p>
   </header>
   <?php include '../resources/navbar.php'; ?>
   <div class="search-results">
