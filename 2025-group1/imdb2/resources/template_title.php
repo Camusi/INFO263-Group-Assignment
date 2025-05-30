@@ -10,6 +10,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../resources/search.js"></script>
     <script src="../resources/like.js"></script>
+    <meta type="description" content="Checkout {NAME} on IMDB2, your home of all things media." />
+    <meta name="keywords" content="{NAME}, IMDB, movies, shows, people, media, database" />
+    <meta name="author" content="Group 1, 2025S1" />
+    <link rel="icon" href="../resources/img/favicon.ico" type="image/x-icon" />
 </head>
 <body>
     <header class="header">

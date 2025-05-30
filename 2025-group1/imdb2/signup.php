@@ -118,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-message error"><?= htmlspecialchars($error) ?></div>
         <?php elseif ($success): ?>
             <div class="form-message success"><?= $success ?></div>
+            <?php header("Refresh: 3; URL=resources/generate-profile.php?id=". $userID); ?>
         <?php endif; ?>
     </form>
 </main>

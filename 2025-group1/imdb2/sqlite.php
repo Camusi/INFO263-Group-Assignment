@@ -22,17 +22,14 @@ try {
 }
 
 try {
-    $stmt = $db->prepare("SELECT * from sqlite_master WHERE type='table' AND name='likes'");
-    $userID = 'cj'; // Replace with actual userID and pageID
+    $stmt = $db->prepare("SELECT userID, role FROM user");
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if ($result) {
         foreach ($result as $row) {
-            echo implode(", ", $row) . "<br>";
+            echo implode(",", $row) . "<br>";
         }
-    } else {
-        echo "No data found in 'likes' table.\n";
-    }
+    } 
 } catch (PDOException $e) {
     echo "Query failed: " . $e->getMessage();
 }

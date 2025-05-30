@@ -45,6 +45,10 @@ function safe($str) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>IMDB2.0 by Group 1 2025S1</title>
+    <meta type="description" content="IMDB2.0 is your new home for all things media! Search for movies, shows, and people, or browse our extensive database." />
+    <meta name="keywords" content="IMDB, movies, shows, people, media, database" />
+    <meta name="author" content="Group 1, 2025S1" />
+    <link rel="icon" href="resources/img/favicon.ico" type="image/x-icon" />
     <!--JS Files-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="resources/search.js"></script>
