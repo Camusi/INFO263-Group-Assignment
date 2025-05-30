@@ -41,6 +41,10 @@
                         exit;
                     }
 
+                    $stmt = $db->prepare('SELECT averageRating FROM title_ratings_trim WHERE tconst = \'{ID}\'');
+                    $stmt->execute();
+                    $averageRating = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $averageRating = $averageRating[0]['averageRating'] ?? '?';
 
                     $stmt = $db->prepare('SELECT likes FROM title_basics_trim WHERE tconst = \'{ID}\'');
                     $stmt->execute();
@@ -72,8 +76,9 @@
             <ul>
                 <li>Title: <span id="movie-title">{NAME}</span></li>
                 <li>Year: <span id="movie-year">{YEAR}</span></li>
+                <li>Rating: <span id="movie-rating"><?php echo $averageRating;?>/10</span></li>
                 <li>Runtime: <span id="movie-runtime">{RUNTIME}</span></li>
-                <li>Genres: <span id="movie-genres" class="genre-list">{GENRES}</span></li>
+                <li>Genres: <span id="movie-genres">{GENRES}</span></li>
             </ul>
         </aside>
     </main>

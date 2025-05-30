@@ -46,7 +46,6 @@
                             exit;
                         }
 
-
                         $stmt = $db->prepare('SELECT likes FROM name_basics_trim WHERE nconst = \'{ID}\'');
                         $stmt->execute();
                         $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -96,7 +96,7 @@ ini_set('max_execution_time', 90);
 
         loadImages();
 
-        const viewMoreBtn = document.getElementById("view-more-btn");
+        const viewMoreBtn = document.getElementById("title-view-more-btn");
         const container = document.getElementById("results-container");
 
         if (viewMoreBtn) {
