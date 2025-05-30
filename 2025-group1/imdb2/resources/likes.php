@@ -1,97 +1,143 @@
 <?php
 session_start();
-if (!empty($_SESSION['userID'])) {
-    http_response_code(403);
-    header('Location: ../index.php?error=403');
+if (!isset($_SESSION["userID"] )) {
+    header("Location: signin.php?error=You%20must%20be%20logged%20in%20to%20rank%20pages.");
+    exit;
 }
-
 $userID = $_SESSION['userID'];
 $pageID = $_GET['id'] ?? '';
+// ld = like/dislike/unlike/undislike
 $ld = $_GET['ld'] ?? 'like';
+$type = substr($pageID, 0, 2) === 'tt' ? 'title' : 'person';
+$table = substr($pageID, 0, 2) === 'tt' ? 'title_basics_trim' : 'name_basics_trim';
+$id_col = substr($pageID, 0, 2) === 'tt' ? 'tconst' : 'nconst';
 
+// Value logic
+$value = 0;
+if ($ld === 'like' || $ld === 'undislike') {
+    $value = 1;
+} elseif ($ld === 'dislike' || $ld === 'unlike') {
+    $value = -1;
+} else {
+    http_response_code(400);
+    header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (invalid like action [23])");
+    exit;
+}
+// Check if the page ID is valid
 if (empty($pageID)) {
     http_response_code(400);
-    exit("Missing page ID.");
+    header("Location: index.php?error=A fatal error occurred when liking a page. Please try again later. (page disappeared [29])");
+    exit;
 }
 
-// Determine value to store
-$valueMap = ['like' => 1, 'dislike' => -1, 'unlike' => 0, 'undislike' => 0];
-if (!isset($valueMap[$ld])) {
-    http_response_code(400);
-    exit("Invalid action.");
-}
-$value = $valueMap[$ld];
 
-try {
+
+
+function getLikes($type, $pageID) {
     $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-// Determine which table this is (title or person)
-    $table = substr($pageID, 0, 2) === 'tt' ? 'title_basics_trim' : 'name_basics_trim';
-    $id_col = substr($pageID, 0, 2) === 'tt' ? 'tconst' : 'nconst';
-
-
-    // Update like count if like/dislike
-    $inc = ($ld === 'like') ? 1 : (($ld === 'dislike') ? -1 : 0);
-    if ($inc !== 0) {
-        $stmt = $db->prepare("UPDATE $table SET likes = COALESCE(likes, 0) + :inc WHERE $id_col = :id");
-        $stmt->bindValue(':inc', $inc, PDO::PARAM_INT);
-        $stmt->bindValue(':id', $pageID, PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    // Update user-level like tracking
-    $udb = new PDO('sqlite:../resources/imdb2-user.sqlite3');
-    $udb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if ($value !== 0) {
-        $likeID = $userID . '_' . $pageID;
-        $stmt = $udb->prepare("
-            INSERT INTO likes (likeID, userID, pageID, value)
-            VALUES (:lid, :uid, :pid, :val)
-            ON CONFLICT(likeID) DO UPDATE SET value = :val
-        ");
-        $stmt->bindValue(':lid', $likeID, PDO::PARAM_STR);
-        $stmt->bindValue(':uid', $userID, PDO::PARAM_STR);
-        $stmt->bindValue(':pid', $pageID, PDO::PARAM_STR);
-        $stmt->bindValue(':val', $value, PDO::PARAM_INT);
-        $stmt->execute();
-    } else {
-        // Remove user’s like/dislike
-        $stmt = $udb->prepare("DELETE FROM likes WHERE userID = :uid AND pageID = :pid");
-        $stmt->bindValue(':uid', $userID, PDO::PARAM_STR);
-        $stmt->bindValue(':pid', $pageID, PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    // Count likes from user table to
-    $stmt = $udb->prepare("
-    SELECT COUNT(likes) AS likes
-    FROM likes
-    WHERE pageID = ':pid';
-    ");
-    $stmt->bindValue(':pid', $pageID, PDO::PARAM_STR);
-    $stmt->execute();
-    $li = $stmt->fetch(PDO::FETCH_ASSOC)['likes'] ?? 0;
-
-    $stmt = $db->prepare("
-    UPDATE :table (likes)
-    VALUES (':count')
-    WHERE ':col' = ':pid';
-    ");
-    $stmt->bindValue(':table', $table, PDO::PARAM_STR);
-    $stmt->bindValue(':count', $li, PDO::PARAM_INT);
-    $stmt->bindValue(':col', $id_col, PDO::PARAM_STR);
-    $stmt->bindValue(':pid', $pageID, PDO::PARAM_STR);
-    $stmt->execute();
-
-    // Return updated like count
-    $stmt = $db->prepare("SELECT likes FROM $table WHERE $id_col = :id");
+    $table = $type === 'title' ? 'title_basics_trim' : 'name_basics_trim';
+    $id_col = $type === 'title' ? 'tconst' : 'nconst';
+    $query = 'SELECT likes FROM ' . $table . ' WHERE ' . $id_col . ' = :id';
+    $stmt = $db->prepare($query);
     $stmt->bindValue(':id', $pageID, PDO::PARAM_STR);
     $stmt->execute();
-    $likes = $stmt->fetch(PDO::FETCH_ASSOC)['likes'] ?? '?';
+    return $stmt->fetch(PDO::FETCH_ASSOC)['likes'] ?? 0;
+}
 
-    echo json_encode(['likes' => $likes]);
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+function getLikers($pageID) {
+    $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
+    $table = 'likes';
+    $query = 'SELECT userID, value FROM ' . $table . ' WHERE pageID = :id';
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(':id', $pageID, PDO::PARAM_STR);
+    $stmt->execute();
+    $likers = [];
+    $likedBy = [];
+    $dislikedBy = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if ($row['value'] == 1) {
+            $likedBy[] = $row['userID'];
+        } elseif ($row['value'] == -1) {
+            $dislikedBy[] = $row['userID'];
+        }
+    }
+    return "<b>Liked by:</b> " . implode(', ', $likedBy) . 
+           "<br><b>Disliked by:</b> " . implode(', ', $dislikedBy);
+}
+
+function updateLikes($type, $pageID, $value) {
+    $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
+    $table = $type === 'title' ? 'title_basics_trim' : 'name_basics_trim';
+    $id_col = $type === 'title' ? 'tconst' : 'nconst';
+    $query = 'UPDATE ' . $table . ' SET likes = :likes WHERE ' . $id_col . ' = :id';
+    $stmt = $db->prepare($query);
+    $likes = getLikes($type, $pageID) + $value;
+    $stmt->bindValue(':likes', $likes, PDO::PARAM_INT);
+    $stmt->bindValue(':id', $pageID, PDO::PARAM_STR);
+    return $stmt->execute();
+}
+
+function updateUserLikes($userID, $pageID, $value) {
+    $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
+    $likeID = $userID . '_' . $pageID;
+    $stmt = $db->prepare("
+        INSERT INTO likes (likeID, userID, pageID, value)
+        VALUES (:lid, :uid, :pid, :val)
+        ON CONFLICT(likeID) DO UPDATE SET value = :val
+    ");
+    $stmt->bindValue(':lid', $likeID, PDO::PARAM_STR);
+    $stmt->bindValue(':uid', $userID, PDO::PARAM_STR);
+    $stmt->bindValue(':pid', $pageID, PDO::PARAM_STR);
+    $stmt->bindValue(':val', $value, PDO::PARAM_INT);
+    return $stmt->execute();
+}
+
+function checkUserLike($userID, $pageID) {
+    $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
+    $likeID = $userID . '_' . $pageID;
+    $stmt = $db->prepare("SELECT value FROM likes WHERE likeID = :lid");
+    $stmt->bindValue(':lid', $likeID, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC)['value'] ?? 0;
+}
+
+
+// WHAT: Manage request.
+$requestManage = isset($_GET['q']) ? str_split(preg_replace('/[^0-9]/', '', $_GET['q'])) : [];
+if (empty($requestManage)) {
+    http_response_code(400);
+    header("Location: ../index.php?error=Invalid or missing action parameter.");
+    exit;
+}
+foreach ($requestManage as $action) {
+    switch ($action) {
+        case 0:
+            echo getLikes($type, $pageID);
+        case 1:
+            echo getLikers($pageID);
+        case 2:
+            if (updateLikes($type, $pageID, $value)) {
+            } else {
+                http_response_code(500);
+                header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update likes [111])");
+                exit;
+            }
+        case 3:
+            if (updateUserLikes($userID, $pageID, $value)) {
+            } else {
+                http_response_code(500);
+                header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update user likes [119])");
+                exit;
+            }
+        case 4:
+            if (checkUserLike($userID, $pageID)) {
+            } else {
+                http_response_code(500);
+                header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update user likes [119])");
+                exit;
+            }
+        default:
+            echo "Invalid action.";
+            break;
+    }
 }

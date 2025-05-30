@@ -52,7 +52,7 @@
                         $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         $likes = $likes[0]['likes'] ?? '?'; // Default to ? if no likes found
                         ?>
-                    <p><span><?php echo $likes; ?></span> Likes</p>
+                    <p><span id="like-count"><?php echo $likes; ?></span> Likes</p>
                     <?php if (!isset($_SESSION['userID'])){echo '<button id="rate-login-prompt">Login to rate "{NAME} ({YEAR})"!</button>';} else{echo '<button id="like-button">👍 Like</button><button id="dislike-button">👎 Dislike</button>';} ?> 
                 </div>
             </div>

@@ -55,7 +55,7 @@
                     <br><strong>Starring:</strong> <span id='stars'>{STARS}</span>
                     <br><strong>Other Notable People:</strong> <span id='notable'>{NOTABLE}</span>
             </div>
-            <p><span><?php echo $likes; ?></span> Likes</p>
+            <p><span id="like-count"><?php echo $likes; ?></span> Likes</p>
             <div>
                 <?php if (!isset($_SESSION['userID'])){echo '<button id="rate-login-prompt">Login to rate "{NAME} ({YEAR})"!</button>';} else{echo '<button id="like-button">👍 Like</button><button id="dislike-button">👎 Dislike</button>';} ?> 
             </div>

@@ -15,25 +15,23 @@
 */
 // SQLite database connection
 try {
-    $db = new PDO('sqlite:resources/imdb-2.sqlite3');
+    $db = new PDO('sqlite:resources/imdb2-user.sqlite3');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
 
 try {
-    #$stmt = $db->query("
-    #ALTER TABLE title_basics_trim
-    #ADD COLUMN image_url TEXT;
-    #");
-    #echo "Column 'image_url' added to 'title_basics_trim' table successfully.<br>";
-    
-    $stmt = $db->query("PRAGMA table_info(title_basics_trim)");
-    #$stmt = $db->query("SELECT name from sqlite_master WHERE type='table';");
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        #echo "<br>" . $row['nconst'] . " (" . $row['job'] . ")\n";
-        echo "<br>" . $row['name'] . " (" . $row['type'] . ")\n";
-        #echo "<br>" . $row['name'] . "\n";
+    $stmt = $db->prepare("SELECT * from sqlite_master WHERE type='table' AND name='likes'");
+    $userID = 'cj'; // Replace with actual userID and pageID
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($result) {
+        foreach ($result as $row) {
+            echo implode(", ", $row) . "<br>";
+        }
+    } else {
+        echo "No data found in 'likes' table.\n";
     }
 } catch (PDOException $e) {
     echo "Query failed: " . $e->getMessage();
