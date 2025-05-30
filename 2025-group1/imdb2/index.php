@@ -3,7 +3,7 @@ session_start();
 
 // Connect to SQLite database
 try {
-    $pdo = new PDO('sqlite:./resources/imdb-2.sqlite3'); // Replace with your actual database path
+    $pdo = new PDO('sqlite:./resources/imdb-2.sqlite3');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Fetch top 3 liked movies
@@ -65,7 +65,7 @@ function safe($str) {
     <?php if (!empty($_GET['error'])): ?>
         <p id="page-warning"><?php echo htmlspecialchars($_GET['error']); ?></p>
     <?php endif; ?>
-    </div>
+</div>
 <main class="main-content">
     <h2>Welcome to IMDB2.0</h2>
     <p>Your one-stop destination for all things movies! Search for a movie above or browse through our extensive database of over 211,000 titles and 3 million people.</p>
