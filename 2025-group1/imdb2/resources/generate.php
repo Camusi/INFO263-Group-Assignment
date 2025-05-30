@@ -113,7 +113,6 @@ $image_url = '../resources/img/load.gif'; // Default fallback image
 // Find the blurb
 if (preg_match('/<span[^>]*data-testid="plot-xl"[^>]*>(.*?)<\/span>/is', $data, $blurbMatch)) {
     $blurb = trim(strip_tags($blurbMatch[1]));
-    $blurb = '';
 }
 
 
