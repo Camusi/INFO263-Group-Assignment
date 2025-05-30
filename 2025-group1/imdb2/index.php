@@ -7,7 +7,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Fetch top 3 liked movies
-    $stmt = $pdo->query("SELECT primaryTitle, startYear, genres, image_url, tconst
+    $stmt = $pdo->query("SELECT primaryTitle, startYear, genres, image_url, tconst, likes
                         FROM title_basics_trim
                         ORDER BY IFNULL(likes, 0) DESC
                         LIMIT 3");
@@ -82,6 +82,7 @@ function safe($str) {
                             <h3><a href="resources/page.php?q=<?= safe($topMovies[$i]['tconst']) ?>"><?= safe($topMovies[$i]['primaryTitle']) ?></a></h3>
                             <p><strong>Genre:</strong> <?= safe($topMovies[$i]['genres']) ?></p>
                             <p><strong>Year:</strong> <?= safe($topMovies[$i]['startYear']) ?></p>
+                            <p><strong>Likes:</strong> <?= isset($topMovies[$i]['likes']) ? $topMovies[$i]['likes'] : '...' ?></p>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -98,6 +99,7 @@ function safe($str) {
                         <p><strong>Known For:</strong> <?= htmlspecialchars($person['primaryProfession']) ?></p>
                         <p><strong>Birth Year:</strong> <?= $person['birthYear'] ?: 'N/A' ?></p>
                         <p><strong>Death Year:</strong> <?= $person['deathYear'] ?: 'N/A' ?></p>
+                        <p><strong>Likes:</strong> <?= isset($person['likes']) ? $person['likes'] : '...' ?></p>
                     </div>
                 </div>
             <?php endforeach; ?>
