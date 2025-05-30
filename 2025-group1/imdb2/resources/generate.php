@@ -225,15 +225,8 @@ if ($type === 'title') {
         $genresArr[] = htmlspecialchars($row['genres']);
     }
     $genres = !empty($genresArr) ? implode(', ', $genresArr) : 'N/A';
-    // If no genres found, add a message
-    if (empty($genresArr)) {
-        $genresArr[] = 'No genres found for this title.';
-    }
-    foreach ($genresArr as $genre) {
-        $genres .= '<li>' . $genre . '</li>';
-    }
 } else {
-    $roles = 'N/A';
+    $genres = 'N/A';
 }
 
 // Find Stars
