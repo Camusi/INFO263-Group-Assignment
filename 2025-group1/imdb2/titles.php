@@ -10,6 +10,7 @@ ini_set('max_execution_time', 90);
     <title>Featured Titles | IMDB2</title>
     <link rel="stylesheet" href="resources/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="resources/search.js"></script>
 </head>
 <body>
 <header class="header">
@@ -18,10 +19,13 @@ ini_set('max_execution_time', 90);
 </header>
 
 <?php include 'resources/navbar.php'; ?>
+<div class="search-results">
+    <p id="search-output"></p>
+</div>
 
 <main>
-    <h2 style="text-align: center;">Featured Titles</h2>
-    <div class="query-results" id="results-container">
+    <h2 style="text-align: center; margin: 2rem;">Featured Titles</h2>
+    <div class="title-query-results" id="results-container">
         <?php
         try {
             $db = new PDO('sqlite:./resources/imdb-2.sqlite3');
@@ -57,7 +61,7 @@ ini_set('max_execution_time', 90);
         ?>
     </div>
     <?php if ($totalResults > $maxResults): ?>
-        <button id="view-more-btn">View 6 More</button>
+        <button id="title-view-more-btn">View 6 More</button>
     <?php endif; ?>
 </main>
 

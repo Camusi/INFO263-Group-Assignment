@@ -85,11 +85,11 @@ a:hover {
 }
 
 /* Titles */
-.query-results {
+.title-query-results {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.25rem; /* 20px → 20 / 16 = 1.25rem */
+  gap: 1.25rem;
   margin: 0 auto;
 }
 
@@ -109,12 +109,12 @@ a:hover {
   border-radius: 0.375rem;
 }
 
-#view-more-btn {
+#title-view-more-btn {
   display: block;
   padding: 0.625rem 1.25rem;
   font-size: 1rem;
   cursor: pointer;
-  margin: -15rem auto 20rem;
+  margin: 2rem auto 20rem;
 }
 
 @media screen and (max-width: 1200px) {

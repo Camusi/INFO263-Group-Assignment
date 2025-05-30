@@ -2,6 +2,7 @@
     <div class="nav-left">
         <a href="/INFO263-Group-Assignment/2025-group1/imdb2">Home</a>
         <a href="/INFO263-Group-Assignment/2025-group1/imdb2/titles.php">Titles</a>
+        <a href="/INFO263-Group-Assignment/2025-group1/imdb2/stats.php">Stats</a>
     </div>
 
     <div class="nav-center">
