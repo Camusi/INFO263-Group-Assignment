@@ -1,10 +1,11 @@
 <nav class="navbar">
     <div class="nav-left">
-      <a href="/INFO263-Group-Assignment/2025-group1/imdb2">Home</a>
+        <a href="/INFO263-Group-Assignment/2025-group1/imdb2">Home</a>
+        <a href="/INFO263-Group-Assignment/2025-group1/imdb2/titles.php">Titles</a>
     </div>
 
     <div class="nav-center">
-      <input type="text" id="search-input" name="search-input" placeholder="Search any movie..."/>
+        <input type="text" id="search-input" name="search-input" placeholder="Search any movie..."/>
     </div>
 
     <div class="nav-right" id="account">

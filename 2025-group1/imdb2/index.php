@@ -3,7 +3,7 @@ session_start();
 
 // Connect to SQLite database
 try {
-    $pdo = new PDO('sqlite:./resources/imdb-2.sqlite3'); // Replace with your actual database path
+    $pdo = new PDO('sqlite:./resources/imdb-2.sqlite3');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Fetch top 3 liked movies
