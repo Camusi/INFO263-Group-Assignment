@@ -35,7 +35,7 @@ ini_set('max_execution_time', 90);
                 SELECT tconst AS id, primaryTitle AS primary_name, startYear AS year
                 FROM title_basics_trim
                 WHERE primaryTitle IS NOT NULL
-                ORDER BY startYear ASC
+                ORDER BY IFNULL(likes, 0) DESC
             ";
             $stmt = $db->query($sql);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
