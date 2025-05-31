@@ -61,9 +61,7 @@ $pagesDislikeCount = count($dislikedPages);
     <title>admin | IMDB2.0</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../resources/search.js"></script>
-    <meta type="description" content="Checkout admin on IMDB2, your home of all things media." />
-    <meta name="keywords" content="admin, IMDB, movies, shows, people, media, database" />
-    <meta name="author" content="Group 1, 2025S1" />
+    <meta type="robots" content="noindex, nofollow">
     <link rel="icon" href="../resources/img/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="../resources/style.css">
 </head>
