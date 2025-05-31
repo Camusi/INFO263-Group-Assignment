@@ -4,23 +4,17 @@ The core task is to develop a website for showcasing and augmenting the IMDB tit
 
 ## 2025 Group 1 Solution
 
-### Directories:
-#### 2025-group1
-- All our workload is here.
-- Note that the imdb-php file has now been moved to 2025-group1/objects as is no longer needed
+### Setup Requirements
 
-### Database tables:
+To ensure the site works as intended, please ensure the following requirements are met:
+1. The directory structure is: LOCALHOST: info263/INFO263-Group-Assignment/2025-group1/imdb2/
+    -> This would be configured in a cloud enviroment .-. reasonable requirement
+2. The PHP version is => 7.1
+3. The database files you start with are the two in [The WDProject/Final ShareDrive](https://ucliveac-my.sharepoint.com/:f:/g/personal/jcr168_uclive_ac_nz/Ej-QREvLujpEmAwBCC8Izi8BaEfPB_8APGkqaykNoKjtZg).
 
-* **genres** — List of all genres for a title extracted from `title_basics`
-* **title_genre** — Combination table between `title_basics` and `genres`
-* **professions** — List of all professions of a person extracted from `name_basics`
-* **name_professions** — Combination table between `name_basics` and `professions`
-* **title_known_for** — Combination table between `title_basics` and `name_basics`
-* **title_principals_trim**
-* **title_writer_trim**
-* **title_ratings_trim**
-* **title_director_trim**
-* **title_basics_trim**
-* **name_basics_trim**
-* **known_for_titles_trim**
+### Pregenerated data
 
+The following accounts are made to be model accounts that the marker can login to. Password === Username
+- admin (Site Admin)
+- ChrisAkroyd (An active user)
+- constantine (A non-active user)
