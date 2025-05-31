@@ -1,4 +1,5 @@
 <?php
+session_start();
 try {
     $pdo = new PDO('sqlite:./resources/imdb-2.sqlite3');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
