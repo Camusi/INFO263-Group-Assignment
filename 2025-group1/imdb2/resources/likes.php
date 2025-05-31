@@ -1,11 +1,7 @@
 <?php
-file_put_contents('/tmp/likes_debug.txt', "Hello\n", FILE_APPEND);
-
-file_put_contents(__DIR__ . '/likes_debug.txt', "GET: " . print_r($_GET, true), FILE_APPEND);
-
 session_start();
 if (!isset($_SESSION["userID"])) {
-    header("Location: signin.php?error=You%20must%20be%20logged%20in%20to%20rank%20pages.");
+    header("Location: ../signin.php?error=You%20must%20be%20logged%20in%20to%20rank%20pages.");
     exit;
 }
 
@@ -23,20 +19,16 @@ if ($ld === 'like' || $ld === 'undislike') {
 } elseif ($ld === 'dislike' || $ld === 'unlike') {
     $value = -1;
 } else {
-    header("Location: index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(invalid+like+action+23)");
+    header("Location: ../index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(invalid+like+action+23)");
     exit;
 }
 if (empty($pageID)) {
-    header("Location: index.php?error=A+fatal+error+occurred+when+liking+a+page.+Please+try+again+later.+(page+disappeared+29)");
+    header("Location: ../index.php?error=A+fatal+error+occurred+when+liking+a+page.+Please+try+again+later.+(page+disappeared+29)");
     exit;
 }
-
-// Helper functions (preserved)
-function getLikes($type, $pageID) {
-    $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
-    $table = $type === 'title' ? 'title_basics_trim' : 'name_basics_trim';
-    $id_col = $type === 'title' ? 'tconst' : 'nconst';
-    $query = 'SELECT likes FROM ' . $table . ' WHERE ' . $id_col . ' = :id';
+function getLikes($pageID) {
+    $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
+    $query = 'SELECT SUM(value) FROM likes WHERE pageID = :id';
     $stmt = $db->prepare($query);
     $stmt->bindValue(':id', $pageID, PDO::PARAM_STR);
     $stmt->execute();
@@ -69,7 +61,7 @@ function updateLikes($type, $pageID, $value) {
     $id_col = $type === 'title' ? 'tconst' : 'nconst';
     $query = 'UPDATE ' . $table . ' SET likes = :likes WHERE ' . $id_col . ' = :id';
     $stmt = $db->prepare($query);
-    $likes = getLikes($type, $pageID) + $value;
+    $likes = getLikes($pageID) + $value;
     $stmt->bindValue(':likes', $likes, PDO::PARAM_INT);
     $stmt->bindValue(':id', $pageID, PDO::PARAM_STR);
     return $stmt->execute();
@@ -110,13 +102,13 @@ if ($returnTo) {
         switch ($action) {
             case 2:
                 if (!updateLikes($type, $pageID, $value)) {
-                    header("Location: index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(failed+to+update+likes+111)");
+                    header("Location: ../index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(failed+to+update+likes+111)");
                     exit;
                 }
                 break;
             case 3:
                 if (!updateUserLikes($userID, $pageID, $value)) {
-                    header("Location: index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(failed+to+update+user+likes+119)");
+                    header("Location: ../index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(failed+to+update+user+likes+119)");
                     exit;
                 }
                 break;
@@ -131,7 +123,7 @@ if ($returnTo) {
 foreach ($requestManage as $action) {
     switch ($action) {
         case 0:
-            echo getLikes($type, $pageID);
+            echo getLikes($pageID);
             break;
         case 1:
             echo getLikers($pageID);
