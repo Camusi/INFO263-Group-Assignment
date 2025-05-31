@@ -1,4 +1,33 @@
-<?php session_start(); ?>
+<?php session_start();
+ $userID = $_SESSION['userID'] ?? '';
+$pageID = '{ID}'; // Assuming {ID} is replaced with the actual page ID in the template, IGNORE THE WARNING
+
+$userLikeStatus = 0;
+if ($userID && $pageID) {
+    $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
+    $stmt = $db->prepare("SELECT value FROM likes WHERE userID = :userID AND pageID = :pageID");
+    $stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
+    $stmt->bindValue(':pageID', $pageID, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result) {
+        $userLikeStatus = (int)$result['value'] ?? 0;
+    }
+}
+// Database connection
+try {
+    $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+    exit;
+}
+
+$stmt = $db->prepare('SELECT likes FROM name_basics_trim WHERE nconst = \'{ID}\'');
+$stmt->execute();
+$likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$likes = $likes[0]['likes'] ?? '0'; // Default to 0 if no likes found
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +38,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../resources/search.js"></script>
     <script src="../resources/like.js"></script>
-    <meta type="description" content="Checkout {NAME} on IMDB2, your home of all things media." />
+    <meta type="description" content="Check out {NAME} on IMDB2, your home of all things media." />
     <meta name="keywords" content="{NAME}, IMDB, movies, shows, people, media, database" />
     <meta name="author" content="Group 1, 2025S1" />
     <link rel="icon" href="../resources/img/favicon.ico" type="image/x-icon" />
@@ -38,25 +67,73 @@
                     <ul>
                         <li>Born: <span id="person-year"></span>{YEAR}</span></li>
                         <li>Name: <span id="person-name">{NAME}</span></li>
+                        <li>Votes: <span><?php echo htmlspecialchars($likes); ?></span></li>
                     </ul>
                 </aside>
-                <div id="rating">
-                    <?php
-                        try {
-                            $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
-                            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        } catch (PDOException $e) {
-                            echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
-                            exit;
-                        }
+                <div id="like-controls">
 
-                        $stmt = $db->prepare('SELECT likes FROM name_basics_trim WHERE nconst = \'{ID}\'');
-                        $stmt->execute();
-                        $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        $likes = $likes[0]['likes'] ?? '?'; // Default to ? if no likes found
-                        ?>
-                    <p><span id="like-count"><?php echo $likes; ?></span> Likes</p>
-                    <?php if (!isset($_SESSION['userID'])){echo '<button id="rate-login-prompt">Login to rate "{NAME} ({YEAR})"!</button>';} else{echo '<button id="like-button">👍 Like</button><button id="dislike-button">👎 Dislike</button>';} ?> 
+                <?php 
+                if ($userLikeStatus == 0){
+                    echo "
+                    <form action='../resources/likes.php' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                        <input type='hidden' name='ld' value='like'>
+                        <input type='hidden' name='q' value='23'>
+                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <button type='submit'>👍 Like</button>
+                    </form>
+                    <form action='../resources/likes.php' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                        <input type='hidden' name='ld' value='dislike'>
+                        <input type='hidden' name='q' value='23'>
+                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <button type='submit'>👎 Dislike</button>
+                    ";
+                } elseif ($userLikeStatus == -1) {
+                    echo "
+                    <form action='../resources/likes.php' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                        <input type='hidden' name='ld' value='like'>
+                        <input type='hidden' name='q' value='23'>
+                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <button type='submit' disabled>👍 Like</button>
+                    </form>
+                    <form action='../resources/likes.php' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                        <input type='hidden' name='ld' value='undislike'>
+                        <input type='hidden' name='q' value='23'>
+                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <button type='submit'>👎 Remove Dislike</button>
+                    </form>
+                    ";
+                } elseif ($userLikeStatus == 1) {
+                    echo "
+                    <form action='../resources/likes.php' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                        <input type='hidden' name='ld' value='unlike'>
+                        <input type='hidden' name='q' value='23'>
+                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <button type='submit'>👍 Remove Like</button>
+                    </form>
+                    <form action='../resources/likes.php' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                        <input type='hidden' name='ld' value='dislike'>
+                        <input type='hidden' name='q' value='23'>
+                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <button type='submit' disabled>👎 Dislike</button>
+                    </form>
+                    ";
+                }
+                ?>
+                <?php 
+                if ($userLikeStatus == 1) {
+                    echo '<span style="color:green">You liked this.</span>';
+                } elseif ($userLikeStatus == -1) {
+                    echo '<span style="color:red">You disliked this.</span>';
+                } else {
+                    echo '<span></span>';
+                }
+                ?>
                 </div>
             </div>
 

@@ -14,10 +14,12 @@ $id_col = $type === 'title' ? 'tconst' : 'nconst';
 
 // Value logic
 $value = 0;
-if ($ld === 'like' || $ld === 'undislike') {
+if ($ld === 'like') {
     $value = 1;
-} elseif ($ld === 'dislike' || $ld === 'unlike') {
+} elseif ($ld === 'dislike') {
     $value = -1;
+} elseif ($ld === 'unlike' || $ld === 'undislike') {
+    $value = 0;
 } else {
     header("Location: ../index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(invalid+like+action+23)");
     exit;
