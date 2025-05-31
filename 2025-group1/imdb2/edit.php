@@ -34,7 +34,7 @@ if (preg_match('/<span\s+id="movie-title"\s*>(.*?)<\/span>/is', $pagedata, $matc
     $title = trim($matches[1]);
 }
 if (preg_match('/<span\s+id="movie-year"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $year = trim($matches[1]);
+    $movieYear = trim($matches[1]);
 }
 if (preg_match('/<span\s+id="movie-runtime"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
     $runtime = trim($matches[1]);
@@ -46,27 +46,28 @@ if (preg_match('/<p\s+id="plot-text"\s*>(.*?)<\/p>/is', $pagedata, $matches)) {
     $plot = trim($matches[1]);
 }
 if (preg_match('/<span\s+id="director"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $director = trim($matches);
+    $director = trim($matches[1]);
 }
 if (preg_match('/<span\s+id="writers"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $writers = trim($matches);
+    $writers = trim($matches[1]);
 }
 if (preg_match('/<span\s+id="stars"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $stars = trim($matches);
+    $stars = trim($matches[1]);
 }
 if (preg_match('/<span\s+id="notable"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $notable = trim($matches);
+    $notable = trim($matches[1]);
 }
 //people
-if (preg_match('/<span\s+id="person-year"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
-    $year = trim($matches[1]);
-}
 if (preg_match('/<span\s+id="person-name"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
     $title = trim($matches[1]);
 }
-if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matches)) {
-    $roles = trim($matches[1]);
-}}
+if (preg_match('/<p\s+id="blurb-text"\s*>(.*?)<\/p>/is', $pagedata, $matches)) {
+    $bio = trim($matches[1]);
+}
+if (preg_match('/<li>Born:\s*<span\s+id="person-year"\s*>(.*?)<\/span>/is', $pagedata, $matches)) {
+    $personYear = trim($matches[1]);
+}
+}
 ?>
 
 <!DOCTYPE html>
@@ -112,7 +113,7 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
             <input class="page-edit-form-entry" type="text" id="title-edit-title" name="title" value="' . htmlspecialchars($title) . '" required>
             
             <label for="year">Year:</label>
-            <input class="page-edit-form-entry" type="text" id="title-edit-year" name="year" value="' . htmlspecialchars($year) . '" required>
+            <input class="page-edit-form-entry" type="text" id="title-edit-year" name="year" value="' . htmlspecialchars($movieYear) . '" required>
             
             <label for="runtime">Runtime:</label>
             <input class="page-edit-form-entry" type="text" id="title-edit-runtime" name="runtime" value="' . htmlspecialchars($runtime) . '" required>
@@ -155,16 +156,14 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
             <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-title\" name=\"title\" value=\"$title\" required>
             
             <label for=\"year\">Year of Birth:</label>
-            <input class=\"page-edit-form-entry\" type=\"number\" id=\"person-edit-year\" name=\"year\" value=\"$year\" required>
+            <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-year\" name=\"year\" value=\"" . htmlspecialchars($personYear) . "\" required>
 
             <label for=\"bio\">Bio:</label>
             <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-bio\" name=\"bio\" value=\"$bio\" required>
 
-            <label for=\"roles\">Roles:</label>
-            <input class=\"page-edit-form-entry\" type=\"text\" id=\"person-edit-roles\" name=\"roles\" value=\"$roles\" required>
-
+            <p>Want to update $title's roles? Please contact a site administrator.</p>
             <label for=\"sources\">Sources/Notes</label>
-            <textarea class=\"page-edit-form-entry\" id=\"person-edit-sources\" name=\"sources\" maxlength=\"800\" placeholder=\"Please enter any notes or sources for your edits. This edit message is limited to 800 characters and will be visible for all site users.\" required></textarea>
+            <textarea class=\"page-edit-form-entry\" id=\"person-edit-sources\" name=\"sources\" maxlength=\"800\" rows=4 placeholder=\"Please enter any notes or sources for your edits. This edit message is limited to 800 characters and will be visible for all site users.\" required></textarea>
 
 
             <input type=\"hidden\" name=\"type\" value=\"person\">

@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updatedContent = preg_replace('/<span\s+id="stars"\s*>.*?<\/span>/is', '<span id="stars">' . htmlspecialchars($_POST['stars']) . '</span>', $updatedContent);
         $updatedContent = preg_replace('/<span\s+id="notable"\s*>.*?<\/span>/is', '<span id="notable">' . htmlspecialchars($_POST['notable']) . '</span>', $updatedContent);
     } elseif ($type === 'person') {
-        $updatedContent = preg_replace('/<span\s+id="person-name"[^>]*>.*?<\/[^>]*>/is', '<span id="person-name">' . htmlspecialchars($_POST['title']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<span\s+id="person-year"\s*>.*?<\/span>/is', '<span id="person-year">' . htmlspecialchars($_POST['year']) . '</span>', $updatedContent);
-        $updatedContent = preg_replace('/<ul\s+class="roles-list"\s*>.*?<\/ul>/is', '<ul class="roles-list">' . htmlspecialchars($_POST['roles']) . '</ul>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="person-name"[^>]*>.*?<\/span>/is', '<span id="person-name">' . htmlspecialchars($_POST['title']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<span\s+id="person-year"[^>]*>.*?<\/span>/is', '<span id="person-year">' . htmlspecialchars($_POST['year']) . '</span>', $updatedContent);
+        $updatedContent = preg_replace('/<p\s+id="blurb-text"[^>]*>.*?<\/p>/is', '<p id="blurb-text">' . htmlspecialchars($_POST['blurb']) . '</p>', $updatedContent);
     }
 
 
