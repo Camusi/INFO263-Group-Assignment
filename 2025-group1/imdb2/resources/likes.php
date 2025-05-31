@@ -4,6 +4,7 @@ if (!isset($_SESSION["userID"] )) {
     header("Location: signin.php?error=You%20must%20be%20logged%20in%20to%20rank%20pages.");
     exit;
 }
+
 $userID = $_SESSION['userID'];
 $pageID = $_GET['id'] ?? '';
 // ld = like/dislike/unlike/undislike
@@ -113,8 +114,10 @@ foreach ($requestManage as $action) {
     switch ($action) {
         case 0:
             echo getLikes($type, $pageID);
+            break;
         case 1:
             echo getLikers($pageID);
+            break;
         case 2:
             if (updateLikes($type, $pageID, $value)) {
             } else {
@@ -122,6 +125,7 @@ foreach ($requestManage as $action) {
                 header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update likes [111])");
                 exit;
             }
+            break;
         case 3:
             if (updateUserLikes($userID, $pageID, $value)) {
             } else {
@@ -129,6 +133,7 @@ foreach ($requestManage as $action) {
                 header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update user likes [119])");
                 exit;
             }
+            break;
         case 4:
             if (checkUserLike($userID, $pageID)) {
             } else {
@@ -136,8 +141,12 @@ foreach ($requestManage as $action) {
                 header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update user likes [119])");
                 exit;
             }
+            break;
         default:
             echo "Invalid action.";
             break;
     }
 }
+$returnTo = $_GET['return_to'] ?? '../index.php';
+header("Location: $returnTo");
+exit;

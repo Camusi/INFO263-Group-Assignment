@@ -1,4 +1,19 @@
-<?php session_start(); ?>
+<?php session_start();
+$userID = $_SESSION['userID'] ?? '';
+$pageID = $id ?? '';
+$userLikeStatus = 0;
+if ($userID && $pageID) {
+    $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
+    $stmt = $db->prepare("SELECT value FROM likes WHERE userID = :userID AND pageID = :pageID");
+    $stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
+    $stmt->bindValue(':pageID', $pageID, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result) {
+        $userLikeStatus = (int)$result['value'] ?? 0;
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -63,9 +78,34 @@
                     <br><strong>Starring:</strong> <span id='stars'>{STARS}</span>
                     <br><strong>Other Notable People:</strong> <span id='notable'>{NOTABLE}</span>
             </div>
-            <p><span id="like-count"><?php echo $likes; ?></span> Likes</p>
-            <div>
-                <?php if (!isset($_SESSION['userID'])){echo '<button id="rate-login-prompt">Login to rate "{NAME} ({YEAR})"!</button>';} else{echo '<button id="like-button">👍 Like</button><button id="dislike-button">👎 Dislike</button>';} ?> 
+            <div class="like-controls">
+                <form action="../resources/likes.php" method="get" style="display:inline;">
+                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($pageID); ?>">
+                    <input type="hidden" name="ld" value="like">
+                    <input type="hidden" name="q" value="23">
+                    <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>'"
+                    <button type="submit"
+                        <?php if ($userLikeStatus == 1) echo 'disabled style="color:green;font-weight:bold"'; ?>>
+                        👍 Like
+                    </button>
+                </form>
+                <form action="../resources/likes.php" method="get" style="display:inline;">
+                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($pageID); ?>">
+                    <input type="hidden" name="ld" value="dislike">
+                    <input type="hidden" name="q" value="23">
+                    <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>'"
+                    <button type="submit"
+                        <?php if ($userLikeStatus == -1) echo 'disabled style="color:red;font-weight:bold"'; ?>>
+                        👎 Dislike
+                    </button>
+                </form>
+                <?php
+                if ($userLikeStatus == 1) {
+                    echo '<span style="color:green">You liked this.</span>';
+                } elseif ($userLikeStatus == -1) {
+                    echo '<span style="color:red">You disliked this.</span>';
+                }
+                ?>
             </div>
             <details id="plot" title="Plot Summary">
                 <summary><h2>Plot:</h2></summary>
