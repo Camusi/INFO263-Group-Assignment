@@ -73,6 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Sign Up | IMDB2.0</title>
     <!-- this link will definitely be the first thing the browser sees -->
     <link rel="stylesheet" href="resources/style.css" />
+    <link rel="icon" href="resources/img/favicon.ico" type="image/x-icon" />
+    <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
 

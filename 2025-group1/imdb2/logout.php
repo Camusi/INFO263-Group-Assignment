@@ -1,3 +1,11 @@
+<html>
+    <head>
+    <link rel="icon" href="resources/img/favicon.ico" type="image/x-icon" />
+    <meta name="robots" content="noindex, nofollow">
+    </head>
+<body>
+</body>
+</html>
 <?php
 session_start();
 

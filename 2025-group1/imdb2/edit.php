@@ -75,6 +75,8 @@ if (preg_match('/<ul\s+class="roles-list"\s*>(.*?)<\/ul>/is', $pagedata, $matche
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editing <?php echo $title; ?> | IMDB2.0</title>
+    <link rel="icon" href="resources/img/favicon.ico" type="image/x-icon" />
+    <meta name="robots" content="noindex, nofollow">
     <!--JS Files-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="resources/search.js"></script>

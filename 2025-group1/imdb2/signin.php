@@ -44,6 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign In | IMDB2.0</title>
+  <link rel="icon" href="resources/img/favicon.ico" type="image/x-icon" />
+  <meta type="description" content="Sign in to IMDB2.0, your home of all things media." />
   <link rel="stylesheet" href="resources/style.css" />
 </head>
 <body>

@@ -41,6 +41,8 @@ try {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Genre Statistics | IMDB2</title>
+    <link rel="icon" href="resources/img/favicon.ico" type="image/x-icon" />
+    <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="resources/style.css" />
     <title>Genre Distribution Pie Chart</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

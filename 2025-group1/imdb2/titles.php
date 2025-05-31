@@ -8,6 +8,10 @@ ini_set('max_execution_time', 90);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Featured Titles | IMDB2</title>
+    <meta type="description" content="IMDB2.0 is your new home for all things media! See all our 200,000+ titles!" />
+    <meta name="keywords" content="IMDB, movies, shows, people, media, database" />
+    <meta name="author" content="Group 1, 2025S1" />
+    <link rel="icon" href="resources/img/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="resources/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="resources/search.js"></script>
