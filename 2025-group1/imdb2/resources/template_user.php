@@ -3,7 +3,7 @@ session_start();
 
 
 
-$id = '<ID>';
+$id = '{ID}';
 
 $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -19,40 +19,34 @@ $stmt->execute();
 $dislikedPages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-foreach ($pages as $page){
-    $pdb = new PDO('sqlite:../resources/imdb-2.sqlite3');
-    $stmt = $pdb->prepare("
-        SELECT primaryTitle AS primary_name, 'title_basics_trim' AS table_name
-        FROM title_basics_trim
-        WHERE tconst = :id
-        UNION ALL
-        SELECT primaryName AS primary_name, 'name_basics_trim' AS table_name
-        FROM name_basics_trim
-        WHERE nconst = :id
-    ");
-    $stmt->bindParam(':id', $page['pageID'], PDO::PARAM_STR);
+function getPageName($pageID) {
+    $pageDB = new PDO('sqlite:../resources/imdb-2.sqlite3');
+    $stmt = $pageDB->prepare("
+      SELECT primaryTitle as pageName FROM title_basics_trim WHERE tconst = :pageID
+      UNION
+      SELECT primaryName as pageName FROM name_basics_trim WHERE nconst = :pageID
+      ");
+    $stmt->bindParam(':pageID', $pageID, PDO::PARAM_STR);
     $stmt->execute();
-    $page['pageName'] = $stmt->fetchColumn();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 function generatePageLinks($pages) {
     $html = '<ul>';
     foreach ($pages as $page) {
-        $html .= '<li><a href="../resources/page.php?q=' . htmlspecialchars($page['pageID']) . '" target="_blank">' . htmlspecialchars($page['pageName']) . '</a></li>';
+        $pageID = $page['pageID'] ?? null;
+        if ($pageID) {
+            $pageData = getPageName($pageID);
+            $pageName = $pageData['pageName'] ?? 'Unknown';
+            $html .= '<li><a href="../resources/page.php?q=' . htmlspecialchars($pageID) . '" target="_blank">' . htmlspecialchars($pageName) . '</a></li>';
+        }
     }
     $html .= '</ul>';
     return $html;
 }
 
-$likedTitlesHTML = generateTitleLinks($likedTitles);
-$dislikedTitlesHTML = generateTitleLinks($dislikedTitles);
-$likedPeopleHTML = generatePersonLinks($likedPeople);
-$dislikedPeopleHTML = generatePersonLinks($dislikedPeople);
-
-echo '<div id="liked-titles">' . $likedTitlesHTML . '</div>';
-echo '<div id="disliked-titles">' . $dislikedTitlesHTML . '</div>';
-echo '<div id="liked-people">' . $likedPeopleHTML . '</div>';
-echo '<div id="disliked-people">' . $dislikedPeopleHTML . '</div>';
+$likedPagesHTML = generatePageLinks($likedPages);
+$dislikedPagesHTML = generatePageLinks($dislikedPages);
 
 // Count liked pages
 $pagesLikeCount = count($likedPages);
@@ -71,6 +65,7 @@ $pagesDislikeCount = count($dislikedPages);
     <meta name="keywords" content="{NAME}, IMDB, movies, shows, people, media, database" />
     <meta name="author" content="Group 1, 2025S1" />
     <link rel="icon" href="../resources/img/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../resources/style.css">
 </head>
 <body>
     <header class="header">
@@ -80,13 +75,13 @@ $pagesDislikeCount = count($dislikedPages);
     <?php include '../resources/navbar.php'; ?>
     <main class="title-page-info">
         <div class="left-column">
-            <div id="title-likes">
-                <h1>Titles {USER} LOVES</h1>
-                    <?php echo $likedTitlesHTML; ?>
+            <div id="user-likes">
+                <h1>Pages that <em>{USER}</em> Likes</h1>
+                    <?php echo $likedPagesHTML; ?>
             </div>
-            <div id="person-likes">
-                <h1>People {USER} LOVES</h1>
-                    <?php echo $likedPeopleHTML; ?>
+            <div id="user-dislikes">
+                <h1>Pages that <em>{USER}</em> Dislikes</h1>
+                    <?php echo $dislikedPagesHTML; ?>
             </div>
         </div>
 

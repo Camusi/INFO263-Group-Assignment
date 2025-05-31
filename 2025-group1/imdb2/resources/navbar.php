@@ -12,7 +12,7 @@
     <div class="nav-right" id="account">
       <?php if (!empty($_SESSION['userID'])): ?>
         <a href="/INFO263-Group-Assignment/2025-group1/imdb2/logout.php">Logout</a>
-        <p class="account-preview">👤 <?= htmlspecialchars($_SESSION['userID']) ?></p>
+        <p class="account-preview">👤 <a href="/INFO263-Group-Assignment/2025-group1/imdb2/user/" target="_blank"><?= htmlspecialchars($_SESSION['userID']) ?></a></p>
         <?php else: ?>
         <a href="/INFO263-Group-Assignment/2025-group1/imdb2/signin.php">Sign In</a>
         <p class="account-preview">👤 Guest</p>

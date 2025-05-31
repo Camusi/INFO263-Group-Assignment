@@ -445,6 +445,7 @@ button:active {
   min-width: 80px;
   text-align: center;
   font-weight: 500;
+  list-style: none;
 }
 
 /* form feedback messages */
@@ -500,4 +501,56 @@ textarea {
 textarea:focus {
   box-shadow: 0 0 8px #6e6e6e;
   border-color: #6e6e6e;
+}
+
+#user-likes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  flex-direction: row;
+  overflow: hidden;
+  word-break: break-word;
+  padding: 0.5rem;
+  list-style: none;
+}
+
+#user-likes ul {
+  background: #fff;
+  color: #383d41;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 0 6px rgba(0,0,0,0.08);
+  font-size: 1rem;
+  margin: 0;
+  min-width: 80px;
+  text-align: center;
+  font-weight: 500;
+  list-style: none;
+}
+
+#user-dislikes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  flex-direction: row;
+  overflow: hidden;
+  word-break: break-word;
+  padding: 0.5rem;
+  list-style: none;
+}
+
+#user-dislikes ul {
+  list-style: none;
+  background: #fff;
+  color: #383d41;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 0 6px rgba(0,0,0,0.08);
+  font-size: 1rem;
+  margin: 0;
+  min-width: 80px;
+  text-align: center;
+  font-weight: 500;
 }

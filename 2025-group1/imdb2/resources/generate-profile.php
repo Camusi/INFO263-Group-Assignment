@@ -1,6 +1,7 @@
 <?php
 session_start();
 $userID = isset($_SESSION['userID']) ? $_SESSION['userID'] : '';
+
 $id = isset($_GET['id']) ? trim($_GET['id']) : '';
 $pagePath = "../user/{$id}.php";
 
@@ -44,6 +45,7 @@ $warningsArr = array();
             // Replace placeholders
             $content = str_replace('{NAME}', $id, $content);
             $content = str_replace('{ID}', $id, $content);
+            $content = str_replace('{USER}', $id, $content);
             // Write back to the file
             if (file_put_contents($pagePath, $content) !== false) {
                 $isWritten = true;
