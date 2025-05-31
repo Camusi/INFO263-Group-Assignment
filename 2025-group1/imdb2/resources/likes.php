@@ -1,17 +1,20 @@
 <?php
+file_put_contents('/tmp/likes_debug.txt', "Hello\n", FILE_APPEND);
+
+file_put_contents(__DIR__ . '/likes_debug.txt', "GET: " . print_r($_GET, true), FILE_APPEND);
+
 session_start();
-if (!isset($_SESSION["userID"] )) {
+if (!isset($_SESSION["userID"])) {
     header("Location: signin.php?error=You%20must%20be%20logged%20in%20to%20rank%20pages.");
     exit;
 }
 
 $userID = $_SESSION['userID'];
 $pageID = $_GET['id'] ?? '';
-// ld = like/dislike/unlike/undislike
 $ld = $_GET['ld'] ?? 'like';
 $type = substr($pageID, 0, 2) === 'tt' ? 'title' : 'person';
-$table = substr($pageID, 0, 2) === 'tt' ? 'title_basics_trim' : 'name_basics_trim';
-$id_col = substr($pageID, 0, 2) === 'tt' ? 'tconst' : 'nconst';
+$table = $type === 'title' ? 'title_basics_trim' : 'name_basics_trim';
+$id_col = $type === 'title' ? 'tconst' : 'nconst';
 
 // Value logic
 $value = 0;
@@ -20,20 +23,15 @@ if ($ld === 'like' || $ld === 'undislike') {
 } elseif ($ld === 'dislike' || $ld === 'unlike') {
     $value = -1;
 } else {
-    http_response_code(400);
-    header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (invalid like action [23])");
+    header("Location: index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(invalid+like+action+23)");
     exit;
 }
-// Check if the page ID is valid
 if (empty($pageID)) {
-    http_response_code(400);
-    header("Location: index.php?error=A fatal error occurred when liking a page. Please try again later. (page disappeared [29])");
+    header("Location: index.php?error=A+fatal+error+occurred+when+liking+a+page.+Please+try+again+later.+(page+disappeared+29)");
     exit;
 }
 
-
-
-
+// Helper functions (preserved)
 function getLikes($type, $pageID) {
     $db = new PDO('sqlite:../resources/imdb-2.sqlite3');
     $table = $type === 'title' ? 'title_basics_trim' : 'name_basics_trim';
@@ -52,7 +50,6 @@ function getLikers($pageID) {
     $stmt = $db->prepare($query);
     $stmt->bindValue(':id', $pageID, PDO::PARAM_STR);
     $stmt->execute();
-    $likers = [];
     $likedBy = [];
     $dislikedBy = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -62,8 +59,8 @@ function getLikers($pageID) {
             $dislikedBy[] = $row['userID'];
         }
     }
-    return "<b>Liked by:</b> " . implode(', ', $likedBy) . 
-           "<br><b>Disliked by:</b> " . implode(', ', $dislikedBy);
+    return "<b>Liked by:</b> " . implode(', ', $likedBy) .
+        "<br><b>Disliked by:</b> " . implode(', ', $dislikedBy);
 }
 
 function updateLikes($type, $pageID, $value) {
@@ -102,14 +99,35 @@ function checkUserLike($userID, $pageID) {
     return $stmt->fetch(PDO::FETCH_ASSOC)['value'] ?? 0;
 }
 
-
 // WHAT: Manage request.
 $requestManage = isset($_GET['q']) ? str_split(preg_replace('/[^0-9]/', '', $_GET['q'])) : [];
-if (empty($requestManage)) {
-    http_response_code(400);
-    header("Location: ../index.php?error=Invalid or missing action parameter.");
+$returnTo = $_GET['return_to'] ?? null;
+
+// If this is a form submission (with return_to), DO NOT output anything before the redirect
+if ($returnTo) {
+    // Only do the update actions (2 and 3) for a like/dislike, then redirect
+    foreach ($requestManage as $action) {
+        switch ($action) {
+            case 2:
+                if (!updateLikes($type, $pageID, $value)) {
+                    header("Location: index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(failed+to+update+likes+111)");
+                    exit;
+                }
+                break;
+            case 3:
+                if (!updateUserLikes($userID, $pageID, $value)) {
+                    header("Location: index.php?error=Sorry,+but+you+cannot+rate+the+page+at+this+time.+(failed+to+update+user+likes+119)");
+                    exit;
+                }
+                break;
+            // ignore other actions in form mode
+        }
+    }
+    header("Location: $returnTo");
     exit;
 }
+
+// Otherwise, allow API-like access (no redirect, can output)
 foreach ($requestManage as $action) {
     switch ($action) {
         case 0:
@@ -119,34 +137,19 @@ foreach ($requestManage as $action) {
             echo getLikers($pageID);
             break;
         case 2:
-            if (updateLikes($type, $pageID, $value)) {
-            } else {
-                http_response_code(500);
-                header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update likes [111])");
-                exit;
-            }
+            updateLikes($type, $pageID, $value);
+            echo "ok";
             break;
         case 3:
-            if (updateUserLikes($userID, $pageID, $value)) {
-            } else {
-                http_response_code(500);
-                header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update user likes [119])");
-                exit;
-            }
+            updateUserLikes($userID, $pageID, $value);
+            echo "ok";
             break;
         case 4:
-            if (checkUserLike($userID, $pageID)) {
-            } else {
-                http_response_code(500);
-                header("Location: index.php?error=Sorry, but you cannot rate the page at this time. (failed to update user likes [119])");
-                exit;
-            }
+            echo checkUserLike($userID, $pageID);
             break;
         default:
             echo "Invalid action.";
             break;
     }
 }
-$returnTo = $_GET['return_to'] ?? '../index.php';
-header("Location: $returnTo");
-exit;
+?>

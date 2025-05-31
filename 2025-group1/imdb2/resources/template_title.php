@@ -1,6 +1,8 @@
 <?php session_start();
 $userID = $_SESSION['userID'] ?? '';
-$pageID = $id ?? '';
+$pageID = $_GET['id'] ?? '';
+file_put_contents(__DIR__ . '/debug_page_id.txt', "pageID: " . $pageID . PHP_EOL, FILE_APPEND);
+
 $userLikeStatus = 0;
 if ($userID && $pageID) {
     $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
@@ -68,8 +70,10 @@ if ($userID && $pageID) {
                     $stmt = $db->prepare('SELECT likes FROM title_basics_trim WHERE tconst = \'{ID}\'');
                     $stmt->execute();
                     $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    $likes = $likes[0]['likes'] ?? '?'; // Default to ? if no likes found
+                    $likes = $likes[0]['likes'] ?? '0'; // Default to 0 if no likes found
                     ?>
+                <span>Rating: <?php echo htmlspecialchars($averageRating); ?>/10</span><br>
+                <span>Likes: <?php echo htmlspecialchars($likes); ?></span>
             </div>
             <div id="people">
                 <h2>Notable People:</h2>
@@ -83,7 +87,7 @@ if ($userID && $pageID) {
                     <input type="hidden" name="id" value="<?php echo htmlspecialchars($pageID); ?>">
                     <input type="hidden" name="ld" value="like">
                     <input type="hidden" name="q" value="23">
-                    <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>'"
+                    <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>">
                     <button type="submit"
                         <?php if ($userLikeStatus == 1) echo 'disabled style="color:green;font-weight:bold"'; ?>>
                         👍 Like
@@ -93,7 +97,7 @@ if ($userID && $pageID) {
                     <input type="hidden" name="id" value="<?php echo htmlspecialchars($pageID); ?>">
                     <input type="hidden" name="ld" value="dislike">
                     <input type="hidden" name="q" value="23">
-                    <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>'"
+                    <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>">
                     <button type="submit"
                         <?php if ($userLikeStatus == -1) echo 'disabled style="color:red;font-weight:bold"'; ?>>
                         👎 Dislike

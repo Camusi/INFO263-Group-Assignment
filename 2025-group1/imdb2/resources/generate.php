@@ -4,21 +4,6 @@ $userID = isset($_SESSION['userID']) ? $_SESSION['userID'] : '';
 $id = isset($_GET['q']) ? trim($_GET['q']) : '';
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
 $pageID = $id; // Define pageID here
-$userLikeStatus = 0;
-if ($userID && $pageID) {
-    $db = new PDO('sqlite:../resources/imdb2-user.sqlite3');
-    $stmt = $db->prepare("SELECT value FROM likes WHERE userID = :userID AND pageID = :pageID");
-    $stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
-    $stmt->bindValue(':pageID', $pageID, PDO::PARAM_STR);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($result) {
-        $userLikeStatus = (int)$result['value'] ?? 0; // Default to 0 if no record found
-    }
-} else {
-    echo 'You must be logged in to like or dislike a page.';
-    exit;
-}
 ?>
 
 <!DOCTYPE html>
