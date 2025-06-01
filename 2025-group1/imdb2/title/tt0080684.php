@@ -82,71 +82,61 @@ if ($userID && $pageID) {
                     <br><strong>Other Notable People:</strong> <span id='notable'><a href="../resources/page.php?q=nm0476030">Gary Kurtz (producer)</a>, <a href="../resources/page.php?q=nm0564768">Rick McCallum (producer)</a>, <a href="../resources/page.php?q=nm0002354">John Williams (Unknown Job (You can add this!))</a>, <a href="../resources/page.php?q=nm0005893">Peter Suschitzky (director of photography)</a>, <a href="../resources/page.php?q=nm0160628">T.M. Christopher (editor)</a>, <a href="../resources/page.php?q=nm0386532">Paul Hirsch (editor)</a>, <a href="../resources/page.php?q=nm0249450">Bob Edmiston (Unknown Job (You can add this!))</a>, <a href="../resources/page.php?q=nm0482961">Irene Lamb (Unknown Job (You can add this!))</a>, <a href="../resources/page.php?q=nm0509490">Terry Liebling (Unknown Job (You can add this!))</a>, <a href="../resources/page.php?q=nm0721888">Norman Reynolds (Unknown Job (You can add this!))</a></span>
             </div>
             <div class="like-controls">
-                <?php 
-                if ($userLikeStatus == 0){
-                    echo "
-                    <form action='../resources/likes.php' method='get' style='display:inline;'>
-                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                <?php if ($userLikeStatus == 0): ?>
+                    <form action='../resources/likes.php?t=<?= time() ?>' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='<?= htmlspecialchars($pageID) ?>'>
                         <input type='hidden' name='ld' value='like'>
                         <input type='hidden' name='q' value='23'>
-                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <input type='hidden' name='return_to' value='<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>'>
                         <button type='submit'>👍 Like</button>
                     </form>
-                    <form action='../resources/likes.php' method='get' style='display:inline;'>
-                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                    <form action='../resources/likes.php?t=<?= time() ?>' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='<?= htmlspecialchars($pageID) ?>'>
                         <input type='hidden' name='ld' value='dislike'>
                         <input type='hidden' name='q' value='23'>
-                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <input type='hidden' name='return_to' value='<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>'>
                         <button type='submit'>👎 Dislike</button>
-                    ";
-                } elseif ($userLikeStatus == -1) {
-                    echo "
-                    <form action='../resources/likes.php' method='get' style='display:inline;'>
-                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                    </form>
+                <?php elseif ($userLikeStatus == -1): ?>
+                    <form action='../resources/likes.php?t=<?= time() ?>' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='<?= htmlspecialchars($pageID) ?>'>
                         <input type='hidden' name='ld' value='like'>
                         <input type='hidden' name='q' value='23'>
-                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <input type='hidden' name='return_to' value='<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>'>
                         <button type='submit' disabled>👍 Like</button>
                     </form>
-                    <form action='../resources/likes.php' method='get' style='display:inline;'>
-                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                    <form action='../resources/likes.php?t=<?= time() ?>' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='<?= htmlspecialchars($pageID) ?>'>
                         <input type='hidden' name='ld' value='undislike'>
                         <input type='hidden' name='q' value='23'>
-                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <input type='hidden' name='return_to' value='<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>'>
                         <button type='submit'>👎 Remove Dislike</button>
                     </form>
-                    ";
-                } elseif ($userLikeStatus == 1) {
-                    echo "
-                    <form action='../resources/likes.php' method='get' style='display:inline;'>
-                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                <?php elseif ($userLikeStatus == 1): ?>
+                    <form action='../resources/likes.php?t=<?= time() ?>' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='<?= htmlspecialchars($pageID) ?>'>
                         <input type='hidden' name='ld' value='unlike'>
                         <input type='hidden' name='q' value='23'>
-                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <input type='hidden' name='return_to' value='<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>'>
                         <button type='submit'>👍 Remove Like</button>
                     </form>
-                    <form action='../resources/likes.php' method='get' style='display:inline;'>
-                        <input type='hidden' name='id' value='".htmlspecialchars($pageID)."'>
+                    <form action='../resources/likes.php?t=<?= time() ?>' method='get' style='display:inline;'>
+                        <input type='hidden' name='id' value='<?= htmlspecialchars($pageID) ?>'>
                         <input type='hidden' name='ld' value='dislike'>
                         <input type='hidden' name='q' value='23'>
-                        <input type='hidden' name='return_to' value='".htmlspecialchars($_SERVER['REQUEST_URI'])."'>
+                        <input type='hidden' name='return_to' value='<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>'>
                         <button type='submit' disabled>👎 Dislike</button>
                     </form>
-                    ";
-                }
-                ?>
-                <?php 
-                if ($userLikeStatus == 1) {
-                    echo '<span style="color:green">You liked this.</span>';
-                } elseif ($userLikeStatus == -1) {
-                    echo '<span style="color:red">You disliked this.</span>';
-                } else {
-                    echo '<span></span>';
-                }
-                ?>
+                <?php endif; ?>
+                
+                <?php if ($userLikeStatus == 1): ?>
+                    <span style="color:green">You liked this.</span>
+                <?php elseif ($userLikeStatus == -1): ?>
+                    <span style="color:red">You disliked this.</span>
+                <?php endif; ?>
             </div>
             <details id="plot" title="Plot Summary">
-                <summary><h2>Plot:</h2></summary>
+                <summary><h2>Click to read Plot:</h2></summary>
                 <p id="plot-text">After the Empire overpowers the Rebel Alliance, Luke Skywalker begins training with Jedi Master Yoda, while Darth Vader and bounty hunter Boba Fett pursue his friends across the galaxy.</p>
             </details>
         </div>

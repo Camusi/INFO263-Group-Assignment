@@ -1,6 +1,6 @@
 <?php session_start();
  $userID = $_SESSION['userID'] ?? '';
-$pageID = 'nm0000518'; // Assuming nm0000518 is replaced with the actual page ID in the template, IGNORE THE WARNING
+$pageID = 'nm0562679'; // Assuming nm0562679 is replaced with the actual page ID in the template, IGNORE THE WARNING
 
 $userLikeStatus = 0;
 if ($userID && $pageID) {
@@ -23,7 +23,7 @@ try {
     exit;
 }
 
-$stmt = $db->prepare('SELECT likes FROM name_basics_trim WHERE nconst = \'nm0000518\'');
+$stmt = $db->prepare('SELECT likes FROM name_basics_trim WHERE nconst = \'nm0562679\'');
 $stmt->execute();
 $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $likes = $likes[0]['likes'] ?? '0'; // Default to 0 if no likes found
@@ -33,40 +33,40 @@ $likes = $likes[0]['likes'] ?? '0'; // Default to 0 if no likes found
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>John Malkovich | IMDB2.0</title>
+    <title>Peter Mayhew | IMDB2.0</title>
     <link rel="stylesheet" href="../resources/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../resources/search.js"></script>
     <script src="../resources/like.js"></script>
-    <meta type="description" content="Check out John Malkovich on IMDB2, your home of all things media." />
-    <meta name="keywords" content="John Malkovich, IMDB, movies, shows, people, media, database" />
+    <meta type="description" content="Check out Peter Mayhew on IMDB2, your home of all things media." />
+    <meta name="keywords" content="Peter Mayhew, IMDB, movies, shows, people, media, database" />
     <meta name="author" content="Group 1, 2025S1" />
     <link rel="icon" href="../resources/img/favicon.ico" type="image/x-icon" />
 </head>
 <body>
     <header class="header">
     <h1>IMDB2.0</h1>
-    <p id="person-name">John Malkovich</p>
+    <p id="person-name">Peter Mayhew</p>
   </header>
   <?php include '../resources/navbar.php'; ?>
   <div class="search-results">
     <p id="search-output"></p>
   </div>
     <section class="edit-page-button">
-        <a href="../edit.php?type=person&id=nm0000518" class="edit-button"><button>Edit This Page</button></a>
+        <a href="../edit.php?type=person&id=nm0562679" class="edit-button"><button>Edit This Page</button></a>
         <div id="warnings">
             <p id="warning-text"></p>
         </div>
     </section>
     <main class="main-content">
-        <div id="person-name"><h1>John Malkovich</h1></div>
+        <div id="person-name"><h1>Peter Mayhew</h1></div>
         <div class="blurb-image">
             <div>
                 <aside id="blurb">
                     <p id="blurb-text">No biography available yet, but you can add one!</p>
                     <ul>
-                        <li>Born: <span id="person-year"></span>1953</span></li>
-                        <li>Name: <span id="person-name">John Malkovich</span></li>
+                        <li>Born: <span id="person-year"></span>1944</span></li>
+                        <li>Name: <span id="person-name">Peter Mayhew</span></li>
                         <li>Votes: <span><?php echo htmlspecialchars($likes); ?></span></li>
                     </ul>
                 </aside>
@@ -146,7 +146,7 @@ $likes = $likes[0]['likes'] ?? '0'; // Default to 0 if no likes found
         <div id="roles" class="roles">
             <h2>Roles</h2>
             <ul class="roles-list">
-                <li><a href="../resources/page.php?q=tt0087553">The Killing Fields (actor)</a></li><li><a href="../resources/page.php?q=tt0087921">Places in the Heart (actor)</a></li><li><a href="../resources/page.php?q=tt0092965">Empire of the Sun (actor)</a></li><li><a href="../resources/page.php?q=tt0093093">The Glass Menagerie (actor)</a></li><li><a href="../resources/page.php?q=tt0094947">Dangerous Liaisons (actor)</a></li><li><a href="../resources/page.php?q=tt0105046">Of Mice and Men (actor)</a></li><li><a href="../resources/page.php?q=tt0107206">In the Line of Fire (actor)</a></li><li><a href="../resources/page.php?q=tt0120601">Being John Malkovich (actor)</a></li><li><a href="../resources/page.php?q=tt0128442">Rounders (actor)</a></li><li><a href="../resources/page.php?q=tt0162346">Ghost World (producer)</a></li><li><a href="../resources/page.php?q=tt0300149">The Loner (producer)</a></li><li><a href="../resources/page.php?q=tt0467406">Juno (producer)</a></li><li><a href="../resources/page.php?q=tt0887883">Burn After Reading (actor)</a></li><li><a href="../resources/page.php?q=tt0961109">Bloody Mondays &amp; Strawberry Pies (actor)</a></li><li><a href="../resources/page.php?q=tt1028576">Secretariat (actor)</a></li><li><a href="../resources/page.php?q=tt10751170">All Noncombatants Please Clear the Set (self)</a></li><li><a href="../resources/page.php?q=tt12545180">Ten Year Old Tom (actor)</a></li><li><a href="../resources/page.php?q=tt13108124">Unsinkable (actor)</a></li><li><a href="../resources/page.php?q=tt1659337">The Perks of Being a Wallflower (producer)</a></li><li><a href="../resources/page.php?q=tt18177528">The New Look (actor)</a></li><li><a href="../resources/page.php?q=tt1860357">Deepwater Horizon (actor)</a></li><li><a href="../resources/page.php?q=tt30253218">John Malkovich: The Music Critic (actor)</a></li><li><a href="../resources/page.php?q=tt3672994">Le paradoxe de John Malkovich (actor)</a></li><li><a href="../resources/page.php?q=tt6543762">Psychogenic Fugue (actor)</a></li><li><a href="../resources/page.php?q=tt7165196">Hell (actor)</a></li><li><a href="../resources/page.php?q=tt8870836">Russia from Above (actor)</a></li><li><a href="../resources/page.php?q=tt8870836">Russia from Above (actor)</a></li>
+                <li><a href="../resources/page.php?q=tt0076759">Star Wars: Episode IV - A New Hope (actor)</a></li><li><a href="../resources/page.php?q=tt0080684">Star Wars: Episode V - The Empire Strikes Back (actor)</a></li><li><a href="../resources/page.php?q=tt0086190">Star Wars: Episode VI - Return of the Jedi (actor)</a></li><li><a href="../resources/page.php?q=tt0094029">Star Tours (actor)</a></li><li><a href="../resources/page.php?q=tt2669558">Chronicles of Comic Con (self)</a></li>
             </ul>
         </div>
         <div id="comments"></div>

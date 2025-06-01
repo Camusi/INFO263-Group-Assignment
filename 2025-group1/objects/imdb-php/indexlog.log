@@ -1,7 +1,0 @@
-Previous indexing process (PID: 66923) is no longer running. Removing stale lock.
-Indexing started at 2025-05-12 07:14:12
-Indexing complete at 2025-05-12 07:16:12
-Indexing started at 2025-05-13 21:57:58
-Indexing failed: SQLSTATE[HY000]: General error: 1 no such table: title_basics_trim
-Indexing started at 2025-05-14 09:36:13
-Indexing failed: SQLSTATE[HY000]: General error: 5 database is locked
