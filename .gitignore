@@ -1,3 +1,11 @@
-/imdb-php/resources/imdb.2.sqlite3
-/imdb-react/node_modules
 *.DS_Store
+*.sqlite
+*.sqlite3
+/.idea/
+/.idea/*
+imdb-php/.idea/workspace.xml
+imdb-php/.idea/dataSources.local.xml
+2025-group1/imdb2/resources/imdb-2.sqlite3-wal
+2025-group1/imdb2/resources/imdb-2.sqlite3-shm
+/2025-group1/.idea
+/dashboard/.idea
