@@ -1,0 +1,47 @@
+GET: Array
+(
+    [id] => 
+    [ld] => like
+    [q] => 23
+    [return_to] => /2025-group1/imdb2/title/tt0076759.php
+)
+GET: Array
+(
+    [id] => nm0562679
+    [type] => person
+    [q] => 4
+)
+GET: Array
+(
+    [id] => nm0562679
+    [type] => person
+    [q] => 4
+)
+GET: Array
+(
+    [id] => 
+    [ld] => like
+    [q] => 23
+    [return_to] => /2025-group1/imdb2/title/tt0076759.php
+)
+GET: Array
+(
+    [id] => 
+    [ld] => like
+    [q] => 23
+    [return_to] => /2025-group1/imdb2/title/tt0076759.php
+)
+GET: Array
+(
+    [id] => 
+    [ld] => like
+    [q] => 23
+    [return_to] => /2025-group1/imdb2/title/tt0076759.php
+)
+GET: Array
+(
+    [id] => 
+    [ld] => like
+    [q] => 23
+    [return_to] => /2025-group1/imdb2/title/tt0076759.php
+)
